@@ -261,30 +261,29 @@ func (cs *CottageScene) Update() {
 	}
 }
 
-// RenderFrame renders active 8-bit retro scene with scene-aware particle masking.
+// RenderFrame executes the modular 4-step layered rendering pipeline:
+// Step 1: Render Sky, Stars, Moon, Mountains/Buildings outside window (Layer 1)
+// Step 2: Render Weather Particles (Rain/Snow) clipped strictly to WindowBounds (Layer 2)
+// Step 3: Render Window Frames, Room Interior, Desk, Objects, and Focus Buddy (Layers 3-5)
+// Step 4: Apply Dynamic Lighting & Lightning Flashes (Layer 6)
 func (cs *CottageScene) RenderFrame() {
 	c := cs.Canvas
+	s := GetScene(cs.CurrentScene)
 
-	switch cs.CurrentScene {
-	case SceneRainyCity:
-		cs.RenderRainyCity(c)
-	case SceneForestCabin:
-		cs.RenderForestCabin(c)
-	case SceneCottageClassic:
-		cs.RenderCottageClassic(c)
-	case SceneObservatory:
-		cs.RenderObservatory(c)
-	default:
-		cs.RenderRainyCity(c)
-	}
+	// Step 1: Sky & Background (Layer 1)
+	s.RenderSky(c, cs.EffectiveTimeOfDay(), cs.Lightning, cs.FrameCount, cs.Stars)
 
-	// Render Scene-Aware Window Particles (Clipped strictly to window glass!)
-	cs.renderSceneWindowParticles(c)
+	// Step 2: Weather & Rain / Snow Particles (Layer 2 - Rendered BEHIND window frames, desk, and person!)
+	cs.renderSceneWindowParticles(c, s.WindowBounds())
+
+	// Step 3: Window Frames, Room Interior, Objects, and Focus Buddy Companion (Layers 3-5 - Rendered ON TOP of rain!)
+	s.RenderForeground(c, cs.FrameCount, cs.Buddy, cs.LampOn, cs.FireOn, cs.CatBreed)
+
+	// Step 4: Dynamic Lighting Cones, Hearth Glows, and Lightning Flashes (Layer 6)
+	s.ApplyLighting(c, cs.LampOn, cs.FireOn, cs.Lightning)
 }
 
-func (cs *CottageScene) renderSceneWindowParticles(c *Canvas) {
-	wRect := cs.WindowRect()
-
+func (cs *CottageScene) renderSceneWindowParticles(c *Canvas, wRect Rect) {
 	// 1. Rain Drops - Masked strictly inside window glass rect
 	if cs.Weather == WeatherRain || cs.Weather == WeatherStorm {
 		for _, p := range cs.RainParticles {
@@ -318,16 +317,6 @@ func (cs *CottageScene) renderSceneWindowParticles(c *Canvas) {
 				c.DrawGlyph(px, py/2, '~', PicoWhite)
 			}
 		}
-	}
-
-	// 3. Desk Lamp Cone Light Glow
-	if cs.LampOn {
-		c.ApplyLightCone(10, 36, 18, 14, PicoYellow, 0.35)
-	}
-
-	// 4. Lightning Flash (Thunderstorm mode)
-	if cs.Lightning {
-		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
 	}
 }
 
