@@ -253,25 +253,30 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Scene.CatBreed = (m.Scene.CatBreed + 1) % 4
 			m.SetStatusMsg("Cat Breed: " + m.Scene.CatBreed.String())
 
-		// Audio & CLIAMP Controls
-		case "space":
-			if m.CLIAMP != nil && m.CLIAMP.GetStatus().Installed {
+		// Audio & CLIAMP / Native Lofi Radio Controls
+		case "space", " ":
+			if m.CLIAMP != nil {
 				_ = m.CLIAMP.TogglePlayPause()
-				m.SetStatusMsg("CLIAMP Toggled 🎵")
-			} else {
-				m.SetStatusMsg("CLIAMP not installed, running procedural ambient 🎧")
+				st := m.CLIAMP.GetStatus()
+				if st.Playing {
+					m.SetStatusMsg(fmt.Sprintf("Playing Lofi: %s 🎵", st.TrackTitle))
+				} else {
+					m.SetStatusMsg("Lofi Radio Paused ⏸️")
+				}
 			}
 
 		case "n":
 			if m.CLIAMP != nil {
 				_ = m.CLIAMP.NextTrack()
-				m.SetStatusMsg(fmt.Sprintf("Preset: %s 🎶", audio.CuratedLofiPresets[m.CLIAMP.ActivePreset].Name))
+				st := m.CLIAMP.GetStatus()
+				m.SetStatusMsg(fmt.Sprintf("Playing Lofi: %s 🎶", st.TrackTitle))
 			}
 
 		case "p":
 			if m.CLIAMP != nil {
 				_ = m.CLIAMP.PrevTrack()
-				m.SetStatusMsg(fmt.Sprintf("Preset: %s 🎶", audio.CuratedLofiPresets[m.CLIAMP.ActivePreset].Name))
+				st := m.CLIAMP.GetStatus()
+				m.SetStatusMsg(fmt.Sprintf("Playing Lofi: %s 🎶", st.TrackTitle))
 			}
 
 		case "r":
