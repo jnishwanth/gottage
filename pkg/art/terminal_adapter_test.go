@@ -45,7 +45,7 @@ func TestEncodeKittyGPU(t *testing.T) {
 	c := NewCanvas(10, 10)
 	payload := EncodeKittyGPU(c, 74, 34)
 
-	if !strings.HasPrefix(payload, "\x1b_Ga=T,f=32,i=1,q=2,C=1,s=10,v=10,c=74,r=34") {
+	if !strings.HasPrefix(payload, "\x1b_Ga=T,f=32,i=1,q=2,C=1,s=40,v=40,c=74,r=34") {
 		t.Errorf("Kitty GPU transmission escape sequence header invalid: %s", payload[:40])
 	}
 }

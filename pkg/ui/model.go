@@ -51,6 +51,7 @@ type Model struct {
 	ShowHelp      bool
 	StatusMsg     string
 	StatusMsgTime time.Time
+	UseGPURender  bool
 
 	// Core Components
 	Scene     *art.CottageScene
@@ -58,34 +59,38 @@ type Model struct {
 	Ambient   *audio.AmbientManager
 	Timer     *features.FocusTimer
 	Tasks     *features.TaskList
-	TextInput textinput.Model
+
+	// Sub-view State
 	AddingTask bool
+	TextInput  textinput.Model
 }
 
-// NewModel constructs the initial Gottage app model.
+// NewModel creates initial Bubbletea model.
 func NewModel() Model {
-	// Initialize Canvas width & height (74 wide x 68 pixel height = 34 character rows)
-	scene := art.NewCottageScene(74, 68)
-	cliampCtrl := audio.NewCLIAMPController()
-	ambientMgr := audio.NewAmbientManager()
-	ambientMgr.StartAmbientLoop()
-
 	ti := textinput.New()
-	ti.Placeholder = "Enter new task..."
+	ti.Placeholder = "Enter new focus task..."
 	ti.CharLimit = 60
+	ti.Width = 40
+
+	styles := NewStyles(ThemeCozyAutumn)
+	scene := art.NewCottageScene(74, 34)
 
 	return Model{
-		Width:     100,
-		Height:    40,
-		Styles:    NewStyles(ThemeCozyAutumn),
-		ActiveTab: TabArt,
-		ShowHelp:  false,
-		Scene:     scene,
-		CLIAMP:    cliampCtrl,
-		Ambient:   ambientMgr,
-		Timer:     features.NewFocusTimer(),
-		Tasks:     features.NewTaskList(),
-		TextInput: ti,
+		Width:        120,
+		Height:       40,
+		Styles:       styles,
+		ActiveTab:    TabArt,
+		ShowHelp:     false,
+		UseGPURender: art.DetectTerminalProtocol() == art.ProtocolKitty,
+
+		Scene:   scene,
+		CLIAMP:  audio.NewCLIAMPController(),
+		Ambient: audio.NewAmbientManager(),
+		Timer:   features.NewFocusTimer(),
+		Tasks:   features.NewTaskList(),
+
+		AddingTask: false,
+		TextInput:  ti,
 	}
 }
 
@@ -195,6 +200,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.ActiveTab = TabAmbiance
 
 		// Interactive Bit-Art Toggles
+		case "g":
+			m.UseGPURender = !m.UseGPURender
+			if m.UseGPURender {
+				m.SetStatusMsg("Graphics Mode: Ghostty GPU (4x Crisp Native) ⚡")
+			} else {
+				m.SetStatusMsg("Graphics Mode: 8-Bit Half-Block Text Canvas ▀")
+			}
+
 		case "T":
 			newTheme := CycleTheme(m.Styles.Theme)
 			m.Styles = NewStyles(newTheme)

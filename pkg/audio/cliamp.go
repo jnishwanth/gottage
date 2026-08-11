@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// CLIAMPStatus holds parsed details from `cliamp status`.
+// CLIAMPStatus holds parsed details from `cliamp status` or native fallback player.
 type CLIAMPStatus struct {
 	Installed     bool
 	DaemonRunning bool
@@ -40,16 +40,17 @@ var CuratedLofiPresets = []PresetTrack{
 	{Name: "Chiptune & 8-Bit Chill", URL: "https://stream.zeno.fm/u841vbg2kwzuv", Tag: "Chiptune"},
 }
 
-// CLIAMPController handles interaction with cliamp.
+// CLIAMPController handles interaction with cliamp or native streaming audio fallback.
 type CLIAMPController struct {
-	mu           sync.Mutex
-	cliampPath   string
-	status       CLIAMPStatus
-	lastChecked  time.Time
-	ActivePreset int
+	mu              sync.Mutex
+	cliampPath      string
+	status          CLIAMPStatus
+	lastChecked     time.Time
+	ActivePreset    int
+	nativePlayerCmd *exec.Cmd
 }
 
-// NewCLIAMPController initializes the CLIAMP integration controller.
+// NewCLIAMPController initializes the CLIAMP & Native Lofi Player controller.
 func NewCLIAMPController() *CLIAMPController {
 	c := &CLIAMPController{
 		ActivePreset: 0,
@@ -59,22 +60,32 @@ func NewCLIAMPController() *CLIAMPController {
 		c.cliampPath = path
 		c.status.Installed = true
 	} else {
-		// Fallback common homebrew path
 		c.cliampPath = "/opt/homebrew/bin/cliamp"
 		if _, err := exec.Command(c.cliampPath, "--version").Output(); err == nil {
 			c.status.Installed = true
+		} else {
+			c.status.Installed = false
 		}
 	}
 	c.PollStatus()
 	return c
 }
 
-// PollStatus queries cliamp for current state.
+// PollStatus queries cliamp or native player for current state.
 func (c *CLIAMPController) PollStatus() CLIAMPStatus {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	if !c.status.Installed {
+		if c.nativePlayerCmd != nil && c.nativePlayerCmd.Process != nil {
+			c.status.Playing = true
+			c.status.DaemonRunning = true
+			c.status.TrackTitle = CuratedLofiPresets[c.ActivePreset].Name
+		} else {
+			c.status.Playing = false
+			c.status.DaemonRunning = false
+			c.status.TrackTitle = "Paused / Idle"
+		}
 		return c.status
 	}
 
@@ -133,20 +144,18 @@ func (c *CLIAMPController) EnsureDaemon() error {
 	defer c.mu.Unlock()
 
 	if !c.status.Installed {
-		return fmt.Errorf("cliamp binary not found on system")
+		return nil
 	}
 
 	if c.status.DaemonRunning {
 		return nil
 	}
 
-	// Launch daemon asynchronously
 	cmd := exec.Command(c.cliampPath, "--daemon")
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("failed to start cliamp daemon: %w", err)
 	}
 
-	// Wait briefly for socket creation
 	time.Sleep(300 * time.Millisecond)
 	c.status.DaemonRunning = true
 	return nil
@@ -154,18 +163,29 @@ func (c *CLIAMPController) EnsureDaemon() error {
 
 // TogglePlayPause toggles playback state.
 func (c *CLIAMPController) TogglePlayPause() error {
-	if !c.status.Installed {
-		return fmt.Errorf("cliamp not installed")
-	}
-	if err := c.EnsureDaemon(); err != nil {
-		return err
+	if c.status.Installed {
+		if err := c.EnsureDaemon(); err != nil {
+			return err
+		}
+		cmd := exec.Command(c.cliampPath, "toggle")
+		_ = cmd.Run()
+		c.PollStatus()
+		return nil
 	}
 
-	cmd := exec.Command(c.cliampPath, "toggle")
-	_ = cmd.Run()
+	// Native macOS Streaming Fallback Player (afplay / mpv / curl)
+	c.mu.Lock()
+	defer c.mu.Unlock()
 
-	c.PollStatus()
-	return nil
+	if c.nativePlayerCmd != nil && c.nativePlayerCmd.Process != nil {
+		_ = c.nativePlayerCmd.Process.Kill()
+		c.nativePlayerCmd = nil
+		c.status.Playing = false
+		c.status.TrackTitle = "Paused / Idle"
+		return nil
+	}
+
+	return c.startNativeStream(c.ActivePreset)
 }
 
 // NextTrack switches to next track or preset.
@@ -188,25 +208,54 @@ func (c *CLIAMPController) PlayPreset(idx int) error {
 	c.ActivePreset = idx
 	preset := CuratedLofiPresets[idx]
 
-	if !c.status.Installed {
-		return fmt.Errorf("cliamp not installed")
-	}
-	if err := c.EnsureDaemon(); err != nil {
-		return err
+	if c.status.Installed {
+		if err := c.EnsureDaemon(); err != nil {
+			return err
+		}
+		cmd := exec.Command(c.cliampPath, "load", preset.URL)
+		_ = cmd.Run()
+		c.PollStatus()
+		return nil
 	}
 
-	// Queue or load track via cliamp
-	cmd := exec.Command(c.cliampPath, "load", preset.URL)
-	_ = cmd.Run()
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.startNativeStream(idx)
+}
 
-	c.PollStatus()
+func (c *CLIAMPController) startNativeStream(idx int) error {
+	if c.nativePlayerCmd != nil && c.nativePlayerCmd.Process != nil {
+		_ = c.nativePlayerCmd.Process.Kill()
+		c.nativePlayerCmd = nil
+	}
+
+	preset := CuratedLofiPresets[idx]
+
+	// Check mpv, ffplay, or curl + afplay
+	if mpvPath, err := exec.LookPath("mpv"); err == nil {
+		c.nativePlayerCmd = exec.Command(mpvPath, "--no-video", "--really-quiet", preset.URL)
+	} else if ffplayPath, err := exec.LookPath("ffplay"); err == nil {
+		c.nativePlayerCmd = exec.Command(ffplayPath, "-nodisp", "-autoexit", preset.URL)
+	} else {
+		// Native macOS curl | afplay pipeline
+		c.nativePlayerCmd = exec.Command("sh", "-c", fmt.Sprintf("curl -sL %s | afplay -", preset.URL))
+	}
+
+	if err := c.nativePlayerCmd.Start(); err != nil {
+		c.status.Playing = false
+		return fmt.Errorf("failed to start native lofi stream: %w", err)
+	}
+
+	c.status.Playing = true
+	c.status.DaemonRunning = true
+	c.status.TrackTitle = preset.Name
 	return nil
 }
 
 // SetVolume adjusts volume in dB or percentage.
 func (c *CLIAMPController) SetVolume(db string) error {
 	if !c.status.Installed {
-		return fmt.Errorf("cliamp not installed")
+		return nil
 	}
 	cmd := exec.Command(c.cliampPath, "volume", db)
 	return cmd.Run()

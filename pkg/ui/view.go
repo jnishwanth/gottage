@@ -44,6 +44,11 @@ func (m Model) View() string {
 		body = m.renderAmbianceView()
 	}
 
+	// If active tab is NOT TabArt, clear any leftover Kitty GPU image overlay from Ghostty!
+	if m.ActiveTab != TabArt {
+		body = art.ClearKittyGPU() + body
+	}
+
 	// Render Right Sidebar
 	sidebar := m.renderSidebar()
 
@@ -51,7 +56,7 @@ func (m Model) View() string {
 	content := lipgloss.JoinHorizontal(lipgloss.Top, body, "  ", sidebar)
 
 	// Toast / Status Footer
-	footerText := "Press [?] for help • [1-4] switch tabs • [space] audio • [q] quit"
+	footerText := "Press [?] for help • [1-4] switch tabs • [space] audio • [g] toggle GPU/Text • [q] quit"
 	if m.StatusMsg != "" && time.Since(m.StatusMsgTime) < 4*time.Second {
 		footerText = m.Styles.StatusBadge.Render(" " + m.StatusMsg + " ")
 	}
@@ -74,8 +79,15 @@ func (m Model) View() string {
 }
 
 func (m Model) renderArtView() string {
-	// Renders the rendered ANSI character matrix from the Gottage bit-art scene!
-	artStr := strings.TrimRight(m.Scene.Render(), "\r\n")
+	// If GPU mode is enabled and terminal is Kitty/Ghostty, return Kitty GPU graphics string
+	if m.UseGPURender && art.DetectTerminalProtocol() == art.ProtocolKitty {
+		artStr := m.Scene.Render()
+		return m.Styles.Box.Width(76).Height(35).Render(artStr)
+	}
+
+	// Fallback to crisp PICO-8 half-block text canvas ('▀')
+	m.Scene.RenderFrame()
+	artStr := strings.TrimRight(m.Scene.Canvas.Render(), "\r\n")
 	return m.Styles.Box.Width(76).Height(35).Render(artStr)
 }
 

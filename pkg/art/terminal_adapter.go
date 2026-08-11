@@ -35,36 +35,50 @@ func DetectTerminalProtocol() TerminalProtocol {
 	term := strings.ToLower(os.Getenv("TERM"))
 	kittyWindow := os.Getenv("KITTY_WINDOW_ID")
 
-	// Ghostty, Kitty, WezTerm natively support Kitty GPU Graphics Protocol
 	if termProg == "ghostty" || term == "xterm-ghostty" || termProg == "kitty" || kittyWindow != "" || termProg == "wezterm" {
 		return ProtocolKitty
 	}
 
-	// iTerm2 protocol
 	if termProg == "iterm.app" {
 		return ProtocolITerm2
 	}
 
-	// Fallback to standard ANSI half-blocks (Alacritty, Apple Terminal, XTerm)
 	return ProtocolHalfBlock
 }
 
-// EncodeKittyGPU converts a Canvas pixel grid into Kitty GPU Graphics Protocol Base64 payload.
-// Uses i=1 (in-place GPU frame replacement), C=1 (do not advance cursor), and q=2 (quiet mode - no ACKs)
-// to prevent screen flickering, line drifting, and memory leaks.
-func EncodeKittyGPU(c *Canvas, cols, rows int) string {
-	w, h := c.Width, c.Height
-	rgbaBuf := make([]byte, w*h*4)
+// ClearKittyGPU returns the escape sequence to delete Kitty GPU Image ID 1 immediately.
+func ClearKittyGPU() string {
+	return "\x1b_Ga=d,d=i,i=1\x1b\\"
+}
 
-	idx := 0
-	for y := 0; y < h; y++ {
-		for x := 0; x < w; x++ {
+// EncodeKittyGPU converts a Canvas pixel grid into Kitty GPU Graphics Protocol Base64 payload.
+// Applies 4x Nearest-Neighbor Integer Scaling to guarantee razor-sharp 16-bit retro pixels without blur!
+func EncodeKittyGPU(c *Canvas, cols, rows int) string {
+	scale := 4
+	srcW, srcH := c.Width, c.Height
+	dstW, dstH := srcW*scale, srcH*scale
+
+	rgbaBuf := make([]byte, dstW*dstH*4)
+
+	// 4x Nearest-Neighbor Upscaling
+	for y := 0; y < srcH; y++ {
+		for x := 0; x < srcW; x++ {
 			col := c.Pixels[y][x]
-			rgbaBuf[idx] = byte(col.R * 255)
-			rgbaBuf[idx+1] = byte(col.G * 255)
-			rgbaBuf[idx+2] = byte(col.B * 255)
-			rgbaBuf[idx+3] = 255 // Opaque alpha
-			idx += 4
+			r := byte(col.R * 255)
+			g := byte(col.G * 255)
+			b := byte(col.B * 255)
+
+			for dy := 0; dy < scale; dy++ {
+				for dx := 0; dx < scale; dx++ {
+					px := x*scale + dx
+					py := y*scale + dy
+					idx := (py*dstW + px) * 4
+					rgbaBuf[idx] = r
+					rgbaBuf[idx+1] = g
+					rgbaBuf[idx+2] = b
+					rgbaBuf[idx+3] = 255
+				}
+			}
 		}
 	}
 
@@ -74,7 +88,7 @@ func EncodeKittyGPU(c *Canvas, cols, rows int) string {
 	// Kitty Escape Header:
 	// a=T (Transmit & Display), f=32 (32-bit RGBA), i=1 (Image ID 1 for in-place GPU overwrite),
 	// q=2 (Quiet mode - suppress terminal ACKs), C=1 (Do NOT move cursor)
-	hdr := fmt.Sprintf("\x1b_Ga=T,f=32,i=1,q=2,C=1,s=%d,v=%d,c=%d,r=%d", w, h, cols, rows)
+	hdr := fmt.Sprintf("\x1b_Ga=T,f=32,i=1,q=2,C=1,s=%d,v=%d,c=%d,r=%d", dstW, dstH, cols, rows)
 
 	payloadBytes := []byte(b64Payload)
 	chunkSize := 4096
@@ -93,8 +107,7 @@ func EncodeKittyGPU(c *Canvas, cols, rows int) string {
 		}
 	}
 
-	// Pad with 'rows' newlines so Lipgloss layout calculates container line height correctly,
-	// while the Kitty image renders in-place over the area!
+	// Pad with 'rows' newlines for Lipgloss height calculation
 	for r := 0; r < rows; r++ {
 		if r > 0 {
 			sb.WriteString("\n")
