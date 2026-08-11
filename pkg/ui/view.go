@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"gottage/pkg/art"
 	"gottage/pkg/audio"
 
 	"github.com/charmbracelet/lipgloss"
@@ -27,8 +28,9 @@ func (m Model) View() string {
 	}
 	tabBar := strings.Join(tabStrings, "  ")
 
-	headerTitle := m.Styles.Title.Render("🏡 GOTTAGE") + " " + m.Styles.Header.Render("v1.0 • Virtual Cottage TUI")
-	header := lipgloss.JoinHorizontal(lipgloss.Center, headerTitle, "   ", tabBar)
+	headerTitle := m.Styles.Title.Render("🏡 GOTTAGE") + " " + m.Styles.Header.Render("v1.0")
+	protoBadge := m.Styles.StatusBadge.Render(" " + art.DetectTerminalProtocol().String() + " ")
+	header := lipgloss.JoinHorizontal(lipgloss.Center, headerTitle, "  ", protoBadge, "   ", tabBar)
 
 	// Render Main Tab View
 	switch m.ActiveTab {
@@ -233,9 +235,10 @@ func (m Model) renderSidebar() string {
 
 	sb.WriteString(strings.Repeat("─", 28) + "\n\n")
 
-	// 3. Quick Toggles
-	sb.WriteString(m.Styles.Title.Render("✨ QUICK TOGGLES") + "\n")
+	// 3. Quick Toggles & System Info
+	sb.WriteString(m.Styles.Title.Render("✨ QUICK TOGGLES & THEME") + "\n")
 	sb.WriteString(fmt.Sprintf("[v] Scene: %s\n", truncate(m.Scene.CurrentScene.String(), 18)))
+	sb.WriteString(fmt.Sprintf("[Shift+T] Theme: %s\n", truncate(m.Styles.Theme.Name, 16)))
 	sb.WriteString(fmt.Sprintf("[l] Lamp:  %s\n", onOffStr(m.Scene.LampOn)))
 	sb.WriteString(fmt.Sprintf("[f] Fire:  %s\n", onOffStr(m.Scene.FireOn)))
 	sb.WriteString(fmt.Sprintf("[w] Weather: %s\n", m.Scene.Weather.String()))

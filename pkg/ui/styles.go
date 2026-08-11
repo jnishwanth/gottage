@@ -6,13 +6,13 @@ import (
 
 // Theme defines colors for UI panels, borders, headers, and highlights.
 type Theme struct {
-	Name        string
-	Border      lipgloss.Color
-	Title       lipgloss.Color
-	Accent      lipgloss.Color
-	Highlight   lipgloss.Color
-	Subdued     lipgloss.Color
-	Background  lipgloss.Color
+	Name       string
+	Border     lipgloss.Color
+	Title      lipgloss.Color
+	Accent     lipgloss.Color
+	Highlight  lipgloss.Color
+	Subdued    lipgloss.Color
+	Background lipgloss.Color
 }
 
 var (
@@ -45,21 +45,48 @@ var (
 		Subdued:    lipgloss.Color("#b197fc"),
 		Background: lipgloss.Color("#211326"),
 	}
+
+	ThemeCyberpunk = Theme{
+		Name:       "Cyberpunk 8-Bit ⚡",
+		Border:     lipgloss.Color("#ff0055"),
+		Title:      lipgloss.Color("#00f0ff"),
+		Accent:     lipgloss.Color("#ffe600"),
+		Highlight:  lipgloss.Color("#00ff66"),
+		Subdued:    lipgloss.Color("#7000ff"),
+		Background: lipgloss.Color("#050510"),
+	}
+
+	AllThemes = []Theme{
+		ThemeCozyAutumn,
+		ThemeRainyIndigo,
+		ThemeSunsetPastel,
+		ThemeCyberpunk,
+	}
 )
+
+// CycleTheme returns the next theme in the slice.
+func CycleTheme(current Theme) Theme {
+	for i, t := range AllThemes {
+		if t.Name == current.Name {
+			return AllThemes[(i+1)%len(AllThemes)]
+		}
+	}
+	return AllThemes[0]
+}
 
 // Styles holds lipgloss style definitions.
 type Styles struct {
-	Theme        Theme
-	Box          lipgloss.Style
-	Title        lipgloss.Style
-	Header       lipgloss.Style
-	Footer       lipgloss.Style
-	ActiveTab    lipgloss.Style
-	InactiveTab  lipgloss.Style
-	KeyHelp      lipgloss.Style
-	ValueHelp    lipgloss.Style
-	ProgressBar  lipgloss.Style
-	StatusBadge  lipgloss.Style
+	Theme       Theme
+	Box         lipgloss.Style
+	Title       lipgloss.Style
+	Header      lipgloss.Style
+	Footer      lipgloss.Style
+	ActiveTab   lipgloss.Style
+	InactiveTab lipgloss.Style
+	KeyHelp     lipgloss.Style
+	ValueHelp   lipgloss.Style
+	ProgressBar lipgloss.Style
+	StatusBadge lipgloss.Style
 }
 
 // NewStyles creates lipgloss styles using given Theme.

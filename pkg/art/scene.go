@@ -320,9 +320,15 @@ func (cs *CottageScene) renderSceneWindowParticles(c *Canvas, wRect Rect) {
 	}
 }
 
-// Render returns ANSI character string of the rendered frame.
+// Render returns ANSI string or Kitty GPU graphics payload based on terminal capabilities.
 func (cs *CottageScene) Render() string {
 	cs.RenderFrame()
+
+	proto := DetectTerminalProtocol()
+	if proto == ProtocolKitty {
+		return EncodeKittyGPU(cs.Canvas, 74, 34)
+	}
+
 	return cs.Canvas.Render()
 }
 

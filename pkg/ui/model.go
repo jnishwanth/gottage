@@ -195,6 +195,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.ActiveTab = TabAmbiance
 
 		// Interactive Bit-Art Toggles
+		case "T":
+			newTheme := CycleTheme(m.Styles.Theme)
+			m.Styles = NewStyles(newTheme)
+			m.SetStatusMsg("Theme Switched: " + newTheme.Name)
+
 		case "v":
 			newScene := m.Scene.CycleScene()
 			m.SetStatusMsg("Switched Scene: " + newScene.String())
