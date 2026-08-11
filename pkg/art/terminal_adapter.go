@@ -50,7 +50,8 @@ func DetectTerminalProtocol() TerminalProtocol {
 }
 
 // EncodeKittyGPU converts a Canvas pixel grid into Kitty GPU Graphics Protocol Base64 payload.
-// Format: \x1b_Ga=T,f=32,s=<width>,v=<height>,c=<cols>,r=<rows>;<base64_payload>\x1b\
+// Uses i=1 (in-place GPU frame replacement), C=1 (do not advance cursor), and q=2 (quiet mode - no ACKs)
+// to prevent screen flickering, line drifting, and memory leaks.
 func EncodeKittyGPU(c *Canvas, cols, rows int) string {
 	w, h := c.Width, c.Height
 	rgbaBuf := make([]byte, w*h*4)
@@ -67,16 +68,14 @@ func EncodeKittyGPU(c *Canvas, cols, rows int) string {
 		}
 	}
 
-	// Base64 encode raw RGBA payload
 	b64Payload := base64.StdEncoding.EncodeToString(rgbaBuf)
-
 	var sb strings.Builder
 
-	// Kitty Graphics Transmission Escape Sequence
-	// a=T (Transmit & Display), f=32 (32-bit RGBA), s=width, v=height, c=columns, r=rows
-	hdr := fmt.Sprintf("\x1b_Ga=T,f=32,s=%d,v=%d,c=%d,r=%d", w, h, cols, rows)
+	// Kitty Escape Header:
+	// a=T (Transmit & Display), f=32 (32-bit RGBA), i=1 (Image ID 1 for in-place GPU overwrite),
+	// q=2 (Quiet mode - suppress terminal ACKs), C=1 (Do NOT move cursor)
+	hdr := fmt.Sprintf("\x1b_Ga=T,f=32,i=1,q=2,C=1,s=%d,v=%d,c=%d,r=%d", w, h, cols, rows)
 
-	// Send in 4096-byte chunk chunks per Kitty protocol specification
 	payloadBytes := []byte(b64Payload)
 	chunkSize := 4096
 
@@ -91,6 +90,14 @@ func EncodeKittyGPU(c *Canvas, cols, rows int) string {
 			sb.WriteString(fmt.Sprintf("%s,m=%d;%s\x1b\\", hdr, m, string(payloadBytes[i:end])))
 		} else {
 			sb.WriteString(fmt.Sprintf("\x1b_Gm=%d;%s\x1b\\", m, string(payloadBytes[i:end])))
+		}
+	}
+
+	// Pad with 'rows' newlines so Lipgloss layout calculates container line height correctly,
+	// while the Kitty image renders in-place over the area!
+	for r := 0; r < rows; r++ {
+		if r > 0 {
+			sb.WriteString("\n")
 		}
 	}
 
