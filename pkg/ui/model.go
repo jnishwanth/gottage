@@ -73,7 +73,7 @@ func NewModel() Model {
 	ti.Width = 40
 
 	styles := NewStyles(ThemeCozyAutumn)
-	scene := art.NewCottageScene(74, 34)
+	scene := art.NewCottageScene(160, 90)
 
 	return Model{
 		Width:        120,

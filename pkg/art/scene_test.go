@@ -5,7 +5,7 @@ import (
 )
 
 func TestSceneRegistryAndCycling(t *testing.T) {
-	cs := NewCottageScene(74, 34)
+	cs := NewCottageScene(160, 90)
 
 	if cs.CurrentScene != SceneRainyCity {
 		t.Errorf("Expected initial scene SceneRainyCity, got %v", cs.CurrentScene)
@@ -33,17 +33,17 @@ func TestSceneRegistryAndCycling(t *testing.T) {
 }
 
 func TestWindowBounds(t *testing.T) {
-	cs := NewCottageScene(74, 34)
+	cs := NewCottageScene(160, 90)
 
 	cs.CurrentScene = SceneRainyCity
 	rCity := cs.WindowRect()
-	if rCity.W != 54 || rCity.H != 38 {
+	if rCity.W != 120 || rCity.H != 58 {
 		t.Errorf("Unexpected City window bounds: %+v", rCity)
 	}
 
 	cs.CurrentScene = SceneCottageClassic
 	rCot := cs.WindowRect()
-	if rCot.W != 36 || rCot.H != 28 {
+	if rCot.W != 80 || rCot.H != 46 {
 		t.Errorf("Unexpected Cottage window bounds: %+v", rCot)
 	}
 }

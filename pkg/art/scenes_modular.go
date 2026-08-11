@@ -14,17 +14,16 @@ func init() {
 }
 
 // ---------------------------------------------------------
-// 1. CityCafeScene (8-Bit Rainy City Cafe)
+// 1. CityCafeScene (16-Bit Rainy City Cafe)
 // ---------------------------------------------------------
 type CityCafeScene struct{}
 
 func (s *CityCafeScene) ID() SceneType { return SceneRainyCity }
-func (s *CityCafeScene) Name() string { return "8-Bit Rainy City Cafe 🏙️" }
-func (s *CityCafeScene) WindowBounds() Rect { return Rect{X: 10, Y: 4, W: 54, H: 38} }
+func (s *CityCafeScene) Name() string { return "16-Bit Rainy City Cafe 🏙️" }
+func (s *CityCafeScene) WindowBounds() Rect { return Rect{X: 20, Y: 8, W: 120, H: 58} }
 
 func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
-	// Dark 8-bit interior wall background
-	c.DrawVerticalGradient(0, 0, c.Width, 46, PicoNavy, PicoBlack)
+	c.DrawVerticalGradient(0, 0, c.Width, 66, PicoNavy, PicoBlack)
 
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
@@ -46,20 +45,20 @@ func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, fram
 	}
 	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
 
-	// 8-Bit Skyscrapers Silhouette outside window
+	// 16-Bit Skyscrapers Silhouettes
 	bldgColors := []colorful.Color{PicoBlack, PicoNavy, PicoDarkPurple}
 	neonColors := []colorful.Color{PicoPink, PicoCyan, PicoYellow, PicoLime}
 
-	for b := 0; b < 9; b++ {
-		bx := wx + b*6 + 1
-		bw := 5
-		bh := 14 + (b*7)%16
+	for b := 0; b < 10; b++ {
+		bx := wx + b*12 + 2
+		bw := 10
+		bh := 24 + (b*13)%28
 		c.FillRect(bx, wy+wh-bh, bw, bh, bldgColors[b%3])
 
 		if tod == TimeNight || tod == TimeSunset {
 			neonCol := neonColors[(b+int(frameCount/15))%4]
-			for wyPos := wy + wh - bh + 2; wyPos < wy+wh-2; wyPos += 3 {
-				for wxPos := bx + 1; wxPos < bx+bw-1; wxPos += 2 {
+			for wyPos := wy + wh - bh + 4; wyPos < wy+wh-4; wyPos += 6 {
+				for wxPos := bx + 2; wxPos < bx+bw-2; wxPos += 3 {
 					if (wxPos+wyPos)%2 == 0 {
 						c.SetPixel(wxPos, wyPos, neonCol)
 					}
@@ -68,14 +67,14 @@ func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, fram
 		}
 	}
 
-	// 8-Bit Neon Signs
+	// 16-Bit Neon Sign
 	if tod == TimeNight || tod == TimeSunset {
 		neonSignCol := neonColors[int(frameCount/10)%4]
-		c.DrawGlyph(wx+4, wy+6, 'L', neonSignCol)
-		c.DrawGlyph(wx+5, wy+6, 'O', neonSignCol)
-		c.DrawGlyph(wx+6, wy+6, '-', neonSignCol)
-		c.DrawGlyph(wx+7, wy+6, 'F', neonSignCol)
-		c.DrawGlyph(wx+8, wy+6, 'I', neonSignCol)
+		c.DrawGlyph(wx+8, wy+10, 'L', neonSignCol)
+		c.DrawGlyph(wx+10, wy+10, 'O', neonSignCol)
+		c.DrawGlyph(wx+12, wy+10, '-', neonSignCol)
+		c.DrawGlyph(wx+14, wy+10, 'F', neonSignCol)
+		c.DrawGlyph(wx+16, wy+10, 'I', neonSignCol)
 	}
 }
 
@@ -83,34 +82,34 @@ func (s *CityCafeScene) RenderForeground(c *Canvas, frameCount uint64, buddy *Fo
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
-	// Crisp 8-Bit Window Frame (Renders ON TOP of weather particles!)
-	c.DrawRectOutline(wx-1, wy-1, ww+2, wh+2, PicoDarkGrey)
-	c.FillRect(wx+ww/2-1, wy, 2, wh, PicoDarkGrey)
+	// 16-Bit Window Frame (Renders ON TOP of rain drops!)
+	c.DrawRectOutline(wx-2, wy-2, ww+4, wh+4, PicoDarkGrey)
+	c.FillRect(wx+ww/2-2, wy, 4, wh, PicoDarkGrey)
 
-	// Sleek 8-bit bar counter table (Renders ON TOP of weather particles!)
-	c.FillRect(0, 46, c.Width, c.Height-46, PicoBrown)
-	c.FillRect(0, 46, c.Width, 1, PicoPeach)
+	// Sleek 16-bit Bar Counter Table (Rows 66 to Height-1)
+	c.FillRect(0, 66, c.Width, c.Height-66, PicoBrown)
+	c.FillRect(0, 66, c.Width, 2, PicoPeach)
 
-	// 8-Bit Body-Double Companion (Renders ON TOP of weather particles!)
+	// 16-Bit Focus Companion at Desk (Renders ON TOP of rain drops!)
 	if buddy != nil {
-		buddy.Draw(c, 30, 34, frameCount)
+		buddy.Draw(c, 60, 40, frameCount)
 	}
 
-	// Glowing 8-Bit Laptop on Bar Counter
-	c.FillRect(42, 40, 14, 6, PicoDarkGrey)
-	c.FillRect(44, 41, 10, 4, PicoCyan)
-	for l := 0; l < 3; l++ {
-		c.FillRect(45, 42+l, 3+l*2, 1, PicoLime)
+	// Glowing 16-Bit Laptop on Bar Counter
+	c.FillRect(88, 52, 28, 12, PicoDarkGrey)
+	c.FillRect(92, 54, 20, 8, PicoCyan)
+	for l := 0; l < 4; l++ {
+		c.FillRect(94, 56+l*2, 6+l*3, 1, PicoLime)
 	}
-	c.FillRect(40, 46, 18, 2, PicoLightGrey)
+	c.FillRect(84, 64, 36, 4, PicoLightGrey)
 
 	// Coffee Mug on Bar Counter
-	c.FillRect(40, 43, 3, 3, PicoRed)
+	c.FillRect(80, 58, 6, 6, PicoRed)
 }
 
 func (s *CityCafeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
 	if lampOn {
-		c.ApplyLightCone(44, 38, 16, 14, PicoYellow, 0.35)
+		c.ApplyLightCone(92, 52, 32, 24, PicoYellow, 0.35)
 	}
 	if lightning {
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
@@ -118,13 +117,13 @@ func (s *CityCafeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool)
 }
 
 // ---------------------------------------------------------
-// 2. ForestCabinScene (8-Bit Forest Sanctuary Cabin)
+// 2. ForestCabinScene (16-Bit Forest Sanctuary Cabin)
 // ---------------------------------------------------------
 type ForestCabinScene struct{}
 
 func (s *ForestCabinScene) ID() SceneType { return SceneForestCabin }
-func (s *ForestCabinScene) Name() string { return "8-Bit Forest Cabin 🌲" }
-func (s *ForestCabinScene) WindowBounds() Rect { return Rect{X: 12, Y: 6, W: 50, H: 34} }
+func (s *ForestCabinScene) Name() string { return "16-Bit Forest Cabin 🌲" }
+func (s *ForestCabinScene) WindowBounds() Rect { return Rect{X: 24, Y: 10, W: 112, H: 54} }
 
 func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
 	r := s.WindowBounds()
@@ -147,12 +146,12 @@ func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 	}
 	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
 
-	// Pine Trees outside window
-	for i := 0; i < 7; i++ {
-		tx := wx + i*7 + 2
-		th := 14 + (i*5)%10
-		c.FillRect(tx, wy+wh-th, 5, th, PicoBlack)
-		c.FillRect(tx+1, wy+wh-th-4, 3, 4, PicoGreen)
+	// Pine Trees
+	for i := 0; i < 8; i++ {
+		tx := wx + i*14 + 4
+		th := 20 + (i*9)%18
+		c.FillRect(tx, wy+wh-th, 10, th, PicoBlack)
+		c.FillRect(tx+2, wy+wh-th-8, 6, 8, PicoGreen)
 	}
 }
 
@@ -160,38 +159,31 @@ func (s *ForestCabinScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
-	// Log Wall (Renders ON TOP of weather outside window!)
-	c.DrawVerticalGradient(0, 0, wx-1, 46, PicoBrown, PicoDarkGrey)
-	c.DrawVerticalGradient(wx+ww+1, 0, c.Width-(wx+ww+1), 46, PicoBrown, PicoDarkGrey)
-	c.DrawVerticalGradient(0, 0, c.Width, wy-1, PicoBrown, PicoDarkGrey)
-	for y := 0; y < 46; y += 6 {
-		c.FillRect(0, y, c.Width, 1, PicoBlack)
+	c.DrawVerticalGradient(0, 0, wx-2, 66, PicoBrown, PicoDarkGrey)
+	c.DrawVerticalGradient(wx+ww+2, 0, c.Width-(wx+ww+2), 66, PicoBrown, PicoDarkGrey)
+	c.DrawVerticalGradient(0, 0, c.Width, wy-2, PicoBrown, PicoDarkGrey)
+	for y := 0; y < 66; y += 10 {
+		c.FillRect(0, y, c.Width, 2, PicoBlack)
 	}
 
-	// Floor
-	c.FillRect(0, 46, c.Width, c.Height-46, PicoBrown)
-	c.FillRect(0, 46, c.Width, 1, PicoDarkGrey)
+	c.FillRect(0, 66, c.Width, c.Height-66, PicoBrown)
+	c.FillRect(0, 66, c.Width, 2, PicoDarkGrey)
 
-	// Timber Window Frame (Renders ON TOP of weather!)
-	c.DrawRectOutline(wx-1, wy-1, ww+2, wh+2, PicoBrown)
-	c.FillRect(wx+ww/3, wy, 2, wh, PicoBrown)
-	c.FillRect(wx+(ww*2)/3, wy, 2, wh, PicoBrown)
+	c.DrawRectOutline(wx-2, wy-2, ww+4, wh+4, PicoBrown)
+	c.FillRect(wx+ww/3, wy, 4, wh, PicoBrown)
+	c.FillRect(wx+(ww*2)/3, wy, 4, wh, PicoBrown)
 
-	// 8-Bit Body-Double Companion at Bench Desk (Renders ON TOP of weather!)
 	if buddy != nil {
-		buddy.Draw(c, 18, 34, frameCount)
+		buddy.Draw(c, 36, 40, frameCount)
 	}
 
-	// 8-Bit Stone Fireplace
-	renderFireplaceHelper(c, 52, 24, 18, 22, fireOn, frameCount)
-
-	// 8-Bit Sleeping Cat
-	renderCatHelper(c, 38, 50, catBreed, frameCount)
+	renderFireplaceHelper(c, 108, 32, 36, 34, fireOn, frameCount)
+	renderCatHelper(c, 76, 70, catBreed, frameCount)
 }
 
 func (s *ForestCabinScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
 	if fireOn {
-		c.ApplyRadialLight(61, 35, 16.0, PicoOrange, 0.35)
+		c.ApplyRadialLight(126, 48, 28.0, PicoOrange, 0.35)
 	}
 	if lightning {
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
@@ -199,13 +191,13 @@ func (s *ForestCabinScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 }
 
 // ---------------------------------------------------------
-// 3. ClassicCottageScene (8-Bit Classic Cottage)
+// 3. ClassicCottageScene (16-Bit Classic Cottage)
 // ---------------------------------------------------------
 type ClassicCottageScene struct{}
 
 func (s *ClassicCottageScene) ID() SceneType { return SceneCottageClassic }
-func (s *ClassicCottageScene) Name() string { return "8-Bit Classic Cottage 🏡" }
-func (s *ClassicCottageScene) WindowBounds() Rect { return Rect{X: 18, Y: 6, W: 36, H: 28} }
+func (s *ClassicCottageScene) Name() string { return "16-Bit Classic Cottage 🏡" }
+func (s *ClassicCottageScene) WindowBounds() Rect { return Rect{X: 40, Y: 10, W: 80, H: 46} }
 
 func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
 	r := s.WindowBounds()
@@ -229,10 +221,10 @@ func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool
 	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
 
 	if tod == TimeNight && !lightning {
-		c.FillRect(wx+24, wy+3, 4, 3, PicoWhite)
-		c.FillRect(wx+23, wy+3, 2, 3, skyTop)
+		c.FillRect(wx+48, wy+6, 8, 6, PicoWhite)
+		c.FillRect(wx+46, wy+6, 4, 6, skyTop)
 	} else if tod == TimeDay {
-		c.FillRect(wx+24, wy+3, 4, 3, PicoYellow)
+		c.FillRect(wx+48, wy+6, 8, 6, PicoYellow)
 	}
 }
 
@@ -240,39 +232,32 @@ func (s *ClassicCottageScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
-	// Wallpaper & Floor (Renders ON TOP of weather outside window!)
-	c.DrawVerticalGradient(0, 0, wx-1, 46, PicoDarkPurple, PicoNavy)
-	c.DrawVerticalGradient(wx+ww+1, 0, c.Width-(wx+ww+1), 46, PicoDarkPurple, PicoNavy)
-	c.DrawVerticalGradient(0, 0, c.Width, wy-1, PicoDarkPurple, PicoNavy)
+	c.DrawVerticalGradient(0, 0, wx-2, 66, PicoDarkPurple, PicoNavy)
+	c.DrawVerticalGradient(wx+ww+2, 0, c.Width-(wx+ww+2), 66, PicoDarkPurple, PicoNavy)
+	c.DrawVerticalGradient(0, 0, c.Width, wy-2, PicoDarkPurple, PicoNavy)
 
-	c.FillRect(0, 46, c.Width, c.Height-46, PicoBrown)
-	c.FillRect(0, 46, c.Width, 1, PicoBlack)
+	c.FillRect(0, 66, c.Width, c.Height-66, PicoBrown)
+	c.FillRect(0, 66, c.Width, 2, PicoBlack)
 
-	// Window Frame
-	c.DrawRectOutline(wx-1, wy-1, ww+2, wh+2, PicoBrown)
-	c.FillRect(wx+ww/2-1, wy, 2, wh, PicoBrown)
+	c.DrawRectOutline(wx-2, wy-2, ww+4, wh+4, PicoBrown)
+	c.FillRect(wx+ww/2-2, wy, 4, wh, PicoBrown)
 
-	// Desk
-	renderDeskHelper(c, 6, 42, 28, lampOn)
+	renderDeskHelper(c, 12, 58, 48, lampOn)
 
-	// 8-Bit Body-Double Companion at Cottage Desk (Renders ON TOP of weather!)
 	if buddy != nil {
-		buddy.Draw(c, 10, 32, frameCount)
+		buddy.Draw(c, 20, 38, frameCount)
 	}
 
-	// Fireplace
-	renderFireplaceHelper(c, 52, 26, 18, 20, fireOn, frameCount)
-
-	// Cat
-	renderCatHelper(c, 36, 50, catBreed, frameCount)
+	renderFireplaceHelper(c, 108, 34, 36, 32, fireOn, frameCount)
+	renderCatHelper(c, 74, 70, catBreed, frameCount)
 }
 
 func (s *ClassicCottageScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
 	if lampOn {
-		c.ApplyLightCone(10, 36, 18, 14, PicoYellow, 0.35)
+		c.ApplyLightCone(20, 52, 32, 24, PicoYellow, 0.35)
 	}
 	if fireOn {
-		c.ApplyRadialLight(61, 36, 16.0, PicoOrange, 0.35)
+		c.ApplyRadialLight(126, 50, 28.0, PicoOrange, 0.35)
 	}
 	if lightning {
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
@@ -280,13 +265,13 @@ func (s *ClassicCottageScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 }
 
 // ---------------------------------------------------------
-// 4. ObservatoryScene (8-Bit Starlight Observatory)
+// 4. ObservatoryScene (16-Bit Starlight Observatory)
 // ---------------------------------------------------------
 type ObservatoryScene struct{}
 
 func (s *ObservatoryScene) ID() SceneType { return SceneObservatory }
-func (s *ObservatoryScene) Name() string { return "8-Bit Starlight Observatory 🌌" }
-func (s *ObservatoryScene) WindowBounds() Rect { return Rect{X: 10, Y: 4, W: 54, H: 36} }
+func (s *ObservatoryScene) Name() string { return "16-Bit Starlight Observatory 🌌" }
+func (s *ObservatoryScene) WindowBounds() Rect { return Rect{X: 20, Y: 8, W: 120, H: 54} }
 
 func (s *ObservatoryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
 	r := s.WindowBounds()
@@ -294,8 +279,8 @@ func (s *ObservatoryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 
 	c.DrawVerticalGradient(wx, wy, ww, wh, PicoBlack, PicoNavy)
 
-	c.FillRect(wx+36, wy+4, 6, 5, PicoWhite)
-	c.FillRect(wx+34, wy+4, 4, 5, PicoBlack)
+	c.FillRect(wx+72, wy+8, 12, 10, PicoWhite)
+	c.FillRect(wx+68, wy+8, 8, 10, PicoBlack)
 
 	for i, st := range stars {
 		px := wx + (st.X % ww)
@@ -314,25 +299,21 @@ func (s *ObservatoryScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
-	// Wall interior around window
-	c.FillRect(0, 0, wx-1, 46, PicoBlack)
-	c.FillRect(wx+ww+1, 0, c.Width-(wx+ww+1), 46, PicoBlack)
-	c.FillRect(0, 0, c.Width, wy-1, PicoBlack)
-	c.FillRect(0, wy+wh+1, c.Width, c.Height-(wy+wh+1), PicoBlack)
+	c.FillRect(0, 0, wx-2, 66, PicoBlack)
+	c.FillRect(wx+ww+2, 0, c.Width-(wx+ww+2), 66, PicoBlack)
+	c.FillRect(0, 0, c.Width, wy-2, PicoBlack)
+	c.FillRect(0, wy+wh+2, c.Width, c.Height-(wy+wh+2), PicoBlack)
 
-	// Dome Frame (Renders ON TOP of space stars!)
-	c.DrawRectOutline(wx-1, wy-1, ww+2, wh+2, PicoDarkGrey)
-	c.FillRect(wx+ww/2-1, wy, 2, wh, PicoDarkGrey)
-	c.FillRect(wx, wy+wh/2-1, ww, 2, PicoDarkGrey)
+	c.DrawRectOutline(wx-2, wy-2, ww+4, wh+4, PicoDarkGrey)
+	c.FillRect(wx+ww/2-2, wy, 4, wh, PicoDarkGrey)
+	c.FillRect(wx, wy+wh/2-2, ww, 4, PicoDarkGrey)
 
-	// 8-Bit Body-Double Companion at Telescope Desk (Renders ON TOP of space stars!)
 	if buddy != nil {
-		buddy.Draw(c, 20, 34, frameCount)
+		buddy.Draw(c, 40, 40, frameCount)
 	}
 
-	// Telescope
-	c.FillRect(32, 48, 12, 2, PicoPeach)
-	c.FillRect(36, 50, 4, 10, PicoDarkGrey)
+	c.FillRect(64, 68, 24, 4, PicoPeach)
+	c.FillRect(72, 72, 8, 18, PicoDarkGrey)
 }
 
 func (s *ObservatoryScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
@@ -343,26 +324,26 @@ func (s *ObservatoryScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 
 // Helper drawing functions
 func renderDeskHelper(c *Canvas, dx, dy, dw int, lampOn bool) {
-	c.FillRect(dx, dy, dw, 3, PicoBrown)
-	c.FillRect(dx, dy, dw, 1, PicoPeach)
-	c.FillRect(dx+2, dy+3, 3, 15, PicoBrown)
+	c.FillRect(dx, dy, dw, 6, PicoBrown)
+	c.FillRect(dx, dy, dw, 2, PicoPeach)
+	c.FillRect(dx+4, dy+6, 6, 24, PicoBrown)
 
 	if lampOn {
-		c.FillRect(dx+3, dy-1, 3, 1, PicoYellow)
-		c.FillRect(dx+4, dy-5, 1, 4, PicoYellow)
-		c.FillRect(dx+2, dy-8, 5, 3, PicoGreen)
+		c.FillRect(dx+6, dy-2, 6, 2, PicoYellow)
+		c.FillRect(dx+8, dy-10, 2, 8, PicoYellow)
+		c.FillRect(dx+4, dy-16, 10, 6, PicoGreen)
 	} else {
-		c.FillRect(dx+3, dy-1, 3, 1, PicoDarkGrey)
-		c.FillRect(dx+4, dy-5, 1, 4, PicoDarkGrey)
-		c.FillRect(dx+2, dy-8, 5, 3, PicoDarkGrey)
+		c.FillRect(dx+6, dy-2, 6, 2, PicoDarkGrey)
+		c.FillRect(dx+8, dy-10, 2, 8, PicoDarkGrey)
+		c.FillRect(dx+4, dy-16, 10, 6, PicoDarkGrey)
 	}
 
-	c.FillRect(dx+12, dy-3, 3, 3, PicoRed)
+	c.FillRect(dx+24, dy-6, 6, 6, PicoRed)
 }
 
 func renderFireplaceHelper(c *Canvas, fx, fy, fw, fh int, fireOn bool, frameCount uint64) {
 	c.FillRect(fx, fy, fw, fh, PicoBrown)
-	c.FillRect(fx+2, fy+4, fw-4, fh-4, PicoBlack)
+	c.FillRect(fx+4, fy+8, fw-8, fh-8, PicoBlack)
 
 	if !fireOn {
 		return
@@ -371,18 +352,18 @@ func renderFireplaceHelper(c *Canvas, fx, fy, fw, fh int, fireOn bool, frameCoun
 	fireCenter := fx + fw/2
 	fireTick := (frameCount / 3) % 4
 
-	for i := -3; i <= 3; i++ {
+	for i := -6; i <= 6; i++ {
 		px := fireCenter + i
-		flameH := int(4.0 + 2.0*math.Sin(float64(i)+float64(fireTick)*1.5))
+		flameH := int(8.0 + 4.0*math.Sin(float64(i)+float64(fireTick)*1.5))
 
 		for fyPos := 0; fyPos < flameH; fyPos++ {
-			py := fy + fh - 2 - fyPos
+			py := fy + fh - 4 - fyPos
 			if py < fy {
 				continue
 			}
-			if fyPos < 2 {
+			if fyPos < 3 {
 				c.SetPixel(px, py, PicoYellow)
-			} else if fyPos < 4 {
+			} else if fyPos < 6 {
 				c.SetPixel(px, py, PicoOrange)
 			} else {
 				c.SetPixel(px, py, PicoRed)
@@ -392,7 +373,7 @@ func renderFireplaceHelper(c *Canvas, fx, fy, fw, fh int, fireOn bool, frameCoun
 }
 
 func renderCatHelper(c *Canvas, cx, cy int, breed CatBreed, frameCount uint64) {
-	c.FillRect(cx-2, cy+4, 12, 3, PicoDarkPurple)
+	c.FillRect(cx-4, cy+8, 24, 6, PicoDarkPurple)
 
 	var furMain colorful.Color
 	switch breed {
@@ -408,13 +389,13 @@ func renderCatHelper(c *Canvas, cx, cy int, breed CatBreed, frameCount uint64) {
 
 	breathOffset := 0
 	if (frameCount/12)%2 == 0 {
-		breathOffset = -1
+		breathOffset = -2
 	}
 
-	c.FillRect(cx, cy+breathOffset, 8, 4, furMain)
-	c.FillRect(cx-1, cy+1+breathOffset, 3, 3, furMain)
+	c.FillRect(cx, cy+breathOffset, 16, 8, furMain)
+	c.FillRect(cx-2, cy+2+breathOffset, 6, 6, furMain)
 
 	if (frameCount/10)%3 == 1 {
-		c.DrawGlyph(cx-2, (cy-2)/2, 'z', PicoCyan)
+		c.DrawGlyph(cx-4, (cy-4)/2, 'z', PicoCyan)
 	}
 }

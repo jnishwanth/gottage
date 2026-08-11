@@ -7,7 +7,6 @@ import (
 )
 
 func TestDetectTerminalProtocol(t *testing.T) {
-	// Backup original env
 	origTermProg := os.Getenv("TERM_PROGRAM")
 	origTerm := os.Getenv("TERM")
 	origKitty := os.Getenv("KITTY_WINDOW_ID")
@@ -18,21 +17,18 @@ func TestDetectTerminalProtocol(t *testing.T) {
 		os.Setenv("KITTY_WINDOW_ID", origKitty)
 	}()
 
-	// Test Ghostty
 	os.Setenv("TERM_PROGRAM", "ghostty")
 	os.Setenv("TERM", "xterm-ghostty")
 	if proto := DetectTerminalProtocol(); proto != ProtocolKitty {
 		t.Errorf("Expected ProtocolKitty for Ghostty, got %v", proto)
 	}
 
-	// Test iTerm2
 	os.Setenv("TERM_PROGRAM", "iTerm.app")
 	os.Setenv("TERM", "xterm-256color")
 	if proto := DetectTerminalProtocol(); proto != ProtocolITerm2 {
 		t.Errorf("Expected ProtocolITerm2 for iTerm.app, got %v", proto)
 	}
 
-	// Test Alacritty / Fallback
 	os.Setenv("TERM_PROGRAM", "alacritty")
 	os.Setenv("TERM", "alacritty")
 	os.Setenv("KITTY_WINDOW_ID", "")
@@ -42,10 +38,10 @@ func TestDetectTerminalProtocol(t *testing.T) {
 }
 
 func TestEncodeKittyGPU(t *testing.T) {
-	c := NewCanvas(10, 10)
+	c := NewCanvas(160, 90)
 	payload := EncodeKittyGPU(c, 74, 34)
 
-	if !strings.HasPrefix(payload, "\x1b_Ga=T,f=32,i=1,q=2,C=1,s=40,v=40,c=74,r=34") {
+	if !strings.HasPrefix(payload, "\x1b_Ga=T,f=32,i=1,q=2,C=1,s=320,v=180,c=74,r=34") {
 		t.Errorf("Kitty GPU transmission escape sequence header invalid: %s", payload[:40])
 	}
 }

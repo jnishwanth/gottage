@@ -52,15 +52,15 @@ func ClearKittyGPU() string {
 }
 
 // EncodeKittyGPU converts a Canvas pixel grid into Kitty GPU Graphics Protocol Base64 payload.
-// Applies 4x Nearest-Neighbor Integer Scaling to guarantee razor-sharp 16-bit retro pixels without blur!
+// Applies 2x integer scaling (320x180 HD retro pixels) with 16:9 aspect locking to eliminate all stretch/blur!
 func EncodeKittyGPU(c *Canvas, cols, rows int) string {
-	scale := 4
+	scale := 2
 	srcW, srcH := c.Width, c.Height
 	dstW, dstH := srcW*scale, srcH*scale
 
 	rgbaBuf := make([]byte, dstW*dstH*4)
 
-	// 4x Nearest-Neighbor Upscaling
+	// 2x Nearest-Neighbor Integer Scaling for 320x180 HD Retro Pixels
 	for y := 0; y < srcH; y++ {
 		for x := 0; x < srcW; x++ {
 			col := c.Pixels[y][x]
@@ -107,7 +107,6 @@ func EncodeKittyGPU(c *Canvas, cols, rows int) string {
 		}
 	}
 
-	// Pad with 'rows' newlines for Lipgloss height calculation
 	for r := 0; r < rows; r++ {
 		if r > 0 {
 			sb.WriteString("\n")

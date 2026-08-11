@@ -38,18 +38,7 @@ func (s SceneType) String() string {
 
 // WindowRect returns the exact window glass boundaries for scene-aware particle masking!
 func (cs *CottageScene) WindowRect() Rect {
-	switch cs.CurrentScene {
-	case SceneRainyCity:
-		return Rect{X: 10, Y: 4, W: 54, H: 38}
-	case SceneForestCabin:
-		return Rect{X: 12, Y: 6, W: 50, H: 34}
-	case SceneCottageClassic:
-		return Rect{X: 18, Y: 6, W: 36, H: 28}
-	case SceneObservatory:
-		return Rect{X: 10, Y: 4, W: 54, H: 36}
-	default:
-		return Rect{X: 10, Y: 4, W: 54, H: 38}
-	}
+	return GetScene(cs.CurrentScene).WindowBounds()
 }
 
 // RenderRainyCity renders a native 8-bit retro lofi city cafe with animated body-double companion.
