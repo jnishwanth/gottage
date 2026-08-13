@@ -14,6 +14,14 @@ const (
 	SceneForestCabin
 	SceneCottageClassic
 	SceneObservatory
+	SceneKirokazeRoom
+	SceneBalconyLofi
+	SceneRainSetup
+	SceneKirokazeCity
+	SceneHomeSweetHome
+	SceneWaneellaStreet
+	SceneSunsetCity
+	SceneSnowCabin
 )
 
 // Rect represents a rectangular boundary for scene-aware masking.
@@ -22,6 +30,9 @@ type Rect struct {
 }
 
 func (s SceneType) String() string {
+	if sc, ok := SceneRegistry[s]; ok {
+		return sc.Name()
+	}
 	switch s {
 	case SceneRainyCity:
 		return "8-Bit Rainy City Cafe 🏙️"
@@ -32,7 +43,7 @@ func (s SceneType) String() string {
 	case SceneObservatory:
 		return "8-Bit Starlight Observatory 🌌"
 	default:
-		return "8-Bit Rainy City Cafe 🏙️"
+		return "8-Bit Pixel Animation 🎨"
 	}
 }
 

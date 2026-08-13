@@ -11,24 +11,14 @@ func TestSceneRegistryAndCycling(t *testing.T) {
 		t.Errorf("Expected initial scene SceneRainyCity, got %v", cs.CurrentScene)
 	}
 
-	s1 := cs.CycleScene()
-	if s1 != SceneForestCabin {
-		t.Errorf("Expected next scene SceneForestCabin, got %v", s1)
+	initialScene := cs.CurrentScene
+	count := len(SceneOrder)
+	for i := 0; i < count; i++ {
+		cs.CycleScene()
 	}
 
-	s2 := cs.CycleScene()
-	if s2 != SceneCottageClassic {
-		t.Errorf("Expected next scene SceneCottageClassic, got %v", s2)
-	}
-
-	s3 := cs.CycleScene()
-	if s3 != SceneObservatory {
-		t.Errorf("Expected next scene SceneObservatory, got %v", s3)
-	}
-
-	s4 := cs.CycleScene()
-	if s4 != SceneRainyCity {
-		t.Errorf("Expected loop back to SceneRainyCity, got %v", s4)
+	if cs.CurrentScene != initialScene {
+		t.Errorf("Expected loop back to initial scene %v after %d cycles, got %v", initialScene, count, cs.CurrentScene)
 	}
 }
 

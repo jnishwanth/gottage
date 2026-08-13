@@ -11,6 +11,93 @@ func init() {
 	RegisterScene(&ForestCabinScene{})
 	RegisterScene(&ClassicCottageScene{})
 	RegisterScene(&ObservatoryScene{})
+
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneKirokazeRoom,
+		name:      "Kirokaze Cozy Room 🎨",
+		gifPath:   "assets/animations/kirokaze_room.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBalconyLofi,
+		name:      "Lofi Balcony View 🏙️",
+		gifPath:   "assets/animations/balcony_lofi.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneRainSetup,
+		name:      "Pixel Rain Setup 🌧️",
+		gifPath:   "assets/animations/rain_setup.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneKirokazeCity,
+		name:      "Kirokaze Retro City 🌃",
+		gifPath:   "assets/animations/kirokaze_city.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneHomeSweetHome,
+		name:      "Home Sweet Home 🏡",
+		gifPath:   "assets/animations/home_sweet_home.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneWaneellaStreet,
+		name:      "Waneella Pixel Street 🏮",
+		gifPath:   "assets/animations/waneella_street.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSunsetCity,
+		name:      "Sunset City Skyline 🌇",
+		gifPath:   "assets/animations/sunset_city.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSnowCabin,
+		name:      "Winter Cabin Snowfall ❄️",
+		gifPath:   "assets/animations/snow_cabin.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+}
+
+// ---------------------------------------------------------
+// AnimatedGifScene (Generic Decoded GIF Animation Scene)
+// ---------------------------------------------------------
+type AnimatedGifScene struct {
+	id        SceneType
+	name      string
+	gifPath   string
+	winBounds Rect
+	showBuddy bool
+	buddyX    int
+	buddyY    int
+}
+
+func (s *AnimatedGifScene) ID() SceneType       { return s.id }
+func (s *AnimatedGifScene) Name() string     { return s.name }
+func (s *AnimatedGifScene) WindowBounds() Rect { return s.winBounds }
+
+func (s *AnimatedGifScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	anim, err := LoadAnimatedGif(s.gifPath, c.Width, c.Height)
+	if err == nil && anim != nil {
+		anim.DrawFrame(c, frameCount)
+	} else {
+		c.Clear(PicoNavy)
+	}
+}
+
+func (s *AnimatedGifScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	if s.showBuddy && buddy != nil {
+		buddy.Draw(c, s.buddyX, s.buddyY, frameCount)
+	}
+}
+
+func (s *AnimatedGifScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.50)
+	}
 }
 
 // ---------------------------------------------------------

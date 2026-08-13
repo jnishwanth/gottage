@@ -24,9 +24,13 @@ type SceneInterface interface {
 
 // SceneRegistry holds registered modular scene implementations.
 var SceneRegistry = make(map[SceneType]SceneInterface)
+var SceneOrder = []SceneType{}
 
 // RegisterScene adds a modular scene implementation to the registry.
 func RegisterScene(s SceneInterface) {
+	if _, ok := SceneRegistry[s.ID()]; !ok {
+		SceneOrder = append(SceneOrder, s.ID())
+	}
 	SceneRegistry[s.ID()] = s
 }
 

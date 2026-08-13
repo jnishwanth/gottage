@@ -142,7 +142,18 @@ func NewCottageScene(width, height int) *CottageScene {
 
 // CycleScene cycles to the next 8-bit retro scene preset.
 func (cs *CottageScene) CycleScene() SceneType {
-	cs.CurrentScene = (cs.CurrentScene + 1) % 4
+	if len(SceneOrder) == 0 {
+		return cs.CurrentScene
+	}
+	idx := 0
+	for i, id := range SceneOrder {
+		if id == cs.CurrentScene {
+			idx = i
+			break
+		}
+	}
+	nextIdx := (idx + 1) % len(SceneOrder)
+	cs.CurrentScene = SceneOrder[nextIdx]
 	return cs.CurrentScene
 }
 
