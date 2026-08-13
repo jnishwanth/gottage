@@ -96,6 +96,42 @@ func init() {
 		gifPath:   "assets/animations/coffee_shop.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneAutumnPark,
+		name:      "Autumn Amber Park 🍂",
+		gifPath:   "assets/animations/autumn_park.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneMidnightOwl,
+		name:      "Midnight Owl Vista 🦉",
+		gifPath:   "assets/animations/midnight_owl.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneRiverBridge,
+		name:      "River Bridge Railway 🌉",
+		gifPath:   "assets/animations/river_bridge.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneNeonRunner,
+		name:      "Neon Synthwave Runner 🏎️",
+		gifPath:   "assets/animations/neon_runner.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneMagicSanctuary,
+		name:      "Magic Alchemist Sanctuary 🔮",
+		gifPath:   "assets/animations/magic_sanctuary.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberBot,
+		name:      "Relaxing Cyber Bot 🤖",
+		gifPath:   "assets/animations/cyber_bot.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
