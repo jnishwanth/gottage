@@ -37,3 +37,35 @@ func TestAnimatedGifLoader(t *testing.T) {
 	// Test DrawFrameAt
 	anim.DrawFrameAt(canvas, 10, 10, 80, 45, 2)
 }
+
+func TestVerifyDownloadedGifs(t *testing.T) {
+	animDir := filepath.Join("..", "..", "assets", "animations")
+	files, err := os.ReadDir(animDir)
+	if err != nil {
+		t.Fatalf("Failed to read animations directory: %v", err)
+	}
+
+	gifCount := 0
+	for _, f := range files {
+		if filepath.Ext(f.Name()) != ".gif" {
+			continue
+		}
+		gifCount++
+		path := filepath.Join(animDir, f.Name())
+		anim, err := LoadAnimatedGif(path, 160, 90)
+		if err != nil {
+			t.Errorf("Failed to decode GIF %s: %v", f.Name(), err)
+			continue
+		}
+		if anim.FrameCount == 0 {
+			t.Errorf("GIF %s has 0 frames", f.Name())
+			continue
+		}
+		t.Logf("✓ Verified GIF %-24s | Frames: %3d | Scaled: %dx%d", f.Name(), anim.FrameCount, anim.Width, anim.Height)
+	}
+
+	if gifCount < 14 {
+		t.Errorf("Expected at least 14 GIF animations, found %d", gifCount)
+	}
+}
+

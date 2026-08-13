@@ -60,6 +60,42 @@ func init() {
 		gifPath:   "assets/animations/snow_cabin.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberpunkCity,
+		name:      "Cyberpunk Alley 🌆",
+		gifPath:   "assets/animations/cyberpunk_city.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCozyLibrary,
+		name:      "Cozy Pixel Library 📚",
+		gifPath:   "assets/animations/cozy_library.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        ScenePixelTrain,
+		name:      "Retro Pixel Train 🚂",
+		gifPath:   "assets/animations/pixel_train.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneOceanWaves,
+		name:      "Pixel Ocean Waves 🌊",
+		gifPath:   "assets/animations/ocean_waves.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneStargazing,
+		name:      "Stargazing Hill 🌌",
+		gifPath:   "assets/animations/stargazing.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCoffeeShop,
+		name:      "Pixel Coffee Shop ☕",
+		gifPath:   "assets/animations/coffee_shop.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
