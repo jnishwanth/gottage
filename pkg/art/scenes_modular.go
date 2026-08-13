@@ -132,6 +132,42 @@ func init() {
 		gifPath:   "assets/animations/cyber_bot.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSakuraShrine,
+		name:      "Sakura Shrine Garden 🌸",
+		gifPath:   "assets/animations/sakura_shrine.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCozyCampfire,
+		name:      "Cozy Hearth Campfire 🔥",
+		gifPath:   "assets/animations/cozy_campfire.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSpaceStation,
+		name:      "Orbital Space Station 🚀",
+		gifPath:   "assets/animations/space_station.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneRamenShop,
+		name:      "Pixel Ramen Diner 🍜",
+		gifPath:   "assets/animations/ramen_shop.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneDeepSea,
+		name:      "Deep Sea Aquarium 🪼",
+		gifPath:   "assets/animations/deep_sea.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberArcade,
+		name:      "Isometric Cyber Arcade 🕹️",
+		gifPath:   "assets/animations/cyber_arcade.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
