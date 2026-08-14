@@ -348,6 +348,42 @@ func init() {
 		gifPath:   "assets/animations/fairytale_windmill.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberExpress,
+		name:      "Neon Cyberpunk Express Train 🚄",
+		gifPath:   "assets/animations/cyber_express.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBiolumSwamp,
+		name:      "Bioluminescent Willow Swamp 🐊",
+		gifPath:   "assets/animations/biolum_swamp.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneClockworkTower,
+		name:      "Clockwork Citadel Spire 🕰️",
+		gifPath:   "assets/animations/clockwork_tower.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneStarlightCamp,
+		name:      "Starlight Mountain Camp ⛺",
+		gifPath:   "assets/animations/starlight_camp.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSpaceNebula,
+		name:      "Deep Space Cosmic Nebula 🌌",
+		gifPath:   "assets/animations/space_nebula.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberMarket,
+		name:      "Pixel Cyber Market Alley 🏮",
+		gifPath:   "assets/animations/cyber_market.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
