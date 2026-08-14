@@ -58,6 +58,12 @@ const (
 	SceneCyberBar
 	SceneCoralReef
 	SceneFrostPeak
+	SceneCyberDojo
+	SceneMushroomForest
+	SceneRetroArcade
+	ScenePirateCove
+	SceneCozyGreenhouse
+	SceneCosmicObservatory
 )
 
 // Rect represents a rectangular boundary for scene-aware masking.

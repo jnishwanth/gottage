@@ -276,6 +276,42 @@ func init() {
 		gifPath:   "assets/animations/frost_peak.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberDojo,
+		name:      "Cyberpunk Martial Dojo 🥋",
+		gifPath:   "assets/animations/cyber_dojo.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneMushroomForest,
+		name:      "Bioluminescent Mushroom Forest 🍄",
+		gifPath:   "assets/animations/mushroom_forest.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneRetroArcade,
+		name:      "8-Bit Retro Pinball Arcade 🕹️",
+		gifPath:   "assets/animations/retro_arcade_neon.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        ScenePirateCove,
+		name:      "Moonlight Pirate Ship Cove 🏴‍☠️",
+		gifPath:   "assets/animations/pirate_cove.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCozyGreenhouse,
+		name:      "Cozy Glasshouse Botanical Garden 🌿",
+		gifPath:   "assets/animations/cozy_greenhouse.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCosmicObservatory,
+		name:      "Deep Space Celestial Observatory 🔭",
+		gifPath:   "assets/animations/cosmic_observatory.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
