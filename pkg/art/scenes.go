@@ -184,6 +184,12 @@ const (
 	SceneSynthwaveGridNeonBeach
 	SceneZenBambooMoonFountain
 	SceneAstralZodiacStarChamber
+	SceneCyberNeonBistroAlley
+	SceneBiolumCrystalLagoonGrotto
+	SceneSteampunkSkyObservatory
+	SceneSynthwaveGridSunsetHighway
+	SceneZenBambooMoonSpring
+	SceneAstralZodiacNexus
 )
 
 // Rect represents a rectangular boundary for scene-aware masking.
