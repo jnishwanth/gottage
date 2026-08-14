@@ -564,6 +564,42 @@ func init() {
 		gifPath:   "assets/animations/zen_cherry_temple.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberDragon,
+		name:      "Neon Cyber Dragon 🐉",
+		gifPath:   "assets/animations/cyber_dragon.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBiolumRift,
+		name:      "Bioluminescent Abyssal Rift 🌊",
+		gifPath:   "assets/animations/biolum_rift.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSteampunkPlanetarium,
+		name:      "Steampunk Celestial Planetarium 🪐",
+		gifPath:   "assets/animations/steampunk_planetarium.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneRetroLofiTrain,
+		name:      "8-Bit Lofi Sunset Train 🚆",
+		gifPath:   "assets/animations/retro_lofi_train.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneZenBonsai,
+		name:      "Zen Bonsai & Koi Pond 🪨",
+		gifPath:   "assets/animations/zen_bonsai.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneWizardTower,
+		name:      "Starlight Wizard Arcane Tower 🔮",
+		gifPath:   "assets/animations/wizard_tower.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
