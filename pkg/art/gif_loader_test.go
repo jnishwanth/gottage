@@ -64,8 +64,8 @@ func TestVerifyDownloadedGifs(t *testing.T) {
 		t.Logf("✓ Verified GIF %-24s | Frames: %3d | Scaled: %dx%d", f.Name(), anim.FrameCount, anim.Width, anim.Height)
 	}
 
-	if gifCount < 224 {
-		t.Errorf("Expected at least 224 GIF animations, found %d", gifCount)
+	if gifCount < 230 {
+		t.Errorf("Expected at least 230 GIF animations, found %d", gifCount)
 	}
 }
 
