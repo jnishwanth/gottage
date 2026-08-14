@@ -384,6 +384,42 @@ func init() {
 		gifPath:   "assets/animations/cyber_market.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberDiner,
+		name:      "Cyberpunk Neon Diner 🍔",
+		gifPath:   "assets/animations/cyber_diner.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneVolcanoView,
+		name:      "Pixel Volcanic Caldera 🌋",
+		gifPath:   "assets/animations/volcano_view.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCrystalLagoon,
+		name:      "Bioluminescent Crystal Lagoon 💎",
+		gifPath:   "assets/animations/crystal_lagoon.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSteampunkAirship,
+		name:      "Steampunk Sky Airship Fleet ⚙️",
+		gifPath:   "assets/animations/steampunk_airship.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCozyAttic,
+		name:      "Cozy Rain-Slicked Attic Nook 🕯️",
+		gifPath:   "assets/animations/cozy_attic.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneRetroArcadeHall,
+		name:      "Pixel Retro Neon Arcade Hall 🕹️",
+		gifPath:   "assets/animations/retro_arcade_hall.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
