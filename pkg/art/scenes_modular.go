@@ -1464,6 +1464,42 @@ func init() {
 		gifPath:   "assets/animations/astral_zodiac_solaris_portal.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberNeonSkyBalcony,
+		name:      "Neon Cyberpunk Sky Balcony 🌇",
+		gifPath:   "assets/animations/cyber_neon_sky_balcony.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBiolumCrystalCoralLagoon,
+		name:      "Bioluminescent Coral Lagoon 🪸",
+		gifPath:   "assets/animations/biolum_crystal_coral_lagoon.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSteampunkSkyPortTerminal,
+		name:      "Steampunk Sky Port Terminal ⚙️",
+		gifPath:   "assets/animations/steampunk_sky_port_terminal.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSynthwaveGridSkylineDrive,
+		name:      "8-Bit Retro Synthwave Skyline Drive 🌅",
+		gifPath:   "assets/animations/synthwave_grid_skyline_drive.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneZenBambooMoonShrineValley,
+		name:      "Zen Moonlit Bamboo Shrine Valley 🎋",
+		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneAstralZodiacLunarisMatrix,
+		name:      "Astral Celestial Zodiac Lunaris Matrix 🔮",
+		gifPath:   "assets/animations/astral_zodiac_lunaris_matrix.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
