@@ -1140,6 +1140,42 @@ func init() {
 		gifPath:   "assets/animations/astral_zodiac_chamber_matrix.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberNeonMatrixDiner,
+		name:      "Neon Cyberpunk Matrix Diner 🍜",
+		gifPath:   "assets/animations/cyber_neon_matrix_diner.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBiolumCoralAbyssGate,
+		name:      "Bioluminescent Coral Abyss Gate 🪸",
+		gifPath:   "assets/animations/biolum_coral_abyss_gate.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSteampunkSkyDockCitadel,
+		name:      "Steampunk Sky Dock Citadel ⚙️",
+		gifPath:   "assets/animations/steampunk_sky_dock_citadel.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSynthwaveGridNeonSkyline,
+		name:      "8-Bit Retro Synthwave Neon Skyline 🌇",
+		gifPath:   "assets/animations/synthwave_grid_neon_skyline.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneZenBambooToriiWaterfall,
+		name:      "Zen Moonlit Torii Waterfall ⛩️",
+		gifPath:   "assets/animations/zen_bamboo_torii_waterfall.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneAstralZodiacPrismPortal,
+		name:      "Astral Celestial Zodiac Prism Portal 🔮",
+		gifPath:   "assets/animations/astral_zodiac_prism_portal.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
