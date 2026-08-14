@@ -204,6 +204,42 @@ func init() {
 		gifPath:   "assets/animations/sky_island.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBambooGrove,
+		name:      "Zen Bamboo Grove 🎋",
+		gifPath:   "assets/animations/bamboo_grove.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneLighthouseCliff,
+		name:      "Lighthouse Cliff 🚨",
+		gifPath:   "assets/animations/lighthouse_cliff.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneVolcanoForge,
+		name:      "Volcano Smithy Forge 🌋",
+		gifPath:   "assets/animations/volcano_forge.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCrystalCave,
+		name:      "Glowing Crystal Cave 💎",
+		gifPath:   "assets/animations/crystal_cave.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneDesertOasis,
+		name:      "Moonlit Desert Oasis 🌙",
+		gifPath:   "assets/animations/desert_oasis.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSteampunkLab,
+		name:      "Steampunk Clockwork Lab ⚙️",
+		gifPath:   "assets/animations/steampunk_lab.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
