@@ -1176,6 +1176,42 @@ func init() {
 		gifPath:   "assets/animations/astral_zodiac_prism_portal.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberNeonCyberCasino,
+		name:      "Neon Cyberpunk Cyber Casino 🎰",
+		gifPath:   "assets/animations/cyber_neon_cyber_casino.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBiolumAbyssalTideTrench,
+		name:      "Bioluminescent Abyssal Tide Trench 🌊",
+		gifPath:   "assets/animations/biolum_abyssal_tide_trench.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSteampunkClockworkAirship,
+		name:      "Steampunk Clockwork Airship Dock ⚙️",
+		gifPath:   "assets/animations/steampunk_clockwork_airship.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSynthwaveGridSpaceStation,
+		name:      "8-Bit Retro Synthwave Space Station 🌌",
+		gifPath:   "assets/animations/synthwave_grid_space_station.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneZenBambooPagodaSpring,
+		name:      "Zen Moonlit Pagoda Hot Spring ⛩️",
+		gifPath:   "assets/animations/zen_bamboo_pagoda_spring.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneAstralZodiacChronosVault,
+		name:      "Astral Celestial Zodiac Chronos Vault 🔮",
+		gifPath:   "assets/animations/astral_zodiac_chronos_vault.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
