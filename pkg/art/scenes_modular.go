@@ -492,6 +492,42 @@ func init() {
 		gifPath:   "assets/animations/zen_rock_garden.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberBridge,
+		name:      "Neon Cyberpunk Suspension Bridge 🌉",
+		gifPath:   "assets/animations/cyber_bridge.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBiolumCavern,
+		name:      "Bioluminescent Underground Cavern 🪨",
+		gifPath:   "assets/animations/biolum_cavern.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberRacer,
+		name:      "8-Bit Retro Neon Grid Racer 🏎️",
+		gifPath:   "assets/animations/cyber_racer.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneStarlightTreehouse,
+		name:      "Starlight Ancient Oak Treehouse 🌳",
+		gifPath:   "assets/animations/starlight_treehouse.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSteampunkClock,
+		name:      "Steampunk Clockwork Cathedral 🕰️",
+		gifPath:   "assets/animations/steampunk_clock.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneZenTeahouse,
+		name:      "Zen Bamboo Water Teahouse 🍵",
+		gifPath:   "assets/animations/zen_teahouse.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
