@@ -312,6 +312,42 @@ func init() {
 		gifPath:   "assets/animations/cosmic_observatory.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberRooftop,
+		name:      "Cyberpunk Neon Rooftop 🌆",
+		gifPath:   "assets/animations/cyber_rooftop.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCozyIgloo,
+		name:      "Cozy Northern Igloo ❄️",
+		gifPath:   "assets/animations/cozy_igloo.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneAtlantisTemple,
+		name:      "Atlantis Ocean Ruins 🔱",
+		gifPath:   "assets/animations/atlantis_temple.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberMatrix,
+		name:      "Cyber Matrix Terminal 💻",
+		gifPath:   "assets/animations/cyber_matrix.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSunsetBeach,
+		name:      "Sunset Beach Boardwalk 🏖️",
+		gifPath:   "assets/animations/sunset_beach.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneFairytaleWindmill,
+		name:      "Fairytale River Windmill 🌾",
+		gifPath:   "assets/animations/fairytale_windmill.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
