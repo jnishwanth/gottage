@@ -240,6 +240,42 @@ func init() {
 		gifPath:   "assets/animations/steampunk_lab.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneAlienPlanet,
+		name:      "Alien Planet Outpost 🛸",
+		gifPath:   "assets/animations/alien_planet.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneHauntedManor,
+		name:      "Haunted Pixel Manor 👻",
+		gifPath:   "assets/animations/haunted_manor.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCloudTemple,
+		name:      "Floating Cloud Temple ⛩️",
+		gifPath:   "assets/animations/cloud_temple.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberBar,
+		name:      "Neon Synthwave Cyber Bar 🍸",
+		gifPath:   "assets/animations/cyber_bar.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCoralReef,
+		name:      "Submerged Coral Reef 🐠",
+		gifPath:   "assets/animations/coral_reef.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneFrostPeak,
+		name:      "Glacial Frost Peak 🏔️",
+		gifPath:   "assets/animations/frost_peak.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
