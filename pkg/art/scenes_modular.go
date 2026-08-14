@@ -168,6 +168,42 @@ func init() {
 		gifPath:   "assets/animations/cyber_arcade.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneNeonBistro,
+		name:      "Neon Cyber Bistro 🏮",
+		gifPath:   "assets/animations/neon_bistro.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSunsetStation,
+		name:      "Sunset Train Platform 🚉",
+		gifPath:   "assets/animations/sunset_station.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneMountainView,
+		name:      "Cozy Mountain Peak 🏔️",
+		gifPath:   "assets/animations/mountain_view.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        ScenePixelBakery,
+		name:      "Pixel Cozy Bakery 🥐",
+		gifPath:   "assets/animations/pixel_bakery.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneEnchantedForest,
+		name:      "Enchanted Forest Waterfall 🌿",
+		gifPath:   "assets/animations/enchanted_forest.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSkyIsland,
+		name:      "Floating Sky Island ☁️",
+		gifPath:   "assets/animations/sky_island.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
