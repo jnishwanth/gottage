@@ -672,6 +672,42 @@ func init() {
 		gifPath:   "assets/animations/astral_clockwork.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberPenthouse,
+		name:      "Neon Cyber Penthouse 🌃",
+		gifPath:   "assets/animations/cyber_penthouse.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBiolumUnderwaterCity,
+		name:      "Bioluminescent Sunken City 🧜",
+		gifPath:   "assets/animations/biolum_underwater_city.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSteampunkSkyDock,
+		name:      "Steampunk Sky Harbor Dock ⚓",
+		gifPath:   "assets/animations/steampunk_sky_dock.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneRetroSynthwaveCity,
+		name:      "Synthwave Cyber City Sunset 🌇",
+		gifPath:   "assets/animations/retro_synthwave_city.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneZenAutumnTorii,
+		name:      "Zen Autumn Torii Pathway 🍁",
+		gifPath:   "assets/animations/zen_autumn_torii.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneAstralNebulaGate,
+		name:      "Astral Cosmic Nebula Portal 🔮",
+		gifPath:   "assets/animations/astral_nebula_gate.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
