@@ -420,6 +420,42 @@ func init() {
 		gifPath:   "assets/animations/retro_arcade_hall.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneCyberSubway,
+		name:      "Cyberpunk Underground Subway 🚇",
+		gifPath:   "assets/animations/cyber_subway.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneFantasyCastle,
+		name:      "Fantasy Castle Courtyard 🏰",
+		gifPath:   "assets/animations/fantasy_castle.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneBiolumAbyss,
+		name:      "Bioluminescent Deep Abyss 🪼",
+		gifPath:   "assets/animations/biolum_abyss.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneSynthwaveHighway,
+		name:      "Retro Synthwave Highway 🏎️",
+		gifPath:   "assets/animations/synthwave_highway.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        SceneWinterCafe,
+		name:      "Cozy Winter Cafe ☕",
+		gifPath:   "assets/animations/winter_cafe.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
+	RegisterScene(&AnimatedGifScene{
+		id:        ScenePixelLab,
+		name:      "Isometric Pixel Laboratory 🧪",
+		gifPath:   "assets/animations/pixel_lab.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	})
 }
 
 // ---------------------------------------------------------
