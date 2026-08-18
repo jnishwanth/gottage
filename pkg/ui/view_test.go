@@ -287,6 +287,17 @@ func TestModelViewModals(t *testing.T) {
 	if !strings.Contains(vWarp, "3D Cosmos Starfield Warp") {
 		t.Error("Expected status footer to contain 3D Cosmos Starfield Warp live badge")
 	}
+
+	// Test Pet Cat companion interaction & status badge rendering
+	petMsg := m.Scene.PetCat()
+	if !strings.Contains(petMsg, "Bliss:") {
+		t.Errorf("Expected pet message to contain Bliss:, got %s", petMsg)
+	}
+	m.StatusMsg = ""
+	vBliss := m.View()
+	if !strings.Contains(vBliss, "Bliss:") {
+		t.Error("Expected status footer to contain live Bliss badge")
+	}
 }
 
 

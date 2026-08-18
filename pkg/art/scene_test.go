@@ -89,3 +89,22 @@ func TestProceduralShadersAndRipples(t *testing.T) {
 		t.Errorf("Expected ripple life 1 after update, got %v", cs.Ripples[0].Life)
 	}
 }
+
+func TestPetCatCompanion(t *testing.T) {
+	cs := NewCottageScene(80, 40)
+	initialBliss := cs.CatBliss
+
+	msg := cs.PetCat()
+	if cs.CatBliss <= initialBliss {
+		t.Errorf("Expected CatBliss to increase after petting, got %d (initial %d)", cs.CatBliss, initialBliss)
+	}
+	if len(msg) == 0 {
+		t.Errorf("Expected non-empty purr message from PetCat")
+	}
+	if len(cs.OverlayParticles) == 0 {
+		t.Errorf("Expected heart overlay particles spawned after PetCat")
+	}
+	if len(cs.Ripples) == 0 {
+		t.Errorf("Expected rose ripple created on canvas after PetCat")
+	}
+}

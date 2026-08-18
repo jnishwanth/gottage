@@ -70,6 +70,17 @@ func GetCommandList(m *Model) []CommandItem {
 	})
 
 	items = append(items, CommandItem{
+		Title:       "🐾 Companion: Pet Cozy Cat (Purr & Heart Sparks)",
+		Category:    "Interactive Companion",
+		Shortcut:    "[ K ]",
+		Description: "Pet your cozy companion cat to unleash heart particles, purrs, and boost focus bliss",
+		Action: func(m *Model) {
+			msg := m.Scene.PetCat()
+			m.SetStatusMsg(msg)
+		},
+	})
+
+	items = append(items, CommandItem{
 		Title:       "💧 Ripple: Drop Canvas Energy Ripple",
 		Category:    "Aesthetics",
 		Shortcut:    "[ Ripple ]",

@@ -2548,6 +2548,7 @@ func renderFireplaceHelper(c *Canvas, fx, fy, fw, fh int, fireOn bool, frameCoun
 }
 
 func renderCatHelper(c *Canvas, cx, cy int, breed CatBreed, frameCount uint64) {
+	// Cushion rug under cat
 	c.FillRect(cx-4, cy+8, 24, 6, PicoDarkPurple)
 
 	var furMain colorful.Color
@@ -2567,10 +2568,23 @@ func renderCatHelper(c *Canvas, cx, cy int, breed CatBreed, frameCount uint64) {
 		breathOffset = -2
 	}
 
+	// Body & Head
 	c.FillRect(cx, cy+breathOffset, 16, 8, furMain)
 	c.FillRect(cx-2, cy+2+breathOffset, 6, 6, furMain)
 
-	if (frameCount/10)%3 == 1 {
+	// Inner ear pink detail
+	c.SetPixel(cx-2, cy+1+breathOffset, PicoPink)
+	c.SetPixel(cx+2, cy+1+breathOffset, PicoPink)
+
+	// Dynamic Tail Wag
+	tailWag := int((frameCount / 16) % 3)
+	c.FillRect(cx+16, cy+4+breathOffset-tailWag, 4, 2, furMain)
+	c.FillRect(cx+18, cy+2+breathOffset-tailWag*2, 2, 4, furMain)
+
+	// Purr & Sleep glyphs
+	if (frameCount/18)%2 == 1 {
+		c.DrawGlyph(cx+6, (cy-2)/2, '♥', PicoPink)
+	} else if (frameCount/10)%3 == 1 {
 		c.DrawGlyph(cx-4, (cy-4)/2, 'z', PicoCyan)
 	}
 }

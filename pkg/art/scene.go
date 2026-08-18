@@ -298,6 +298,8 @@ type CottageScene struct {
 	SmoothDayNightBlend   bool
 	VignetteOn            bool
 	CRTScanlinesOn        bool
+	CatBliss              int
+	LastPetTime           time.Time
 
 	RainParticles    []Particle
 	SnowParticles    []Particle
@@ -337,6 +339,8 @@ func NewCottageScene(width, height int) *CottageScene {
 		SmoothDayNightBlend:   true,
 		VignetteOn:            true,
 		CRTScanlinesOn:        false,
+		CatBliss:              85,
+		LastPetTime:           time.Now(),
 		rng:                   rng,
 	}
 
@@ -399,6 +403,55 @@ func (cs *CottageScene) TriggerCanvasRippleHex(x, y int, hex string) {
 		col = PicoCyan
 	}
 	cs.TriggerCanvasRipple(x, y, col)
+}
+
+// PetCat pets the cozy cat companion, boosting bliss and launching heart particles.
+func (cs *CottageScene) PetCat() string {
+	cs.CatBliss += 15
+	if cs.CatBliss > 100 {
+		cs.CatBliss = 100
+	}
+	cs.LastPetTime = time.Now()
+
+	cx := 74
+	cy := 70
+	if cs.Canvas != nil {
+		if cx >= cs.Canvas.Width {
+			cx = cs.Canvas.Width - 10
+		}
+		if cy >= cs.Canvas.Height {
+			cy = cs.Canvas.Height - 10
+		}
+	}
+
+	cs.TriggerCanvasRippleHex(cx, cy, "#ff7597")
+
+	heartRunes := []rune{'♥', '💖', '✨', '🐾', '💕'}
+	for i := 0; i < 8; i++ {
+		angle := cs.rng.Float64() * 2 * math.Pi
+		speed := 0.5 + cs.rng.Float64()*1.2
+		cs.OverlayParticles = append(cs.OverlayParticles, Particle{
+			X:       float64(cx) + cs.rng.Float64()*10 - 5,
+			Y:       float64(cy) + cs.rng.Float64()*4 - 2,
+			Vx:      math.Cos(angle) * speed,
+			Vy:      -0.6 - cs.rng.Float64()*0.8,
+			Life:    0,
+			MaxLife: 20 + cs.rng.Float64()*15,
+			Char:    heartRunes[cs.rng.Intn(len(heartRunes))],
+		})
+	}
+
+	catName := "Sparky"
+	switch cs.CatBreed {
+	case CatTuxedo:
+		catName = "Sylvester"
+	case CatCalico:
+		catName = "Mochi"
+	case CatBlack:
+		catName = "Luna"
+	}
+
+	return fmt.Sprintf("🐾 %s purrs happily! Bliss: %d%% 💖", catName, cs.CatBliss)
 }
 
 // CycleShaderEffect cycles to the next procedural canvas shader animation.
@@ -568,6 +621,10 @@ func (cs *CottageScene) Update() {
 	}
 
 	cs.FrameCount++
+
+	if cs.FrameCount%300 == 0 && cs.CatBliss > 40 {
+		cs.CatBliss--
+	}
 
 	if cs.Weather == WeatherStorm {
 		if !cs.Lightning && cs.rng.Float64() < 0.02 {

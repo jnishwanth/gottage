@@ -895,12 +895,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case "K":
-			active := m.Ambient.ToggleCafe()
-			if active {
-				m.SetStatusMsg("Cafe Ambience ON ☕")
-			} else {
-				m.SetStatusMsg("Cafe Ambience OFF")
-			}
+			msg := m.Scene.PetCat()
+			m.SetStatusMsg(msg)
 
 		case "X":
 			m.ShowSoundMixerModal = !m.ShowSoundMixerModal
@@ -935,6 +931,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "k", "up":
 			if m.ActiveTab == TabTasks {
 				m.Tasks.MoveUp()
+			} else {
+				msg := m.Scene.PetCat()
+				m.SetStatusMsg(msg)
 			}
 		case "enter":
 			if m.ActiveTab == TabTasks {
