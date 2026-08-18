@@ -90,7 +90,7 @@ func (m Model) View() string {
 		if len(liveBadges) > 0 {
 			prefix = strings.Join(liveBadges, " • ") + "  |  "
 		}
-		footerText = prefix + "Press [?] help • [i] Scene Info • [V] Catalog • [T] Themes • [M] Spectrum • [R] Random • [q] quit"
+		footerText = prefix + "Press [?] help • [:/Ctrl+P] Palette • [i] Scene Info • [V] Catalog • [T] Themes • [M] Spectrum • [R] Random • [q] quit"
 	}
 	footer := m.Styles.Footer.Render(footerText)
 
@@ -101,6 +101,11 @@ func (m Model) View() string {
 		"",
 		footer,
 	)
+
+	// Command Palette Modal
+	if m.ShowCommandPalette {
+		return m.renderCommandPaletteModal(mainView)
+	}
 
 	// Scene Info & Palette Inspector Modal
 	if m.ShowSceneInfoModal {
@@ -743,3 +748,60 @@ func (m Model) renderSceneInfoModal(bg string) string {
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal)
 }
+
+func (m Model) renderCommandPaletteModal(bg string) string {
+	allCmds := GetCommandList(&m)
+	filtered := FilterCommands(allCmds, m.CommandInput.Value())
+
+	searchHeader := fmt.Sprintf("🔍 QUICK COMMAND PALETTE & MOOD PRESETS   (Press Esc to exit)\n\n  > %s", m.CommandInput.View())
+
+	var listLines []string
+	startIdx := 0
+	if m.CommandIdx > 5 {
+		startIdx = m.CommandIdx - 5
+	}
+	endIdx := startIdx + 7
+	if endIdx > len(filtered) {
+		endIdx = len(filtered)
+	}
+
+	if len(filtered) == 0 {
+		listLines = append(listLines, m.Styles.MutedText.Render("  No matching commands or presets found!"))
+	} else {
+		for i := startIdx; i < endIdx; i++ {
+			cmd := filtered[i]
+			cursor := "  "
+			titleStyle := m.Styles.MutedText
+			if i == m.CommandIdx {
+				cursor = "👉"
+				titleStyle = m.Styles.BoldAccent
+			}
+
+			catBadge := m.Styles.Card.Render(cmd.Category)
+			scBadge := m.Styles.KeyCap.Render(cmd.Shortcut)
+
+			line := fmt.Sprintf("%s %s %s %s\n     %s",
+				cursor,
+				catBadge,
+				titleStyle.Render(cmd.Title),
+				scBadge,
+				m.Styles.MutedText.Render(cmd.Description),
+			)
+			listLines = append(listLines, line)
+		}
+	}
+
+	modalText := fmt.Sprintf("%s\n\n%s\n\n%s",
+		searchHeader,
+		strings.Join(listLines, "\n\n"),
+		m.Styles.MutedText.Render(fmt.Sprintf("Nav: [↑/↓] Select (%d/%d matches) • [Enter] Execute • [Esc] Close", len(filtered), len(allCmds))),
+	)
+
+	modal := m.Styles.Box.
+		BorderForeground(m.Styles.Theme.Accent).
+		Width(88).
+		Render(modalText)
+
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal)
+}
+

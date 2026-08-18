@@ -147,4 +147,29 @@ func TestModelViewModals(t *testing.T) {
 	if !blend && m.Scene.SmoothDayNightBlend {
 		t.Error("Expected ToggleSmoothDayNight to toggle state")
 	}
+
+	// Test Command Palette Modal & Mood Presets
+	m.ShowCommandPalette = true
+	vCmd := m.View()
+	if !strings.Contains(vCmd, "QUICK COMMAND PALETTE & MOOD PRESETS") {
+		t.Error("Expected Command Palette modal to contain QUICK COMMAND PALETTE & MOOD PRESETS")
+	}
+
+	cmds := GetCommandList(&m)
+	if len(cmds) < 15 {
+		t.Errorf("Expected at least 15 commands in palette, got %d", len(cmds))
+	}
+
+	filteredCmds := FilterCommands(cmds, "rainy")
+	if len(filteredCmds) == 0 {
+		t.Error("Expected FilterCommands to match 'rainy'")
+	}
+
+	// Execute Mood Preset 1 (Rainy Cafe Nook)
+	filteredCmds[0].Action(&m)
+	if m.Scene.CurrentScene != art.SceneRainyCity {
+		t.Errorf("Expected CurrentScene to be SceneRainyCity, got %s", m.Scene.CurrentScene.String())
+	}
+	m.ShowCommandPalette = false
 }
+

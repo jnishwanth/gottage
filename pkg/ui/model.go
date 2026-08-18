@@ -58,6 +58,9 @@ type Model struct {
 	ShowThemePicker    bool
 	PickerThemeIdx     int
 	ShowSceneInfoModal bool
+	ShowCommandPalette bool
+	CommandInput       textinput.Model
+	CommandIdx         int
 	SpectrumMode       SpectrumStyle
 	ZenMode           bool
 	AutoSyncAudio     bool
@@ -90,6 +93,11 @@ func NewModel() Model {
 	si.CharLimit = 30
 	si.Width = 36
 
+	ci := textinput.New()
+	ci.Placeholder = "Type command, tab, theme, filter, or mood..."
+	ci.CharLimit = 40
+	ci.Width = 44
+
 	styles := NewStyles(ThemeCozyAutumn)
 	scene := art.NewCottageScene(160, 90)
 
@@ -97,15 +105,17 @@ func NewModel() Model {
 	favs[art.SceneRainyCity] = true
 
 	return Model{
-		Width:             120,
-		Height:            40,
-		Styles:            styles,
-		ActiveTab:         TabArt,
-		ShowHelp:          false,
-		ShowScenePicker:   false,
-		PickerSearchInput: si,
-		ShowThemePicker:   false,
-		SpectrumMode:      SpectrumBars,
+		Width:              120,
+		Height:             40,
+		Styles:             styles,
+		ActiveTab:          TabArt,
+		ShowHelp:           false,
+		ShowScenePicker:    false,
+		PickerSearchInput:  si,
+		ShowCommandPalette: false,
+		CommandInput:       ci,
+		ShowThemePicker:    false,
+		SpectrumMode:       SpectrumBars,
 		AutoSyncAudio:     true,
 		UseGPURender:      art.DetectTerminalProtocol() == art.ProtocolKitty,
 		FavoriteScenes:    favs,
@@ -196,6 +206,39 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch msg.String() {
 			case "esc", "q", "I", "i":
 				m.ShowSceneInfoModal = false
+			}
+			return m, nil
+		}
+
+		// Modal: Quick Command Palette
+		if m.ShowCommandPalette {
+			allCmds := GetCommandList(&m)
+			filtered := FilterCommands(allCmds, m.CommandInput.Value())
+
+			switch msg.String() {
+			case "esc":
+				m.ShowCommandPalette = false
+				m.CommandInput.Blur()
+			case "j", "down", "ctrl+n":
+				if m.CommandIdx < len(filtered)-1 {
+					m.CommandIdx++
+				}
+			case "k", "up", "ctrl+p":
+				if m.CommandIdx > 0 {
+					m.CommandIdx--
+				}
+			case "enter":
+				if len(filtered) > 0 && m.CommandIdx < len(filtered) {
+					targetCmd := filtered[m.CommandIdx]
+					targetCmd.Action(&m)
+				}
+				m.ShowCommandPalette = false
+				m.CommandInput.Blur()
+			default:
+				var cmd tea.Cmd
+				m.CommandInput, cmd = m.CommandInput.Update(msg)
+				m.CommandIdx = 0
+				return m, cmd
 			}
 			return m, nil
 		}
@@ -348,6 +391,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			m.Ambient.Cleanup()
 			return m, tea.Quit
+
+		case "ctrl+p", ":":
+			m.ShowCommandPalette = !m.ShowCommandPalette
+			m.CommandIdx = 0
+			m.CommandInput.Reset()
+			if m.ShowCommandPalette {
+				m.CommandInput.Focus()
+				return m, textinput.Blink
+			}
 
 		case "?":
 			m.ShowHelp = !m.ShowHelp
