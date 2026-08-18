@@ -106,6 +106,9 @@ func (m Model) View() string {
 		if m.Scene.CRTScanlinesOn {
 			liveBadges = append(liveBadges, "📺 CRT")
 		}
+		if m.Scene.RenderMode != art.RenderHalfBlock {
+			liveBadges = append(liveBadges, "🎨 "+m.Scene.RenderMode.String())
+		}
 		if m.Scene.AutoCycleMode != art.AutoCycleOff {
 			liveBadges = append(liveBadges, "🎬 "+m.Scene.AutoCycleMode.String())
 		}
@@ -845,10 +848,11 @@ func (m Model) renderSceneInfoModal(bg string) string {
 		m.Styles.MutedText.Render(truncate(meta.Atmosphere, 40)),
 	)
 
-	col2 := fmt.Sprintf("%s\n  Resolution:   %dx%d px\n  Frames:       %d\n  Anim Speed:   %s\n  GPU Mode:     %s\n  Color Filter: %s\n  Particle:     %s\n  Vignette:     %s\n  CRT Scanlines: %s\n  Beat Pulse:   %s\n  Sky Blend:    %s",
+	col2 := fmt.Sprintf("%s\n  Resolution:   %dx%d px\n  Frames:       %d\n  Render Mode:  %s\n  Anim Speed:   %s\n  GPU Mode:     %s\n  Color Filter: %s\n  Particle:     %s\n  Vignette:     %s\n  CRT Scanlines: %s\n  Beat Pulse:   %s\n  Sky Blend:    %s",
 		m.Styles.Header.Render("⚡ ENGINE METRICS"),
 		m.Scene.Canvas.Width, m.Scene.Canvas.Height,
 		m.Scene.FrameCount,
+		m.Scene.Canvas.RenderMode.String(),
 		m.Scene.AnimSpeed.String(),
 		onOffStr(m.UseGPURender),
 		m.Scene.ColorFilter.String(),
@@ -865,7 +869,7 @@ func (m Model) renderSceneInfoModal(bg string) string {
 		topCols,
 		m.Styles.Header.Render("🖌️ EXTRACTED 8-COLOR SCENE PALETTE"),
 		paletteRow,
-		m.Styles.MutedText.Render("Quick Toggles: [B] Beat Pulse • [D] Day/Night Blend • [C] Color Filter • [P] Particle • [Esc/i] Close"),
+		m.Styles.MutedText.Render("Quick Toggles: [Shift+E] Render Mode • [B] Beat Pulse • [D] Day/Night Blend • [C] Filter • [P] Particle • [Esc/i] Close"),
 	)
 
 	modal := m.Styles.Box.

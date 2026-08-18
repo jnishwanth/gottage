@@ -70,6 +70,17 @@ func GetCommandList(m *Model) []CommandItem {
 	})
 
 	items = append(items, CommandItem{
+		Title:       "🎨 Art Engine: Cycle Terminal Render Modes",
+		Category:    "Aesthetics",
+		Shortcut:    "[ Shift+E ]",
+		Description: "Cycle terminal rendering style (24-Bit Half-Blocks, ASCII Ramp, Braille Matrix, CRT Phosphor Glow)",
+		Action: func(m *Model) {
+			rm := m.Scene.CycleRenderMode()
+			m.SetStatusMsg("Art Engine Render Mode: " + rm.String() + " 🎨")
+		},
+	})
+
+	items = append(items, CommandItem{
 		Title:       "🎬 Auto-Cycle: Cycle Auto-Rotation Mode",
 		Category:    "Aesthetics",
 		Shortcut:    "[ Y ]",

@@ -698,6 +698,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			shader := m.Scene.CycleShaderEffect()
 			m.SetStatusMsg("Canvas Shader: " + shader.String() + " ✨")
 
+		case "E":
+			rm := m.Scene.CycleRenderMode()
+			m.SetStatusMsg("Art Engine Render Mode: " + rm.String() + " 🎨")
+
 		case "S":
 			m.ShowPresetModal = !m.ShowPresetModal
 			m.PresetIdx = 0

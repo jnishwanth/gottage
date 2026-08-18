@@ -251,6 +251,17 @@ func TestModelViewModals(t *testing.T) {
 	if !strings.Contains(vAmbAuto, "Auto-Cycle Mode") {
 		t.Error("Expected renderAmbianceView to display Auto-Cycle Mode settings")
 	}
+
+	// Test Art Engine Render Mode Cycling & Live Badge Rendering
+	rm := m.Scene.CycleRenderMode()
+	if rm != art.RenderASCII {
+		t.Errorf("Expected CycleRenderMode to switch to RenderASCII, got %v", rm)
+	}
+	m.StatusMsg = ""
+	vBadge := m.View()
+	if !strings.Contains(vBadge, "ASCII Density Ramp") {
+		t.Error("Expected status footer to contain live ASCII Density Ramp badge")
+	}
 }
 
 

@@ -8,6 +8,29 @@ import (
 	"github.com/lucasb-eyer/go-colorful"
 )
 
+// CanvasRenderMode specifies terminal art rendering aesthetic style.
+type CanvasRenderMode int
+
+const (
+	RenderHalfBlock CanvasRenderMode = iota // ▀ 24-Bit TrueColor Half-Blocks (Default pixel art)
+	RenderASCII                             // ASCII Luminance Density Ramp ( .:-=+*#%@#) with 24-bit TrueColor
+	RenderBraille                           // Unicode Braille Matrix (⠀-⣿) with pixel subgrid density
+	RenderPhosphor                          // Retro Monochromatic CRT Glow (Amber / Emerald Phosphor)
+)
+
+func (r CanvasRenderMode) String() string {
+	switch r {
+	case RenderASCII:
+		return "ASCII Density Ramp ( .:-=+*#%@)"
+	case RenderBraille:
+		return "Unicode Braille Matrix (⠀-⣿)"
+	case RenderPhosphor:
+		return "Retro CRT Phosphor Glow (📟 Amber/Green)"
+	default:
+		return "24-Bit TrueColor Half-Blocks (▀)"
+	}
+}
+
 // Canvas represents a high-density 24-bit TrueColor pixel canvas.
 // Standard character cells have a 1:2 width:height aspect ratio.
 // Using half-block '▀', each character cell renders 2 vertical pixels (top & bottom).
@@ -17,6 +40,7 @@ type Canvas struct {
 	Pixels      [][]colorful.Color
 	Glyphs      [][]rune
 	GlyphColors [][]colorful.Color
+	RenderMode  CanvasRenderMode
 }
 
 // NewCanvas creates a new Canvas with the specified width (in characters/pixels)
@@ -48,6 +72,7 @@ func NewCanvas(width, height int) *Canvas {
 		Pixels:      pixels,
 		Glyphs:      glyphs,
 		GlyphColors: glyphColors,
+		RenderMode:  RenderHalfBlock,
 	}
 }
 
@@ -221,8 +246,21 @@ func (c *Canvas) ApplyLightCone(cx, cy int, height, angleWidth int, lightColor c
 	}
 }
 
-// Render converts the Canvas into an ANSI TrueColor string using '▀' half-blocks and glyph overlays.
+// Render converts the Canvas into an ANSI TrueColor string based on c.RenderMode.
 func (c *Canvas) Render() string {
+	switch c.RenderMode {
+	case RenderASCII:
+		return c.renderASCII()
+	case RenderBraille:
+		return c.renderBraille()
+	case RenderPhosphor:
+		return c.renderPhosphor()
+	default:
+		return c.renderHalfBlock()
+	}
+}
+
+func (c *Canvas) renderHalfBlock() string {
 	var sb strings.Builder
 	charHeight := c.Height / 2
 
@@ -242,11 +280,9 @@ func (c *Canvas) Render() string {
 
 			r := c.Glyphs[charY][x]
 			if r != 0 {
-				// We have a character overlay!
 				fgCol := c.GlyphColors[charY][x]
 				fgR, fgG, fgB := int(fgCol.R*255), int(fgCol.G*255), int(fgCol.B*255)
 
-				// Foreground = Glyph color, Background = average/bot pixel color
 				if fgR != lastFgR || fgG != lastFgG || fgB != lastFgB {
 					sb.WriteString(fmt.Sprintf("\x1b[38;2;%d;%d;%dm", fgR, fgG, fgB))
 					lastFgR, lastFgG, lastFgB = fgR, fgG, fgB
@@ -257,7 +293,187 @@ func (c *Canvas) Render() string {
 				}
 				sb.WriteRune(r)
 			} else {
-				// Half-block mode: Top pixel color = FG, Bottom pixel color = BG
+				if topR != lastFgR || topG != lastFgG || topB != lastFgB {
+					sb.WriteString(fmt.Sprintf("\x1b[38;2;%d;%d;%dm", topR, topG, topB))
+					lastFgR, lastFgG, lastFgB = topR, topG, topB
+				}
+				if botR != lastBgR || botG != lastBgG || botB != lastBgB {
+					sb.WriteString(fmt.Sprintf("\x1b[48;2;%d;%d;%dm", botR, botG, botB))
+					lastBgR, lastBgG, lastBgB = botR, botG, botB
+				}
+				sb.WriteString("▀")
+			}
+		}
+		if charY < charHeight-1 {
+			sb.WriteString("\x1b[0m\n")
+		} else {
+			sb.WriteString("\x1b[0m")
+		}
+		lastFgR, lastFgG, lastFgB = -1, -1, -1
+		lastBgR, lastBgG, lastBgB = -1, -1, -1
+	}
+
+	return sb.String()
+}
+
+func (c *Canvas) renderASCII() string {
+	var sb strings.Builder
+	charHeight := c.Height / 2
+	ramp := []rune{' ', '.', ':', '-', '=', '+', '*', '#', '%', '@'}
+
+	var lastFgR, lastFgG, lastFgB int = -1, -1, -1
+
+	for charY := 0; charY < charHeight; charY++ {
+		topY := charY * 2
+		botY := charY*2 + 1
+
+		for x := 0; x < c.Width; x++ {
+			topCol := c.Pixels[topY][x]
+			botCol := c.Pixels[botY][x]
+			avgCol := topCol.BlendRgb(botCol, 0.5)
+
+			r := c.Glyphs[charY][x]
+			if r == 0 {
+				lum := 0.299*avgCol.R + 0.587*avgCol.G + 0.114*avgCol.B
+				idx := int(lum * float64(len(ramp)-1))
+				if idx < 0 {
+					idx = 0
+				}
+				if idx >= len(ramp) {
+					idx = len(ramp) - 1
+				}
+				r = ramp[idx]
+			} else {
+				avgCol = c.GlyphColors[charY][x]
+			}
+
+			fgR, fgG, fgB := int(avgCol.R*255), int(avgCol.G*255), int(avgCol.B*255)
+			if fgR != lastFgR || fgG != lastFgG || fgB != lastFgB {
+				sb.WriteString(fmt.Sprintf("\x1b[38;2;%d;%d;%dm", fgR, fgG, fgB))
+				lastFgR, lastFgG, lastFgB = fgR, fgG, fgB
+			}
+			sb.WriteRune(r)
+		}
+		if charY < charHeight-1 {
+			sb.WriteString("\x1b[0m\n")
+		} else {
+			sb.WriteString("\x1b[0m")
+		}
+		lastFgR, lastFgG, lastFgB = -1, -1, -1
+	}
+
+	return sb.String()
+}
+
+func (c *Canvas) renderBraille() string {
+	var sb strings.Builder
+	charHeight := c.Height / 2
+
+	var lastFgR, lastFgG, lastFgB int = -1, -1, -1
+
+	for charY := 0; charY < charHeight; charY++ {
+		topY := charY * 2
+		botY := charY*2 + 1
+
+		for x := 0; x < c.Width; x++ {
+			topCol := c.Pixels[topY][x]
+			botCol := c.Pixels[botY][x]
+			avgCol := topCol.BlendRgb(botCol, 0.5)
+
+			r := c.Glyphs[charY][x]
+			if r == 0 {
+				lumTop := 0.299*topCol.R + 0.587*topCol.G + 0.114*topCol.B
+				lumBot := 0.299*botCol.R + 0.587*botCol.G + 0.114*botCol.B
+
+				var mask int
+				if lumTop > 0.05 {
+					mask |= 0x1
+				}
+				if lumTop > 0.25 {
+					mask |= 0x8
+				}
+				if lumTop > 0.50 {
+					mask |= 0x2
+				}
+				if lumTop > 0.75 {
+					mask |= 0x10
+				}
+				if lumBot > 0.05 {
+					mask |= 0x4
+				}
+				if lumBot > 0.25 {
+					mask |= 0x20
+				}
+				if lumBot > 0.50 {
+					mask |= 0x40
+				}
+				if lumBot > 0.75 {
+					mask |= 0x80
+				}
+
+				if mask == 0 {
+					r = ' '
+				} else {
+					r = rune(0x2800 | mask)
+				}
+			} else {
+				avgCol = c.GlyphColors[charY][x]
+			}
+
+			fgR, fgG, fgB := int(avgCol.R*255), int(avgCol.G*255), int(avgCol.B*255)
+			if fgR != lastFgR || fgG != lastFgG || fgB != lastFgB {
+				sb.WriteString(fmt.Sprintf("\x1b[38;2;%d;%d;%dm", fgR, fgG, fgB))
+				lastFgR, lastFgG, lastFgB = fgR, fgG, fgB
+			}
+			sb.WriteRune(r)
+		}
+		if charY < charHeight-1 {
+			sb.WriteString("\x1b[0m\n")
+		} else {
+			sb.WriteString("\x1b[0m")
+		}
+		lastFgR, lastFgG, lastFgB = -1, -1, -1
+	}
+
+	return sb.String()
+}
+
+func (c *Canvas) renderPhosphor() string {
+	var sb strings.Builder
+	charHeight := c.Height / 2
+
+	var lastFgR, lastFgG, lastFgB int = -1, -1, -1
+	var lastBgR, lastBgG, lastBgB int = -1, -1, -1
+
+	for charY := 0; charY < charHeight; charY++ {
+		topY := charY * 2
+		botY := charY*2 + 1
+
+		for x := 0; x < c.Width; x++ {
+			topCol := c.Pixels[topY][x]
+			botCol := c.Pixels[botY][x]
+
+			topLum := 0.299*topCol.R + 0.587*topCol.G + 0.114*topCol.B
+			botLum := 0.299*botCol.R + 0.587*botCol.G + 0.114*botCol.B
+
+			topPhos := colorful.Color{R: topLum, G: topLum * 0.72, B: topLum * 0.05}
+			botPhos := colorful.Color{R: botLum, G: botLum * 0.72, B: botLum * 0.05}
+
+			topR, topG, topB := int(topPhos.R*255), int(topPhos.G*255), int(topPhos.B*255)
+			botR, botG, botB := int(botPhos.R*255), int(botPhos.G*255), int(botPhos.B*255)
+
+			r := c.Glyphs[charY][x]
+			if r != 0 {
+				if topR != lastFgR || topG != lastFgG || topB != lastFgB {
+					sb.WriteString(fmt.Sprintf("\x1b[38;2;%d;%d;%dm", topR, topG, topB))
+					lastFgR, lastFgG, lastFgB = topR, topG, topB
+				}
+				if botR != lastBgR || botG != lastBgG || botB != lastBgB {
+					sb.WriteString(fmt.Sprintf("\x1b[48;2;%d;%d;%dm", botR, botG, botB))
+					lastBgR, lastBgG, lastBgB = botR, botG, botB
+				}
+				sb.WriteRune(r)
+			} else {
 				if topR != lastFgR || topG != lastFgG || topB != lastFgB {
 					sb.WriteString(fmt.Sprintf("\x1b[38;2;%d;%d;%dm", topR, topG, topB))
 					lastFgR, lastFgG, lastFgB = topR, topG, topB
@@ -358,6 +574,7 @@ func (c *Canvas) Clone() *Canvas {
 		return nil
 	}
 	clone := NewCanvas(c.Width, c.Height)
+	clone.RenderMode = c.RenderMode
 	for y := 0; y < c.Height; y++ {
 		copy(clone.Pixels[y], c.Pixels[y])
 	}

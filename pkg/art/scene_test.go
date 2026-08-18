@@ -37,3 +37,31 @@ func TestWindowBounds(t *testing.T) {
 		t.Errorf("Unexpected Cottage window bounds: %+v", rCot)
 	}
 }
+
+func TestCanvasRenderModes(t *testing.T) {
+	cs := NewCottageScene(80, 40)
+
+	if cs.RenderMode != RenderHalfBlock {
+		t.Errorf("Expected default RenderMode RenderHalfBlock, got %v", cs.RenderMode)
+	}
+
+	modes := []CanvasRenderMode{RenderASCII, RenderBraille, RenderPhosphor, RenderHalfBlock}
+	for _, expected := range modes {
+		next := cs.CycleRenderMode()
+		if next != expected {
+			t.Errorf("Expected next RenderMode %v, got %v", expected, next)
+		}
+		rendered := cs.Render()
+		if len(rendered) == 0 {
+			t.Errorf("Expected non-empty rendered string for mode %v", expected)
+		}
+	}
+
+	// Test Canvas clone preserves RenderMode
+	c := NewCanvas(20, 20)
+	c.RenderMode = RenderBraille
+	cloned := c.Clone()
+	if cloned.RenderMode != RenderBraille {
+		t.Errorf("Expected cloned RenderMode RenderBraille, got %v", cloned.RenderMode)
+	}
+}

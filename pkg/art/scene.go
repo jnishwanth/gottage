@@ -263,6 +263,7 @@ type CottageScene struct {
 	ColorFilter           ColorFilter
 	ParticleOverlay       ParticleOverlay
 	ShaderEffect          ShaderEffect
+	RenderMode            CanvasRenderMode
 	AnimSpeed             AnimSpeed
 	AutoCycleMode         AutoCycleMode
 	AutoCycleFavsOnly     bool
@@ -301,6 +302,7 @@ func NewCottageScene(width, height int) *CottageScene {
 		ColorFilter:           FilterNormal,
 		ParticleOverlay:       OverlayNone,
 		ShaderEffect:          ShaderNone,
+		RenderMode:            RenderHalfBlock,
 		AnimSpeed:             SpeedNormal,
 		AutoCycleMode:         AutoCycleOff,
 		AutoCycleFavsOnly:     false,
@@ -352,6 +354,15 @@ func (cs *CottageScene) CycleShaderEffect() ShaderEffect {
 	cs.ShaderEffect = (cs.ShaderEffect + 1) % 5
 	cs.initShaderParticles()
 	return cs.ShaderEffect
+}
+
+// CycleRenderMode cycles terminal art rendering style (HalfBlock -> ASCII -> Braille -> Phosphor -> HalfBlock).
+func (cs *CottageScene) CycleRenderMode() CanvasRenderMode {
+	cs.RenderMode = (cs.RenderMode + 1) % 4
+	if cs.Canvas != nil {
+		cs.Canvas.RenderMode = cs.RenderMode
+	}
+	return cs.RenderMode
 }
 
 // CycleAnimSpeed cycles animation playback speed (Normal -> Slow -> Fast -> Paused -> Normal).
@@ -898,9 +909,12 @@ func (cs *CottageScene) renderSceneWindowParticles(c *Canvas, wRect Rect) {
 // Render returns ANSI string or Kitty GPU graphics payload based on terminal capabilities.
 func (cs *CottageScene) Render() string {
 	cs.RenderFrame()
+	if cs.Canvas != nil {
+		cs.Canvas.RenderMode = cs.RenderMode
+	}
 
 	proto := DetectTerminalProtocol()
-	if proto == ProtocolKitty {
+	if proto == ProtocolKitty && cs.RenderMode == RenderHalfBlock {
 		return EncodeKittyGPU(cs.Canvas, 74, 34)
 	}
 
