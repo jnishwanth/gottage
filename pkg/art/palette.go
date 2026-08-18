@@ -22,6 +22,75 @@ var (
 	PicoLavender   = hex("#83769C") // 13: Indigo / Lavender
 	PicoPink       = hex("#FF77A8") // 14: Pink
 	PicoPeach      = hex("#FFCCAA") // 15: Peach
+
+	// Cozy Cottage Natural Palette
+	ColorWoodDark       = hex("#2c1810") // Dark Walnut Wood
+	ColorWoodMedium     = hex("#5c3826") // Warm Oak Wood
+	ColorWoodLight      = hex("#8c5835") // Honey Pine Wood
+	ColorWoodHighlight  = hex("#b87d4b") // Birch Highlight
+	ColorWoodPlankSep   = hex("#1a0f0a") // Wood Floor Seam
+	ColorFloorRugBase   = hex("#702632") // Persian Rug Maroon
+	ColorFloorRugBorder = hex("#d4a373") // Rug Cream Border
+	ColorFloorRugGold   = hex("#e9c46a") // Rug Gold Pattern
+	ColorWallWarm       = hex("#231f20") // Warm Interior Shadow
+	ColorWallPlank      = hex("#3d281d") // Wall Wainscoting
+	ColorWallPaper      = hex("#342b38") // Cozy Night Wallpaper
+	ColorWallPaperDay   = hex("#6b5b6e") // Cozy Day Wallpaper
+
+	// Fireplace & Warm Light
+	ColorHearthBrick    = hex("#6e2d22") // Terracotta Brick
+	ColorHearthBrickDark= hex("#441b15") // Brick Shadow
+	ColorHearthMortar   = hex("#8f6a5b") // Brick Mortar
+	ColorHearthInterior = hex("#140a08") // Fireplace Backwall
+	ColorFireCore       = hex("#fff3b0") // White-Hot Flame Core
+	ColorFireYellow     = hex("#ffcc00") // Bright Golden Flame
+	ColorFireOrange     = hex("#ff7b00") // Rich Orange Flame
+	ColorFireRed        = hex("#d9381e") // Deep Red Flame
+	ColorFireEmber      = hex("#801100") // Smoldering Embers
+	ColorWarmGlow       = hex("#ffd166") // Ambient Lamp/Fire Glow
+	ColorLampShade      = hex("#2a9d8f") // Classic Banker's Green / Brass Shade
+	ColorLampBrass      = hex("#e7c169") // Polished Brass Lamp Base
+	ColorCandleWax      = hex("#faedcd") // Cream Candle Wax
+
+	// Nature & Plants
+	ColorLeafDark       = hex("#1b4332") // Dark Monstera Leaf
+	ColorLeafMedium     = hex("#2d6a4f") // Pothos Green
+	ColorLeafLight      = hex("#52b788") // Fresh Vine Sprout
+	ColorLeafHighlight  = hex("#95d5b2") // Leaf Sun Bleed
+	ColorPotClay        = hex("#b05a3c") // Terracotta Plant Pot
+
+	// Sky & Atmosphere
+	ColorSkyNightTop    = hex("#0a0e17") // Deep Cosmic Obsidian
+	ColorSkyNightMid    = hex("#121b2d") // Midnight Indigo
+	ColorSkyNightBot    = hex("#1e2942") // Distant Horizon Blue
+	ColorSkySunsetTop   = hex("#2b1b3d") // Violet Sunset Dusk
+	ColorSkySunsetMid   = hex("#a23e48") // Rose Sunset Horizon
+	ColorSkySunsetBot   = hex("#f38d68") // Golden Amber Horizon
+	ColorSkyDawnTop     = hex("#1f1a3a") // Twilight Purple
+	ColorSkyDawnMid     = hex("#6c4f70") // Morning Lilac
+	ColorSkyDawnBot     = hex("#e8998d") // Peach Dawn Sky
+	ColorSkyDayTop      = hex("#3a7ca5") // Crisp Blue Sky
+	ColorSkyDayMid      = hex("#81c3d7") // Soft Atmosphere
+	ColorSkyDayBot      = hex("#d9dcd6") // Misty Distant Horizon
+
+	// Window & Rain
+	ColorWindowFrame    = hex("#3e2723") // Dark Timber Window Frame
+	ColorWindowSill     = hex("#5d4037") // Window Sill Wood
+	ColorGlassTint      = hex("#1b263b") // Rainwashed Glass
+	ColorRainDrop       = hex("#a0c4e2") // Rain Streak
+	ColorRainSplash     = hex("#e0fbfc") // Window Sill Rain Mist
+	ColorSnowFlake      = hex("#ffffff") // Crisp Snowflake
+	ColorStars          = hex("#fff8dc") // Warm Twinkling Star
+
+	// Books, Mug & Details
+	ColorBookSpine1     = hex("#9b2226") // Burgundy Book
+	ColorBookSpine2     = hex("#005f73") // Deep Teal Book
+	ColorBookSpine3     = hex("#bb3e03") // Rust Orange Book
+	ColorBookSpine4     = hex("#588157") // Sage Green Book
+	ColorMugCeramic     = hex("#e76f51") // Warm Ceramic Terracotta Mug
+	ColorMugSteam       = hex("#e2eafc") // Soft Drifting Steam
+	ColorNotebookPaper  = hex("#fdf0d5") // Cream Journal Pages
+	ColorCatCushion     = hex("#3d348b") // Velvet Indigo Cushion
 )
 
 func hex(s string) colorful.Color {

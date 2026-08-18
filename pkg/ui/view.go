@@ -179,11 +179,20 @@ func (m Model) View() string {
 }
 
 func (m Model) renderHeader() string {
-	tabs := []ActiveTab{TabArt, TabTimer, TabTasks, TabAmbiance}
+	tabs := []struct {
+		tab   ActiveTab
+		short string
+	}{
+		{TabArt, "1 🏡 Room"},
+		{TabTimer, "2 ⏱️ Timer"},
+		{TabTasks, "3 📝 Tasks"},
+		{TabAmbiance, "4 🌿 Ambiance"},
+	}
+
 	var tabStrings []string
-	for i, tab := range tabs {
-		idxStr := fmt.Sprintf("[%d] %s", i+1, tab.String())
-		if m.ActiveTab == tab {
+	for _, item := range tabs {
+		idxStr := fmt.Sprintf("[%s]", item.short)
+		if m.ActiveTab == item.tab {
 			tabStrings = append(tabStrings, m.Styles.ActiveTab.Render(idxStr))
 		} else {
 			tabStrings = append(tabStrings, m.Styles.InactiveTab.Render(idxStr))
@@ -191,12 +200,11 @@ func (m Model) renderHeader() string {
 	}
 	tabBar := strings.Join(tabStrings, " ")
 
-	title := m.Styles.Title.Render("🏡 GOTTAGE") + " " + m.Styles.MutedText.Render("v1.0")
-	clockBadge := m.Styles.StatusBadge.Render(" 🕒 " + time.Now().Format("15:04:05") + " ")
-	proto := m.Styles.Card.Render(art.DetectTerminalProtocol().String())
-	themeBadge := m.Styles.PillBadge.Render(" " + m.Styles.Theme.Name + " ")
+	title := m.Styles.Title.Render("🏡 GOTTAGE") + " " + m.Styles.MutedText.Render("• Virtual Cottage")
+	clockBadge := m.Styles.PillBadge.Render("🕒 " + time.Now().Format("15:04:05"))
+	themeBadge := m.Styles.StatusBadge.Render(" " + m.Styles.Theme.Name + " ")
 
-	return lipgloss.JoinHorizontal(lipgloss.Center, title, "  ", clockBadge, "  ", proto, "  ", themeBadge, "    ", tabBar)
+	return lipgloss.JoinHorizontal(lipgloss.Center, title, "   ", clockBadge, "  ", themeBadge, "     ", tabBar)
 }
 
 func (m Model) renderArtView() string {
@@ -216,28 +224,34 @@ func (m Model) renderArtView() string {
 		favBadge = " ⭐"
 	}
 
-	speedBadge := ""
-	if m.Scene.AnimSpeed != art.SpeedNormal {
-		speedBadge = fmt.Sprintf("  |  ⚡ %s", m.Scene.AnimSpeed.String())
+	lampIcon := "🌙"
+	if m.Scene.LampOn {
+		lampIcon = "💡"
+	}
+	fireIcon := "💤"
+	if m.Scene.FireOn {
+		fireIcon = "🔥"
 	}
 
-	metaHeader := fmt.Sprintf("🎨 %s%s  |  ☀️ %s  |  🌧️ %s  |  🎨 %s  |  ✨ %s%s",
+	metaHeader := fmt.Sprintf(" %s%s  │  %s  │  %s  │  Lamp: %s  │  Fire: %s  │  Shader: %s",
 		m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String()),
 		favBadge,
 		m.Scene.EffectiveTimeOfDay().String(),
 		m.Scene.Weather.String(),
-		m.Scene.ColorFilter.String(),
-		m.Scene.ParticleOverlay.String(),
-		speedBadge,
+		onOffStr(m.Scene.LampOn),
+		onOffStr(m.Scene.FireOn),
+		m.Scene.ShaderEffect.String(),
 	)
 
-	quickDeck := fmt.Sprintf("  %s Lamp: %s  |  %s Fire: %s  |  %s Lights: %s  |  %s Cat: %s  |  %s Pet 🐾  |  %s Shader: %s",
-		m.Styles.KeyCap.Render("[l]"), onOffStr(m.Scene.LampOn),
-		m.Styles.KeyCap.Render("[f]"), onOffStr(m.Scene.FireOn),
-		m.Styles.KeyCap.Render("[s]"), onOffStr(m.Scene.FairyLightsOn),
-		m.Styles.KeyCap.Render("[c]"), truncate(m.Scene.CatBreed.String(), 8),
-		m.Styles.KeyCap.Render("[K]"),
-		m.Styles.KeyCap.Render("[H]"), truncate(m.Scene.ShaderEffect.String(), 10),
+	quickDeck := fmt.Sprintf(" %s Scene  %s Weather  %s Time  %s Lamp %s  %s Fire %s  %s Cat (%s)  %s Pet 🐾  %s Music",
+		m.Styles.KeyCap.Render("v"),
+		m.Styles.KeyCap.Render("w"),
+		m.Styles.KeyCap.Render("t"),
+		m.Styles.KeyCap.Render("l"), lampIcon,
+		m.Styles.KeyCap.Render("f"), fireIcon,
+		m.Styles.KeyCap.Render("c"), truncate(m.Scene.CatBreed.String(), 6),
+		m.Styles.KeyCap.Render("K"),
+		m.Styles.KeyCap.Render("Space"),
 	)
 
 	content := metaHeader + "\n\n" + artStr + "\n\n" + m.Styles.MutedText.Render(quickDeck)
@@ -451,7 +465,7 @@ func (m Model) renderSidebar() string {
 	h := m.mainHeight()
 	var sb strings.Builder
 
-	// 1. Music Widget Card
+	// 1. Music & Soundscape Card
 	st := m.CLIAMP.GetStatus()
 	trackName := audio.CuratedLofiPresets[m.CLIAMP.ActivePreset].Name
 	if st.Playing && st.TrackTitle != "" {
@@ -468,19 +482,47 @@ func (m Model) renderSidebar() string {
 		volStr = fmt.Sprintf("%d%%", m.CLIAMP.VolumePercent)
 	}
 
-	sb.WriteString(m.Styles.Title.Render("🎵 LOFI RADIO") + "\n")
+	sb.WriteString(m.Styles.Title.Render("🎧 24/7 LOFI RADIO") + "\n")
 	sb.WriteString(m.Styles.BoldAccent.Render(truncate(trackName, 22)) + "\n")
 	spec := RenderAudioSpectrum(18, st.Playing, m.Scene.FrameCount, m.SpectrumMode, m.Styles.BoldAccent)
-	sb.WriteString("Spectrum: " + spec + "\n")
-	sb.WriteString("State: " + stateIcon + " • 🔊 " + volStr + "\n")
-	sb.WriteString(m.Styles.MutedText.Render("[Space] Play/Pause • [n/p] • [+/-]") + "\n\n")
+	sb.WriteString("Wave: " + spec + "\n")
+	sb.WriteString(fmt.Sprintf("%s • 🔊 %s\n", stateIcon, volStr))
+
+	var activeSounds []string
+	if m.Ambient.RainActive {
+		activeSounds = append(activeSounds, "🌧️")
+	}
+	if m.Ambient.FireActive {
+		activeSounds = append(activeSounds, "🔥")
+	}
+	if m.Ambient.WindActive {
+		activeSounds = append(activeSounds, "🌬️")
+	}
+	if m.Ambient.CafeActive {
+		activeSounds = append(activeSounds, "☕")
+	}
+	if m.Ambient.CricketsActive {
+		activeSounds = append(activeSounds, "🦗")
+	}
+	if len(activeSounds) > 0 {
+		sb.WriteString("Sound: " + strings.Join(activeSounds, " ") + "\n")
+	}
+	sb.WriteString(m.Styles.MutedText.Render("[Space] Play • [n/p] • [X] EQ") + "\n\n")
 
 	sb.WriteString(strings.Repeat("─", 24) + "\n\n")
 
-	// 2. Focus Timer Card
+	// 2. Focus Pomodoro Card
 	sb.WriteString(m.Styles.Title.Render("⏱️ FOCUS TIMER") + "\n")
 	sb.WriteString(fmt.Sprintf("Time: %s\n", m.Styles.Header.Render(m.Timer.FormattedTime())))
 	sb.WriteString(fmt.Sprintf("Mode: %s\n", m.Timer.Mode.String()))
+
+	barWidth := 18
+	completed := int(m.Timer.ProgressRatio() * float64(barWidth))
+	if completed > barWidth {
+		completed = barWidth
+	}
+	progressBar := strings.Repeat("█", completed) + strings.Repeat("░", barWidth-completed)
+	sb.WriteString(fmt.Sprintf("[%s]\n", m.Styles.ProgressBar.Render(progressBar)))
 	sb.WriteString(m.Styles.MutedText.Render("[x] Start/Pause • [z] Reset") + "\n\n")
 
 	sb.WriteString(strings.Repeat("─", 24) + "\n\n")
@@ -493,25 +535,23 @@ func (m Model) renderSidebar() string {
 
 	sb.WriteString(strings.Repeat("─", 24) + "\n\n")
 
-	// 4. Quick Toggles Card
-	sb.WriteString(m.Styles.Title.Render("✨ QUICK CONTROLS") + "\n")
-	sb.WriteString(fmt.Sprintf("%s Inspector: %s\n", m.Styles.KeyCap.Render("[i]"), m.Styles.MutedText.Render("Palette Info")))
-	sb.WriteString(fmt.Sprintf("%s Quote: %s\n", m.Styles.KeyCap.Render("[Q]"), m.Styles.MutedText.Render("Mindfulness")))
-	sb.WriteString(fmt.Sprintf("%s Pet Cat: %s\n", m.Styles.KeyCap.Render("[K]"), fmt.Sprintf("%d%% Bliss 💖", m.Scene.CatBliss)))
-	sb.WriteString(fmt.Sprintf("%s Catalog: %s\n", m.Styles.KeyCap.Render("[V]"), m.Styles.MutedText.Render("Browse 370+")))
-	sb.WriteString(fmt.Sprintf("%s Mixer: %s\n", m.Styles.KeyCap.Render("[Shift+X]"), m.Styles.MutedText.Render("Sound EQ")))
-	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[T]"), truncate(m.Styles.Theme.Name, 10)))
-	sb.WriteString(fmt.Sprintf("%s Filter: %s\n", m.Styles.KeyCap.Render("[C]"), truncate(m.Scene.ColorFilter.String(), 10)))
-	sb.WriteString(fmt.Sprintf("%s Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), truncate(m.Scene.ParticleOverlay.String(), 10)))
-	sb.WriteString(fmt.Sprintf("%s AutoCycle: %s\n", m.Styles.KeyCap.Render("[Y]"), truncate(m.Scene.AutoCycleMode.String(), 10)))
-	sb.WriteString(fmt.Sprintf("%s FavScope: %s\n", m.Styles.KeyCap.Render("[U]"), onOffStr(m.Scene.AutoCycleFavsOnly)))
-	sb.WriteString(fmt.Sprintf("%s Vignette: %s\n", m.Styles.KeyCap.Render("[G]"), onOffStr(m.Scene.VignetteOn)))
-	sb.WriteString(fmt.Sprintf("%s Scanlines: %s\n", m.Styles.KeyCap.Render("[O]"), onOffStr(m.Scene.CRTScanlinesOn)))
-	sb.WriteString(fmt.Sprintf("%s Speed: %s\n", m.Styles.KeyCap.Render("[S]"), truncate(m.Scene.AnimSpeed.String(), 10)))
-	sb.WriteString(fmt.Sprintf("%s AutoSync: %s\n", m.Styles.KeyCap.Render("[A]"), onOffStr(m.AutoSyncAudio)))
-	sb.WriteString(fmt.Sprintf("%s BeatPulse: %s\n", m.Styles.KeyCap.Render("[B]"), onOffStr(m.Scene.BeatReactiveParticles)))
-	sb.WriteString(fmt.Sprintf("%s Spectrum: %s\n", m.Styles.KeyCap.Render("[M]"), truncate(m.SpectrumMode.String(), 10)))
-	sb.WriteString(fmt.Sprintf("%s Zen Mode: %s\n", m.Styles.KeyCap.Render("[Shift+F]"), m.Styles.MutedText.Render("Minimal")))
+	// 4. Quick Companion Controls Card
+	sb.WriteString(m.Styles.Title.Render("🌿 COZY COMPANION") + "\n")
+	catName := "Sparky"
+	switch m.Scene.CatBreed {
+	case art.CatTuxedo:
+		catName = "Sylvester"
+	case art.CatCalico:
+		catName = "Mochi"
+	case art.CatBlack:
+		catName = "Luna"
+	}
+	sb.WriteString(fmt.Sprintf("🐾 %s: %s\n", catName, m.Styles.Header.Render(fmt.Sprintf("%d%% Bliss 💖", m.Scene.CatBliss))))
+	sb.WriteString(m.Styles.MutedText.Render("Press [K] to pet cat companion!") + "\n\n")
+
+	sb.WriteString(fmt.Sprintf("%s Catalog  %s Presets\n", m.Styles.KeyCap.Render("[V]"), m.Styles.KeyCap.Render("[Shift+S]")))
+	sb.WriteString(fmt.Sprintf("%s Themes   %s Zen Focus\n", m.Styles.KeyCap.Render("[T]"), m.Styles.KeyCap.Render("[Shift+F]")))
+	sb.WriteString(fmt.Sprintf("%s Palette  %s Shortcuts\n", m.Styles.KeyCap.Render("[:]"), m.Styles.KeyCap.Render("[?]")))
 
 	return m.Styles.Box.Width(28).Height(h).Render(sb.String())
 }
