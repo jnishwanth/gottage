@@ -158,6 +158,9 @@ type Styles struct {
 	PillBadge   lipgloss.Style
 	MutedText   lipgloss.Style
 	BoldAccent  lipgloss.Style
+	SwitchOn    lipgloss.Style
+	SwitchOff   lipgloss.Style
+	BadgeAccent lipgloss.Style
 }
 
 // NewStyles creates lipgloss styles using given Theme.
@@ -216,5 +219,19 @@ func NewStyles(t Theme) Styles {
 		BoldAccent: lipgloss.NewStyle().
 			Foreground(t.Accent).
 			Bold(true),
+		SwitchOn: lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#101424")).
+			Background(t.Highlight).
+			Bold(true).
+			Padding(0, 1),
+		SwitchOff: lipgloss.NewStyle().
+			Foreground(t.Subdued).
+			Background(lipgloss.Color("#2d3139")).
+			Padding(0, 1),
+		BadgeAccent: lipgloss.NewStyle().
+			Foreground(t.Accent).
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(t.Accent).
+			Padding(0, 1),
 	}
 }

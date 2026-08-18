@@ -63,3 +63,31 @@ func GetScenesByCategoryAndFavorites(catIdx int, favorites map[SceneType]bool) [
 	}
 	return list
 }
+
+// SceneMeta provides curated atmospheric metadata for catalog preview.
+type SceneMeta struct {
+	MoodTag            string
+	RecommendedWeather string
+	Atmosphere         string
+}
+
+// GetSceneMeta returns atmospheric details for a scene.
+func GetSceneMeta(st SceneType) SceneMeta {
+	catIdx := CategorizeScene(st)
+	switch catIdx {
+	case 1:
+		return SceneMeta{MoodTag: "☕ Cozy & Calm", RecommendedWeather: "🌧️ Rain / Snow", Atmosphere: "Warm indoor ambience with soft light and relaxing focus vibes"}
+	case 2:
+		return SceneMeta{MoodTag: "⚡ High-Tech Cyber", RecommendedWeather: "🌧️ Rain", Atmosphere: "Futuristic neon skyline with rain reflections and digital streams"}
+	case 3:
+		return SceneMeta{MoodTag: "🌿 Serene & Zen", RecommendedWeather: "🌸 Clear / Fog", Atmosphere: "Peaceful Japanese garden with flowing water and koi pond physics"}
+	case 4:
+		return SceneMeta{MoodTag: "🌌 Cosmic & Mystical", RecommendedWeather: "⭐ Starlight Night", Atmosphere: "Stargazing celestial observatory and deep space bioluminescent vistas"}
+	case 5:
+		return SceneMeta{MoodTag: "⚙️ Clockwork & Magic", RecommendedWeather: "☁️ Fog / Storm", Atmosphere: "Industrial brass clockwork gears and fantasy alchemy sanctum"}
+	case 6:
+		return SceneMeta{MoodTag: "🌅 Synthwave & Drive", RecommendedWeather: "🌆 Sunset", Atmosphere: "80s retro grid horizon with glowing neon sunsets and skyline drives"}
+	default:
+		return SceneMeta{MoodTag: "🌿 Focus Ambience", RecommendedWeather: "🌧️ Any Weather", Atmosphere: "Relaxing 8-bit atmospheric scene"}
+	}
+}

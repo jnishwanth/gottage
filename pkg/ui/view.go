@@ -513,7 +513,7 @@ func (m Model) renderScenePickerModal(bg string) string {
 	if m.PickerSceneIdx > 8 {
 		startIdx = m.PickerSceneIdx - 8
 	}
-	endIdx := startIdx + 12
+	endIdx := startIdx + 11
 	if endIdx > len(scenes) {
 		endIdx = len(scenes)
 	}
@@ -541,17 +541,51 @@ func (m Model) renderScenePickerModal(bg string) string {
 		}
 	}
 
-	modalText := fmt.Sprintf("🎨 SCENE CATALOG BROWSER (%d Total Scenes)\n\n%s\n\n%s\n\n%s\n\n%s",
-		len(art.SceneOrder),
+	leftCol := fmt.Sprintf("%s\n\n%s\n\n%s",
 		tabsRow,
 		searchHeader,
 		strings.Join(listLines, "\n"),
-		m.Styles.MutedText.Render("Nav: [h/l] Category • [/] Search • [f/*] Toggle Favorite • [j/k] Select • [Enter] Apply • [Esc/V] Close"),
+	)
+
+	// Right Column: Metadata Preview Card
+	previewCard := ""
+	if len(scenes) > 0 && m.PickerSceneIdx < len(scenes) {
+		selScene := scenes[m.PickerSceneIdx]
+		meta := art.GetSceneMeta(selScene)
+
+		favStatus := "Not Bookmarked"
+		if m.FavoriteScenes != nil && m.FavoriteScenes[selScene] {
+			favStatus = "⭐ Bookmarked"
+		}
+
+		previewContent := fmt.Sprintf("%s\n\n%s\n\n%s %s\n\n%s\n  %s\n\n%s\n  %s\n\n%s %s",
+			m.Styles.Header.Render("👁️ SCENE PREVIEW"),
+			m.Styles.Title.Render(truncate(selScene.String(), 28)),
+			m.Styles.MutedText.Render("Mood Tag:"), m.Styles.BoldAccent.Render(meta.MoodTag),
+			m.Styles.MutedText.Render("Weather Match:"), meta.RecommendedWeather,
+			m.Styles.MutedText.Render("Atmosphere:"), m.Styles.MutedText.Render(truncate(meta.Atmosphere, 32)),
+			m.Styles.MutedText.Render("Favorites:"), m.Styles.Header.Render(favStatus),
+		)
+
+		previewCard = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(m.Styles.Theme.Title).
+			Padding(0, 1).
+			Width(34).
+			Render(previewContent)
+	}
+
+	mainBody := lipgloss.JoinHorizontal(lipgloss.Top, leftCol, "  ", previewCard)
+
+	modalText := fmt.Sprintf("🎨 SCENE CATALOG BROWSER (%d Total Scenes)\n\n%s\n\n%s",
+		len(art.SceneOrder),
+		mainBody,
+		m.Styles.MutedText.Render("Nav: [h/l] Category • [/] Search • [f/*] Favorite • [j/k] Select • [Enter] Apply • [Esc/V] Close"),
 	)
 
 	modal := m.Styles.Box.
 		BorderForeground(m.Styles.Theme.Accent).
-		Width(80).
+		Width(96).
 		Render(modalText)
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal)
