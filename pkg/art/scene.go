@@ -192,8 +192,10 @@ type CottageScene struct {
 	AnimSpeed       AnimSpeed
 	LampOn          bool
 	FireOn          bool
-	FairyLightsOn   bool
-	Lightning       bool
+	FairyLightsOn         bool
+	Lightning             bool
+	BeatReactiveParticles bool
+	SmoothDayNightBlend   bool
 
 	RainParticles    []Particle
 	SnowParticles    []Particle
@@ -210,19 +212,21 @@ func NewCottageScene(width, height int) *CottageScene {
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	cs := &CottageScene{
-		Canvas:          canvas,
-		CurrentScene:    SceneRainyCity,
-		Buddy:           NewFocusBuddy(),
-		TimeOfDay:       TimeAuto,
-		Weather:         WeatherRain,
-		CatBreed:        CatOrange,
-		ColorFilter:     FilterNormal,
-		ParticleOverlay: OverlayNone,
-		AnimSpeed:       SpeedNormal,
-		LampOn:          true,
-		FireOn:          true,
-		FairyLightsOn:   false,
-		rng:             rng,
+		Canvas:                canvas,
+		CurrentScene:          SceneRainyCity,
+		Buddy:                 NewFocusBuddy(),
+		TimeOfDay:             TimeAuto,
+		Weather:               WeatherRain,
+		CatBreed:              CatOrange,
+		ColorFilter:           FilterNormal,
+		ParticleOverlay:       OverlayNone,
+		AnimSpeed:             SpeedNormal,
+		LampOn:                true,
+		FireOn:                true,
+		FairyLightsOn:         false,
+		BeatReactiveParticles: true,
+		SmoothDayNightBlend:   true,
+		rng:                   rng,
 	}
 
 	cs.initStars()
@@ -247,6 +251,18 @@ func (cs *CottageScene) CycleParticleOverlay() ParticleOverlay {
 	cs.ParticleOverlay = (cs.ParticleOverlay + 1) % 6
 	cs.initOverlayParticles()
 	return cs.ParticleOverlay
+}
+
+// ToggleBeatReactive toggles audio-reactive particle pulsing.
+func (cs *CottageScene) ToggleBeatReactive() bool {
+	cs.BeatReactiveParticles = !cs.BeatReactiveParticles
+	return cs.BeatReactiveParticles
+}
+
+// ToggleSmoothDayNight toggles real-time smooth day/night sky blending.
+func (cs *CottageScene) ToggleSmoothDayNight() bool {
+	cs.SmoothDayNightBlend = !cs.SmoothDayNightBlend
+	return cs.SmoothDayNightBlend
 }
 
 // CycleScene cycles to the next 8-bit retro scene preset.

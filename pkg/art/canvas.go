@@ -280,3 +280,50 @@ func (c *Canvas) Render() string {
 
 	return sb.String()
 }
+
+// ExtractDominantPalette samples the canvas pixels and returns up to n dominant colors.
+func (c *Canvas) ExtractDominantPalette(n int) []colorful.Color {
+	if n <= 0 {
+		return nil
+	}
+	colorCounts := make(map[string]int)
+	colorMap := make(map[string]colorful.Color)
+
+	// Sample grid every 4th pixel for speed and efficiency
+	for y := 0; y < c.Height; y += 4 {
+		for x := 0; x < c.Width; x += 4 {
+			col := c.Pixels[y][x]
+			r := uint8(math.Round(col.R*15) * 17)
+			g := uint8(math.Round(col.G*15) * 17)
+			b := uint8(math.Round(col.B*15) * 17)
+			qCol := colorful.Color{R: float64(r) / 255.0, G: float64(g) / 255.0, B: float64(b) / 255.0}
+			hex := qCol.Hex()
+			colorCounts[hex]++
+			colorMap[hex] = qCol
+		}
+	}
+
+	type colCount struct {
+		hex   string
+		count int
+	}
+	var sorted []colCount
+	for h, cnt := range colorCounts {
+		sorted = append(sorted, colCount{hex: h, count: cnt})
+	}
+
+	for i := 0; i < len(sorted); i++ {
+		for j := i + 1; j < len(sorted); j++ {
+			if sorted[j].count > sorted[i].count {
+				sorted[i], sorted[j] = sorted[j], sorted[i]
+			}
+		}
+	}
+
+	var result []colorful.Color
+	for i := 0; i < len(sorted) && i < n; i++ {
+		result = append(result, colorMap[sorted[i].hex])
+	}
+	return result
+}
+

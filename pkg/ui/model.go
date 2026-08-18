@@ -55,9 +55,10 @@ type Model struct {
 	PickerSceneIdx    int
 	PickerSearchMode  bool
 	PickerSearchInput textinput.Model
-	ShowThemePicker   bool
-	PickerThemeIdx    int
-	SpectrumMode      SpectrumStyle
+	ShowThemePicker    bool
+	PickerThemeIdx     int
+	ShowSceneInfoModal bool
+	SpectrumMode       SpectrumStyle
 	ZenMode           bool
 	AutoSyncAudio     bool
 	StatusMsg         string
@@ -190,6 +191,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds = append(cmds, m.timerTick())
 
 	case tea.KeyMsg:
+		// Modal: Scene Info & Palette Inspector
+		if m.ShowSceneInfoModal {
+			switch msg.String() {
+			case "esc", "q", "I", "i":
+				m.ShowSceneInfoModal = false
+			}
+			return m, nil
+		}
+
 		// Modal: Theme Picker
 		if m.ShowThemePicker {
 			switch msg.String() {
@@ -370,6 +380,25 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "C":
 			filter := m.Scene.CycleColorFilter()
 			m.SetStatusMsg("Color Filter: " + filter.String() + " 🎨")
+
+		case "I", "i":
+			m.ShowSceneInfoModal = !m.ShowSceneInfoModal
+
+		case "B":
+			beat := m.Scene.ToggleBeatReactive()
+			if beat {
+				m.SetStatusMsg("Audio-Reactive Particle Pulsing: ON 🎵")
+			} else {
+				m.SetStatusMsg("Audio-Reactive Particle Pulsing: OFF")
+			}
+
+		case "D":
+			blend := m.Scene.ToggleSmoothDayNight()
+			if blend {
+				m.SetStatusMsg("Smooth Day/Night Sky Blending: ON 🌅")
+			} else {
+				m.SetStatusMsg("Smooth Day/Night Sky Blending: OFF")
+			}
 
 		case "P":
 			overlay := m.Scene.CycleParticleOverlay()

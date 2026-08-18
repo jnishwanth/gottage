@@ -90,7 +90,7 @@ func (m Model) View() string {
 		if len(liveBadges) > 0 {
 			prefix = strings.Join(liveBadges, " • ") + "  |  "
 		}
-		footerText = prefix + "Press [?] help • [V] Catalog • [T] Themes • [M] Spectrum • [R] Random Scene • [q] quit"
+		footerText = prefix + "Press [?] help • [i] Scene Info • [V] Catalog • [T] Themes • [M] Spectrum • [R] Random • [q] quit"
 	}
 	footer := m.Styles.Footer.Render(footerText)
 
@@ -101,6 +101,11 @@ func (m Model) View() string {
 		"",
 		footer,
 	)
+
+	// Scene Info & Palette Inspector Modal
+	if m.ShowSceneInfoModal {
+		return m.renderSceneInfoModal(mainView)
+	}
 
 	// Theme Selector Modal
 	if m.ShowThemePicker {
@@ -404,12 +409,14 @@ func (m Model) renderSidebar() string {
 
 	// 3. Quick Toggles Card
 	sb.WriteString(m.Styles.Title.Render("✨ QUICK CONTROLS") + "\n")
+	sb.WriteString(fmt.Sprintf("%s Inspector: %s\n", m.Styles.KeyCap.Render("[i]"), m.Styles.MutedText.Render("Palette Info")))
 	sb.WriteString(fmt.Sprintf("%s Catalog: %s\n", m.Styles.KeyCap.Render("[V]"), m.Styles.MutedText.Render("Browse 370+")))
 	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[T]"), truncate(m.Styles.Theme.Name, 10)))
 	sb.WriteString(fmt.Sprintf("%s Filter: %s\n", m.Styles.KeyCap.Render("[C]"), truncate(m.Scene.ColorFilter.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), truncate(m.Scene.ParticleOverlay.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Speed: %s\n", m.Styles.KeyCap.Render("[S]"), truncate(m.Scene.AnimSpeed.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s AutoSync: %s\n", m.Styles.KeyCap.Render("[A]"), onOffStr(m.AutoSyncAudio)))
+	sb.WriteString(fmt.Sprintf("%s BeatPulse: %s\n", m.Styles.KeyCap.Render("[B]"), onOffStr(m.Scene.BeatReactiveParticles)))
 	sb.WriteString(fmt.Sprintf("%s Spectrum: %s\n", m.Styles.KeyCap.Render("[M]"), truncate(m.SpectrumMode.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Zen Mode: %s\n", m.Styles.KeyCap.Render("[Shift+F]"), m.Styles.MutedText.Render("Minimal")))
 
@@ -669,4 +676,70 @@ func truncate(str string, maxLen int) string {
 		return str
 	}
 	return str[:maxLen-3] + "..."
+}
+
+func (m Model) renderSceneInfoModal(bg string) string {
+	st := m.Scene.CurrentScene
+	meta := art.GetSceneMeta(st)
+
+	favStatus := "Not Bookmarked"
+	if m.FavoriteScenes != nil && m.FavoriteScenes[st] {
+		favStatus = "⭐ Favorites Bookmarked"
+	}
+
+	pals := m.Scene.Canvas.ExtractDominantPalette(8)
+	var swatchElems []string
+	for _, col := range pals {
+		hexStr := col.Hex()
+		block := lipgloss.NewStyle().
+			Background(lipgloss.Color(hexStr)).
+			Foreground(lipgloss.Color("#FFFFFF")).
+			Render(" " + hexStr + " ")
+		swatchElems = append(swatchElems, block)
+	}
+	paletteRow := strings.Join(swatchElems, " ")
+	if paletteRow == "" {
+		paletteRow = m.Styles.MutedText.Render("N/A")
+	}
+
+	catName := art.SceneCategories[art.CategorizeScene(st)]
+
+	col1 := fmt.Sprintf("%s\n  Preset:       %s\n  Category:     %s\n  Favorites:    %s\n\n%s\n  Mood Tag:     %s\n  Weather Match: %s\n  Atmosphere:   %s",
+		m.Styles.Header.Render("🎨 SCENE OVERVIEW"),
+		m.Styles.BoldAccent.Render(st.String()),
+		m.Styles.Title.Render(catName),
+		m.Styles.Header.Render(favStatus),
+		m.Styles.Header.Render("🌿 ATMOSPHERIC METADATA"),
+		m.Styles.BoldAccent.Render(meta.MoodTag),
+		meta.RecommendedWeather,
+		m.Styles.MutedText.Render(truncate(meta.Atmosphere, 40)),
+	)
+
+	col2 := fmt.Sprintf("%s\n  Resolution:   %dx%d px\n  Frames:       %d\n  Anim Speed:   %s\n  GPU Mode:     %s\n  Color Filter: %s\n  Particle:     %s\n  Beat Pulse:   %s\n  Sky Blend:    %s",
+		m.Styles.Header.Render("⚡ ENGINE METRICS"),
+		m.Scene.Canvas.Width, m.Scene.Canvas.Height,
+		m.Scene.FrameCount,
+		m.Scene.AnimSpeed.String(),
+		onOffStr(m.UseGPURender),
+		m.Scene.ColorFilter.String(),
+		m.Scene.ParticleOverlay.String(),
+		onOffStr(m.Scene.BeatReactiveParticles),
+		onOffStr(m.Scene.SmoothDayNightBlend),
+	)
+
+	topCols := lipgloss.JoinHorizontal(lipgloss.Top, col1, "    ", col2)
+
+	modalText := fmt.Sprintf("🎨 SCENE INSPECTOR & PALETTE ANALYSIS\n\n%s\n\n%s\n  %s\n\n%s",
+		topCols,
+		m.Styles.Header.Render("🖌️ EXTRACTED 8-COLOR SCENE PALETTE"),
+		paletteRow,
+		m.Styles.MutedText.Render("Quick Toggles: [B] Beat Pulse • [D] Day/Night Blend • [C] Color Filter • [P] Particle • [Esc/i] Close"),
+	)
+
+	modal := m.Styles.Box.
+		BorderForeground(m.Styles.Theme.Accent).
+		Width(86).
+		Render(modalText)
+
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal)
 }

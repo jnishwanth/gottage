@@ -123,4 +123,28 @@ func TestModelViewModals(t *testing.T) {
 	if !strings.Contains(vTasks, "COTTAGE TO-DO NOTEBOOK") {
 		t.Error("Expected tasks view to contain COTTAGE TO-DO NOTEBOOK")
 	}
+
+	// Test Scene Info Inspector Modal
+	m.ShowSceneInfoModal = true
+	vInfo := m.View()
+	if !strings.Contains(vInfo, "SCENE INSPECTOR & PALETTE ANALYSIS") {
+		t.Error("Expected Scene Info modal to contain SCENE INSPECTOR & PALETTE ANALYSIS")
+	}
+	m.ShowSceneInfoModal = false
+
+	// Test Dominant Palette Extraction & Scene Toggles
+	pals := m.Scene.Canvas.ExtractDominantPalette(8)
+	if len(pals) == 0 {
+		t.Error("Expected ExtractDominantPalette to return at least 1 color")
+	}
+
+	beat := m.Scene.ToggleBeatReactive()
+	if !beat && m.Scene.BeatReactiveParticles {
+		t.Error("Expected ToggleBeatReactive to toggle state")
+	}
+
+	blend := m.Scene.ToggleSmoothDayNight()
+	if !blend && m.Scene.SmoothDayNightBlend {
+		t.Error("Expected ToggleSmoothDayNight to toggle state")
+	}
 }
