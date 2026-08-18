@@ -81,6 +81,17 @@ func GetCommandList(m *Model) []CommandItem {
 	})
 
 	items = append(items, CommandItem{
+		Title:       "✨ Quote: Cycle Focus Mindfulness Quote",
+		Category:    "Mindfulness",
+		Shortcut:    "[ Q ]",
+		Description: "Cycle uplifting focus and mindfulness inspiration quotes",
+		Action: func(m *Model) {
+			q := m.Inspiration.NextQuote()
+			m.SetStatusMsg(fmt.Sprintf("✨ Quote: \"%s\" — %s", q.Quote, q.Author))
+		},
+	})
+
+	items = append(items, CommandItem{
 		Title:       "💧 Ripple: Drop Canvas Energy Ripple",
 		Category:    "Aesthetics",
 		Shortcut:    "[ Ripple ]",

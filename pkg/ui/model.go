@@ -77,12 +77,13 @@ type Model struct {
 	FavoriteScenes     map[art.SceneType]bool
 
 	// Core Components
-	Scene   *art.CottageScene
-	CLIAMP  *audio.CLIAMPController
-	Ambient *audio.AmbientManager
-	Timer   *features.FocusTimer
-	Tasks   *features.TaskList
-	Presets *features.PresetManager
+	Scene       *art.CottageScene
+	CLIAMP      *audio.CLIAMPController
+	Ambient     *audio.AmbientManager
+	Timer       *features.FocusTimer
+	Tasks       *features.TaskList
+	Presets     *features.PresetManager
+	Inspiration *features.InspirationManager
 
 	// Sub-view State
 	AddingTask bool
@@ -135,12 +136,13 @@ func NewModel() Model {
 		UseGPURender:       art.DetectTerminalProtocol() == art.ProtocolKitty,
 		FavoriteScenes:     favs,
 
-		Scene:   scene,
-		CLIAMP:  audio.NewCLIAMPController(),
-		Ambient: audio.NewAmbientManager(),
-		Timer:   features.NewFocusTimer(),
-		Tasks:   features.NewTaskList(),
-		Presets: features.NewPresetManager("user_presets.json"),
+		Scene:       scene,
+		CLIAMP:      audio.NewCLIAMPController(),
+		Ambient:     audio.NewAmbientManager(),
+		Timer:       features.NewFocusTimer(),
+		Tasks:       features.NewTaskList(),
+		Presets:     features.NewPresetManager("user_presets.json"),
+		Inspiration: features.NewInspirationManager(),
 
 		AddingTask: false,
 		TextInput:  ti,
@@ -677,6 +679,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.SetStatusMsg("🎬 Auto-Cycle Scope: All 370+ Scenes 🎨")
 			}
+
+		case "Q":
+			q := m.Inspiration.NextQuote()
+			m.SetStatusMsg(fmt.Sprintf("✨ Quote: \"%s\" — %s", q.Quote, q.Author))
 
 		case "b":
 			newScene := m.Scene.PrevScene()

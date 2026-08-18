@@ -123,7 +123,7 @@ func (m Model) View() string {
 		if len(liveBadges) > 0 {
 			prefix = strings.Join(liveBadges, " • ") + "  |  "
 		}
-		footerText = prefix + "Press [?] Help • [K] Pet Cat 🐾 • [F] Zen 🌿 • [:/Ctrl+P] Palette • [Shift+X] Mixer • [M] Spectrum • [q] quit"
+		footerText = prefix + "Press [?] Help • [K] Pet Cat 🐾 • [Q] Quote ✨ • [F] Zen 🌿 • [:/Ctrl+P] Palette • [Shift+X] Mixer • [M] Spectrum • [q] quit"
 	}
 	footer := m.Styles.Footer.Render(footerText)
 
@@ -192,10 +192,11 @@ func (m Model) renderHeader() string {
 	tabBar := strings.Join(tabStrings, " ")
 
 	title := m.Styles.Title.Render("🏡 GOTTAGE") + " " + m.Styles.MutedText.Render("v1.0")
-	proto := m.Styles.StatusBadge.Render(" " + art.DetectTerminalProtocol().String() + " ")
+	clockBadge := m.Styles.StatusBadge.Render(" 🕒 " + time.Now().Format("15:04:05") + " ")
+	proto := m.Styles.Card.Render(art.DetectTerminalProtocol().String())
 	themeBadge := m.Styles.PillBadge.Render(" " + m.Styles.Theme.Name + " ")
 
-	return lipgloss.JoinHorizontal(lipgloss.Center, title, "  ", proto, "  ", themeBadge, "    ", tabBar)
+	return lipgloss.JoinHorizontal(lipgloss.Center, title, "  ", clockBadge, "  ", proto, "  ", themeBadge, "    ", tabBar)
 }
 
 func (m Model) renderArtView() string {
@@ -230,7 +231,16 @@ func (m Model) renderArtView() string {
 		speedBadge,
 	)
 
-	content := metaHeader + "\n\n" + artStr
+	quickDeck := fmt.Sprintf("  %s Lamp: %s  |  %s Fire: %s  |  %s Lights: %s  |  %s Cat: %s  |  %s Pet 🐾  |  %s Shader: %s",
+		m.Styles.KeyCap.Render("[l]"), onOffStr(m.Scene.LampOn),
+		m.Styles.KeyCap.Render("[f]"), onOffStr(m.Scene.FireOn),
+		m.Styles.KeyCap.Render("[s]"), onOffStr(m.Scene.FairyLightsOn),
+		m.Styles.KeyCap.Render("[c]"), truncate(m.Scene.CatBreed.String(), 8),
+		m.Styles.KeyCap.Render("[K]"),
+		m.Styles.KeyCap.Render("[H]"), truncate(m.Scene.ShaderEffect.String(), 10),
+	)
+
+	content := metaHeader + "\n\n" + artStr + "\n\n" + m.Styles.MutedText.Render(quickDeck)
 	return m.Styles.Box.Width(w).Height(h).Render(content)
 }
 
@@ -475,9 +485,18 @@ func (m Model) renderSidebar() string {
 
 	sb.WriteString(strings.Repeat("─", 24) + "\n\n")
 
-	// 3. Quick Toggles Card
+	// 3. Mindfulness Prompt Card
+	q := m.Inspiration.CurrentQuote()
+	sb.WriteString(m.Styles.Title.Render("✨ MINDFULNESS PROMPT") + "\n")
+	sb.WriteString(m.Styles.BoldAccent.Render("\""+truncate(q.Quote, 22)+"\"") + "\n")
+	sb.WriteString(m.Styles.MutedText.Render("— "+q.Author) + " " + m.Styles.KeyCap.Render("[Q]") + "\n\n")
+
+	sb.WriteString(strings.Repeat("─", 24) + "\n\n")
+
+	// 4. Quick Toggles Card
 	sb.WriteString(m.Styles.Title.Render("✨ QUICK CONTROLS") + "\n")
 	sb.WriteString(fmt.Sprintf("%s Inspector: %s\n", m.Styles.KeyCap.Render("[i]"), m.Styles.MutedText.Render("Palette Info")))
+	sb.WriteString(fmt.Sprintf("%s Quote: %s\n", m.Styles.KeyCap.Render("[Q]"), m.Styles.MutedText.Render("Mindfulness")))
 	sb.WriteString(fmt.Sprintf("%s Pet Cat: %s\n", m.Styles.KeyCap.Render("[K]"), fmt.Sprintf("%d%% Bliss 💖", m.Scene.CatBliss)))
 	sb.WriteString(fmt.Sprintf("%s Catalog: %s\n", m.Styles.KeyCap.Render("[V]"), m.Styles.MutedText.Render("Browse 370+")))
 	sb.WriteString(fmt.Sprintf("%s Mixer: %s\n", m.Styles.KeyCap.Render("[Shift+X]"), m.Styles.MutedText.Render("Sound EQ")))
@@ -570,8 +589,9 @@ func (m Model) renderZenView() string {
 	st := m.CLIAMP.GetStatus()
 	spec := RenderAudioSpectrum(16, st.Playing, m.Scene.FrameCount, m.SpectrumMode, m.Styles.BoldAccent)
 	breath := GetZenBreathState(m.Scene.FrameCount)
+	quote := m.Inspiration.CurrentQuote()
 
-	cardContent := fmt.Sprintf("%s\n\n⏱️ %s   |   %s   |   🐾 Bliss: %d%%\n\n%s  %s\n%s\n\n%s %s",
+	cardContent := fmt.Sprintf("%s\n\n⏱️ %s   |   %s   |   🐾 Bliss: %d%%\n\n%s  %s\n%s\n\n✨ %s\n   %s\n\n%s %s",
 		m.Styles.Title.Render("🌿 ZEN FOCUS MODE"),
 		m.Styles.BoldAccent.Render(m.Timer.FormattedTime()),
 		m.timerStateStr(),
@@ -579,6 +599,8 @@ func (m Model) renderZenView() string {
 		m.Styles.Title.Render(breath.PhaseName),
 		m.Styles.Header.Render(breath.RingVisual),
 		m.Styles.MutedText.Render("  "+breath.Instruction),
+		m.Styles.BoldAccent.Render("\""+quote.Quote+"\""),
+		m.Styles.MutedText.Render("— "+quote.Author+"  "+m.Styles.KeyCap.Render("[Q]")),
 		m.Styles.MutedText.Render("Spectrum: "),
 		spec,
 	)
@@ -589,7 +611,7 @@ func (m Model) renderZenView() string {
 		Render(cardContent)
 
 	overlay := lipgloss.Place(m.Width, m.Height-2, lipgloss.Center, lipgloss.Center, floatingCard)
-	footer := m.Styles.Footer.Render("Press [Esc] or [F] to exit Zen Mode • [K] Pet Cat 🐾 • [Space] Audio • [x] Timer • [v] Cycle Scene")
+	footer := m.Styles.Footer.Render("Press [Esc] or [F] to exit Zen Mode • [K] Pet Cat 🐾 • [Q] Quote ✨ • [Space] Audio • [x] Timer • [v] Cycle Scene")
 
 	return artCanvas + "\n" + overlay + "\n" + footer
 }

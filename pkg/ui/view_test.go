@@ -298,6 +298,24 @@ func TestModelViewModals(t *testing.T) {
 	if !strings.Contains(vBliss, "Bliss:") {
 		t.Error("Expected status footer to contain live Bliss badge")
 	}
+
+	// Test Desktop Clock Badge, Quick Control Deck, and Mindfulness Quotes
+	if !strings.Contains(vBliss, "🕒") {
+		t.Error("Expected header to contain live desktop clock badge")
+	}
+	if !strings.Contains(vBliss, "MINDFULNESS PROMPT") {
+		t.Error("Expected sidebar to contain MINDFULNESS PROMPT card")
+	}
+	vArt := m.renderArtView()
+	if !strings.Contains(vArt, "Lamp:") || !strings.Contains(vArt, "Shader:") {
+		t.Error("Expected renderArtView to contain interactive Quick Control Deck")
+	}
+
+	q1 := m.Inspiration.CurrentQuote()
+	q2 := m.Inspiration.NextQuote()
+	if q1.Quote == q2.Quote {
+		t.Error("Expected InspirationManager.NextQuote to cycle to a new quote")
+	}
 }
 
 
