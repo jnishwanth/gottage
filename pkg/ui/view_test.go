@@ -275,6 +275,18 @@ func TestModelViewModals(t *testing.T) {
 		t.Error("Expected ShowSpectrumModal view to render 2D AUDIO SPECTRUM & EQUALIZER STUDIO header")
 	}
 	m.ShowSpectrumModal = false
+
+	// Test Canvas Energy Ripples & 3D Cosmos Starfield Warp Shader Badge
+	m.Scene.TriggerCanvasRippleHex(40, 20, "#ff5588")
+	if len(m.Scene.Ripples) != 1 {
+		t.Errorf("Expected 1 canvas ripple active, got %d", len(m.Scene.Ripples))
+	}
+	m.Scene.ShaderEffect = art.ShaderStarfieldWarp
+	m.StatusMsg = ""
+	vWarp := m.View()
+	if !strings.Contains(vWarp, "3D Cosmos Starfield Warp") {
+		t.Error("Expected status footer to contain 3D Cosmos Starfield Warp live badge")
+	}
 }
 
 

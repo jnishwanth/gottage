@@ -153,6 +153,10 @@ const (
 	ShaderFireflies
 	ShaderAuroraWaves
 	ShaderAudioWaveform
+	ShaderStarfieldWarp
+	ShaderFluidWaves
+	ShaderFireFlames
+	ShaderMatrixDepth
 )
 
 func (s ShaderEffect) String() string {
@@ -165,6 +169,14 @@ func (s ShaderEffect) String() string {
 		return "Atmospheric Aurora Waves 🌅"
 	case ShaderAudioWaveform:
 		return "8-Bit Audio Waveform Spectrum 🌊"
+	case ShaderStarfieldWarp:
+		return "3D Cosmos Starfield Warp 🌌"
+	case ShaderFluidWaves:
+		return "Bioluminescent Fluid Waves 🌊"
+	case ShaderFireFlames:
+		return "Procedural Flame Engine 🔥"
+	case ShaderMatrixDepth:
+		return "3D Layered Matrix Code Rain 📟"
 	default:
 		return "None ❌"
 	}
@@ -248,6 +260,16 @@ type Particle struct {
 	Char    rune
 }
 
+// CanvasRipple represents an expanding energy ring dropped onto the canvas.
+type CanvasRipple struct {
+	X, Y      float64
+	Radius    float64
+	MaxRadius float64
+	Color     colorful.Color
+	Life      float64
+	MaxLife   float64
+}
+
 // CottageScene encapsulates dynamic state for the 8-bit retro scene engine.
 type CottageScene struct {
 	Canvas                *Canvas
@@ -282,6 +304,7 @@ type CottageScene struct {
 	SteamParticles   []Particle
 	OverlayParticles []Particle
 	ShaderParticles  []Particle
+	Ripples          []CanvasRipple
 	Stars            []struct{ X, Y int; Phase float64 }
 
 	rng *rand.Rand
@@ -349,9 +372,38 @@ func (cs *CottageScene) ToggleAutoCycleFavs() bool {
 	return cs.AutoCycleFavsOnly
 }
 
+// TriggerCanvasRipple drops a serene expanding energy ring on the canvas.
+func (cs *CottageScene) TriggerCanvasRipple(x, y int, col colorful.Color) {
+	if cs.Canvas == nil {
+		return
+	}
+	if x < 0 || x >= cs.Canvas.Width || y < 0 || y >= cs.Canvas.Height {
+		x = cs.Canvas.Width / 2
+		y = cs.Canvas.Height / 2
+	}
+	cs.Ripples = append(cs.Ripples, CanvasRipple{
+		X:         float64(x),
+		Y:         float64(y),
+		Radius:    1.0,
+		MaxRadius: 14.0 + cs.rng.Float64()*8.0,
+		Color:     col,
+		Life:      0,
+		MaxLife:   15,
+	})
+}
+
+// TriggerCanvasRippleHex drops a serene expanding energy ring using a hex color string.
+func (cs *CottageScene) TriggerCanvasRippleHex(x, y int, hex string) {
+	col, err := colorful.Hex(hex)
+	if err != nil {
+		col = PicoCyan
+	}
+	cs.TriggerCanvasRipple(x, y, col)
+}
+
 // CycleShaderEffect cycles to the next procedural canvas shader animation.
 func (cs *CottageScene) CycleShaderEffect() ShaderEffect {
-	cs.ShaderEffect = (cs.ShaderEffect + 1) % 5
+	cs.ShaderEffect = (cs.ShaderEffect + 1) % 9
 	cs.initShaderParticles()
 	return cs.ShaderEffect
 }
@@ -606,6 +658,16 @@ func (cs *CottageScene) Update() {
 		}
 	}
 
+	// Ripple Energy physics
+	for i := len(cs.Ripples) - 1; i >= 0; i-- {
+		rp := &cs.Ripples[i]
+		rp.Life++
+		rp.Radius += (rp.MaxRadius - rp.Radius) * 0.25
+		if rp.Life >= rp.MaxLife {
+			cs.Ripples = append(cs.Ripples[:i], cs.Ripples[i+1:]...)
+		}
+	}
+
 	// Shader Particle physics
 	if cs.ShaderEffect != ShaderNone {
 		for i := range cs.ShaderParticles {
@@ -617,6 +679,10 @@ func (cs *CottageScene) Update() {
 			case ShaderFireflies:
 				p.Y += math.Sin(p.Life*0.4) * 0.3
 				p.X += math.Cos(p.Life*0.4) * 0.3
+			case ShaderMatrixDepth:
+				p.Y += 1.2 + cs.rng.Float64()*0.6
+			case ShaderStarfieldWarp:
+				p.Life += 0.15
 			}
 			if p.Y >= float64(cs.Canvas.Height) || p.Y < 0 || p.X >= float64(cs.Canvas.Width) || p.X < 0 {
 				p.X = float64(cs.rng.Intn(cs.Canvas.Width))
@@ -654,6 +720,10 @@ func (cs *CottageScene) initShaderParticles() {
 		count = 25
 	} else if cs.ShaderEffect == ShaderFireflies {
 		count = 20
+	} else if cs.ShaderEffect == ShaderStarfieldWarp {
+		count = 45
+	} else if cs.ShaderEffect == ShaderMatrixDepth {
+		count = 35
 	}
 	for i := 0; i < count; i++ {
 		cs.ShaderParticles = append(cs.ShaderParticles, Particle{
@@ -673,7 +743,8 @@ func (cs *CottageScene) initShaderParticles() {
 // Step 3: Render Window Frames, Room Interior, Desk, Objects, and Focus Buddy (Layers 3-5)
 // Step 4: Apply Dynamic Lighting Cones, Hearth Glows, and Lightning Flashes (Layer 6)
 // Step 5: Render Organic Screen Particle Overlays (Sakura, Embers, Matrix Rain)
-// Step 5.5: Render Procedural Canvas Shader Effects (Rain-on-Glass, Fireflies, Aurora, Audio Waveform)
+// Step 5.5: Render Procedural Canvas Shader Effects (Rain-on-Glass, Fireflies, Aurora, Starfield Warp, Fluid Waves, Flames, Matrix Depth)
+// Step 5.6: Render Interactive Canvas Energy Ripples
 // Step 6: Apply Visual Color Filter Post-Processing Tint
 func (cs *CottageScene) RenderFrame() {
 	c := cs.Canvas
@@ -699,7 +770,12 @@ func (cs *CottageScene) RenderFrame() {
 		cs.renderShaderEffect(c)
 	}
 
-	// Step 5.6: Apply Smooth Multi-Frame Scene Dissolve Crossfade
+	// Step 5.6: Interactive Canvas Energy Ripples
+	if len(cs.Ripples) > 0 {
+		cs.renderCanvasRipples(c)
+	}
+
+	// Step 5.7: Apply Smooth Multi-Frame Scene Dissolve Crossfade
 	if cs.PrevCanvas != nil && cs.TransitionStep < cs.TransitionMax {
 		alpha := 1.0 - (float64(cs.TransitionStep) / float64(cs.TransitionMax))
 		c.BlendCanvas(cs.PrevCanvas, alpha)
@@ -725,6 +801,28 @@ func (cs *CottageScene) RenderFrame() {
 	}
 }
 
+func (cs *CottageScene) renderCanvasRipples(c *Canvas) {
+	for _, rp := range cs.Ripples {
+		alpha := (1.0 - rp.Life/rp.MaxLife) * 0.85
+		cx, cy := int(rp.X), int(rp.Y)
+		r := rp.Radius
+		minY := int(math.Max(0, float64(cy)-r))
+		maxY := int(math.Min(float64(c.Height-1), float64(cy)+r))
+		minX := int(math.Max(0, float64(cx)-r*2))
+		maxX := int(math.Min(float64(c.Width-1), float64(cx)+r*2))
+
+		for py := minY; py <= maxY; py++ {
+			for px := minX; px <= maxX; px++ {
+				dx := float64(px-cx) / 2.0
+				dy := float64(py - cy)
+				dist := math.Sqrt(dx*dx + dy*dy)
+				if math.Abs(dist-r) < 1.2 {
+					c.BlendPixel(px, py, rp.Color, alpha)
+				}
+			}
+		}
+	}
+}
 
 func (cs *CottageScene) renderShaderEffect(c *Canvas) {
 	if cs.ShaderEffect == ShaderNone {
@@ -792,6 +890,85 @@ func (cs *CottageScene) renderShaderEffect(c *Canvas) {
 						col = PicoPink
 					}
 					c.BlendPixel(x, py, col, 0.7)
+				}
+			}
+		}
+
+	case ShaderStarfieldWarp:
+		cx, cy := float64(c.Width)/2.0, float64(c.Height)/2.0
+		for i := range cs.ShaderParticles {
+			t := float64(cs.FrameCount)*0.08 + float64(i)*1.5
+			dist := math.Mod(t*12.0, math.Max(cx, cy))
+			angle := float64(i) * (math.Pi * 2 / float64(len(cs.ShaderParticles)))
+			px := cx + math.Cos(angle)*dist*2.0
+			py := cy + math.Sin(angle)*dist
+			if px >= 0 && px < float64(c.Width) && py >= 0 && py < float64(c.Height) {
+				alpha := math.Min(1.0, dist/15.0)
+				col := PicoCyan
+				if i%3 == 0 {
+					col = PicoPink
+				} else if i%3 == 1 {
+					col = PicoYellow
+				}
+				c.BlendPixel(int(px), int(py), col, alpha*0.9)
+				if dist > 15 {
+					c.DrawGlyph(int(px), int(py)/2, '✦', col)
+				}
+			}
+		}
+
+	case ShaderFluidWaves:
+		t := float64(cs.FrameCount) * 0.08
+		baseY := c.Height - 14
+		for x := 0; x < c.Width; x++ {
+			wave1 := math.Sin(t+float64(x)*0.07) * 4.0
+			wave2 := math.Cos(t*0.7+float64(x)*0.12) * 2.5
+			yPeak := baseY + int(wave1+wave2)
+			for py := yPeak; py < c.Height; py++ {
+				if py >= 0 && py < c.Height {
+					depth := float64(py-yPeak) / 14.0
+					col := PicoCyan.BlendRgb(PicoNavy, depth)
+					c.BlendPixel(x, py, col, 0.45*(1.0-depth*0.5))
+				}
+			}
+		}
+
+	case ShaderFireFlames:
+		t := float64(cs.FrameCount) * 0.12
+		baseY := c.Height - 1
+		for x := 0; x < c.Width; x++ {
+			flameH := int(math.Abs(math.Sin(t+float64(x)*0.2)*6.0) + math.Abs(math.Cos(t*1.3+float64(x)*0.35)*4.0))
+			for dy := 0; dy <= flameH; dy++ {
+				py := baseY - dy
+				if py >= 0 && py < c.Height {
+					ratio := float64(dy) / float64(flameH+1)
+					col := PicoYellow
+					if ratio > 0.6 {
+						col = PicoRed
+					} else if ratio > 0.3 {
+						col = PicoOrange
+					}
+					c.BlendPixel(x, py, col, 0.75*(1.0-ratio*0.4))
+				}
+			}
+		}
+
+	case ShaderMatrixDepth:
+		for _, p := range cs.ShaderParticles {
+			px, py := int(p.X), int(p.Y)
+			for trail := 0; trail < 6; trail++ {
+				ty := py - trail
+				if px >= 0 && px < c.Width && ty >= 0 && ty < c.Height {
+					alpha := (1.0 - float64(trail)/6.0) * 0.85
+					col := PicoGreen
+					if trail == 0 {
+						col = PicoWhite
+					}
+					c.BlendPixel(px, ty, col, alpha)
+					if ty%2 == 0 {
+						r := rune('0' + (px+ty+cs.rng.Intn(10))%10)
+						c.DrawGlyph(px, ty/2, r, col)
+					}
 				}
 			}
 		}

@@ -100,6 +100,9 @@ func (m Model) View() string {
 		if m.Scene.ParticleOverlay != art.OverlayNone {
 			liveBadges = append(liveBadges, "✨ "+m.Scene.ParticleOverlay.String())
 		}
+		if m.Scene.ShaderEffect != art.ShaderNone {
+			liveBadges = append(liveBadges, "🌌 "+m.Scene.ShaderEffect.String())
+		}
 		if m.Scene.VignetteOn {
 			liveBadges = append(liveBadges, "🖼️ Vignette")
 		}

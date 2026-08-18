@@ -65,3 +65,27 @@ func TestCanvasRenderModes(t *testing.T) {
 		t.Errorf("Expected cloned RenderMode RenderBraille, got %v", cloned.RenderMode)
 	}
 }
+
+func TestProceduralShadersAndRipples(t *testing.T) {
+	cs := NewCottageScene(80, 40)
+
+	// Test 9 shader modes cycle clean
+	for i := 0; i < 9; i++ {
+		s := cs.CycleShaderEffect()
+		if len(s.String()) == 0 {
+			t.Errorf("Expected non-empty shader string description for index %d", i)
+		}
+		cs.RenderFrame()
+	}
+
+	// Test Canvas Energy Ripple trigger & rendering
+	cs.TriggerCanvasRippleHex(40, 20, "#ff5588")
+	if len(cs.Ripples) != 1 {
+		t.Errorf("Expected 1 active canvas ripple, got %d", len(cs.Ripples))
+	}
+	cs.RenderFrame()
+	cs.Update()
+	if cs.Ripples[0].Life != 1 {
+		t.Errorf("Expected ripple life 1 after update, got %v", cs.Ripples[0].Life)
+	}
+}

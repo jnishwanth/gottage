@@ -62,10 +62,21 @@ func GetCommandList(m *Model) []CommandItem {
 		Title:       "✨ Shader: Cycle Procedural Canvas Shaders",
 		Category:    "Aesthetics",
 		Shortcut:    "[ H ]",
-		Description: "Cycle canvas animation shaders (Rain-on-Glass, Fireflies, Aurora, Audio Waveform)",
+		Description: "Cycle canvas animation shaders (Rain-on-Glass, Fireflies, Aurora, Audio Waveform, Starfield Warp, Fluid Waves, Flames, Matrix Depth)",
 		Action: func(m *Model) {
 			shader := m.Scene.CycleShaderEffect()
 			m.SetStatusMsg("Canvas Shader: " + shader.String() + " ✨")
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "💧 Ripple: Drop Canvas Energy Ripple",
+		Category:    "Aesthetics",
+		Shortcut:    "[ Ripple ]",
+		Description: "Drop a serene expanding energy ripple ring onto the terminal canvas",
+		Action: func(m *Model) {
+			m.Scene.TriggerCanvasRippleHex(m.mainWidth()/2, m.mainHeight(), string(m.Styles.Theme.Accent))
+			m.SetStatusMsg("Dropped Serene Canvas Energy Ripple 💧")
 		},
 	})
 
