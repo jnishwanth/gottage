@@ -76,6 +76,21 @@ func (m Model) View() string {
 		if st.Playing {
 			liveBadges = append(liveBadges, "🎵 Playing")
 		}
+		if m.Ambient.RainActive {
+			liveBadges = append(liveBadges, "🌧️ Rain")
+		}
+		if m.Ambient.FireActive {
+			liveBadges = append(liveBadges, "🔥 Fire")
+		}
+		if m.Ambient.WindActive {
+			liveBadges = append(liveBadges, "🌬️ Wind")
+		}
+		if m.Ambient.CafeActive {
+			liveBadges = append(liveBadges, "☕ Cafe")
+		}
+		if m.Ambient.CricketsActive {
+			liveBadges = append(liveBadges, "🦗 Crickets")
+		}
 		if m.Timer.Running {
 			liveBadges = append(liveBadges, "⏱️ "+m.Timer.FormattedTime())
 		}
@@ -349,11 +364,14 @@ func (m Model) renderAmbianceView() string {
 		m.Styles.KeyCap.Render("[f]"), onOffStr(m.Scene.FireOn),
 		m.Styles.KeyCap.Render("[s]"), onOffStr(m.Scene.FairyLightsOn)))
 
-	sb.WriteString(m.Styles.Title.Render("🌧️ Procedural Audio Channels & Auto-Sync") + "\n")
-	sb.WriteString(fmt.Sprintf("  %s Rain Sound: %s    %s Fire Sound: %s    %s Wind Sound: %s\n",
+	sb.WriteString(m.Styles.Title.Render("🌧️ 5-Channel Procedural Ambient Sound Console") + "\n")
+	sb.WriteString(fmt.Sprintf("  %s Rain: %s    %s Fireplace: %s    %s Wind Breeze: %s\n",
 		m.Styles.KeyCap.Render("[r]"), onOffStr(m.Ambient.RainActive),
 		m.Styles.KeyCap.Render("[m]"), onOffStr(m.Ambient.FireActive),
 		m.Styles.KeyCap.Render("[W]"), onOffStr(m.Ambient.WindActive)))
+	sb.WriteString(fmt.Sprintf("  %s Cafe Chatter: %s    %s Night Crickets: %s\n",
+		m.Styles.KeyCap.Render("[K]"), onOffStr(m.Ambient.CafeActive),
+		m.Styles.KeyCap.Render("[e]"), onOffStr(m.Ambient.CricketsActive)))
 	sb.WriteString(fmt.Sprintf("  %s Weather Audio Auto-Sync: %s\n\n",
 		m.Styles.KeyCap.Render("[A]"), onOffStr(m.AutoSyncAudio)))
 
@@ -473,6 +491,8 @@ func (m Model) renderHelpModal(bg string) string {
   [r]      Toggle Rain Ambient Sound
   [m]      Toggle Fireplace Ambient Sound
   [W]      Toggle Wind Ambient Sound
+  [K]      Toggle Cafe Chatter Ambient Sound
+  [e]      Toggle Night Crickets Ambient Sound
 
   TIMER & TASKS:
   [x]      Start / Pause Pomodoro Timer

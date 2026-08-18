@@ -645,10 +645,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SetStatusMsg("Atmospheric Audio Auto-Sync: OFF")
 			}
 
-		case "K":
-			speed := m.Scene.CycleAnimSpeed()
-			m.SetStatusMsg("Animation Speed: " + speed.String())
-
 		case "+", "=":
 			if m.CLIAMP != nil {
 				vol := m.CLIAMP.AdjustVolume(10)
@@ -743,6 +739,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SetStatusMsg("Wind Audio ON 🌬️")
 			} else {
 				m.SetStatusMsg("Wind Audio OFF")
+			}
+
+		case "K":
+			active := m.Ambient.ToggleCafe()
+			if active {
+				m.SetStatusMsg("Cafe Ambience ON ☕")
+			} else {
+				m.SetStatusMsg("Cafe Ambience OFF")
+			}
+
+		case "e":
+			active := m.Ambient.ToggleCrickets()
+			if active {
+				m.SetStatusMsg("Night Crickets Audio ON 🦗")
+			} else {
+				m.SetStatusMsg("Night Crickets Audio OFF")
 			}
 
 		// Timer Controls

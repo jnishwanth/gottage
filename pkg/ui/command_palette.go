@@ -237,7 +237,7 @@ func GetCommandList(m *Model) []CommandItem {
 		CommandItem{
 			Title:       "🍃 Audio: Toggle Wind Breeze Sound",
 			Category:    "Audio",
-			Shortcut:    "[ w ]",
+			Shortcut:    "[ W ]",
 			Description: "Toggle ambient wind breeze audio loop",
 			Action: func(m *Model) {
 				w := m.Ambient.ToggleWind()
@@ -245,6 +245,34 @@ func GetCommandList(m *Model) []CommandItem {
 					m.SetStatusMsg("Wind Breeze Audio: ON 🍃")
 				} else {
 					m.SetStatusMsg("Wind Breeze Audio: OFF")
+				}
+			},
+		},
+		CommandItem{
+			Title:       "☕ Audio: Toggle Cafe Chatter Ambience",
+			Category:    "Audio",
+			Shortcut:    "[ K ]",
+			Description: "Toggle ambient coffee shop chatter audio loop",
+			Action: func(m *Model) {
+				c := m.Ambient.ToggleCafe()
+				if c {
+					m.SetStatusMsg("Cafe Ambience: ON ☕")
+				} else {
+					m.SetStatusMsg("Cafe Ambience: OFF")
+				}
+			},
+		},
+		CommandItem{
+			Title:       "🦗 Audio: Toggle Night Crickets Ambience",
+			Category:    "Audio",
+			Shortcut:    "[ e ]",
+			Description: "Toggle ambient night crickets chirping audio loop",
+			Action: func(m *Model) {
+				cr := m.Ambient.ToggleCrickets()
+				if cr {
+					m.SetStatusMsg("Night Crickets Audio: ON 🦗")
+				} else {
+					m.SetStatusMsg("Night Crickets Audio: OFF")
 				}
 			},
 		},

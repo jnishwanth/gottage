@@ -182,5 +182,19 @@ func TestModelViewModals(t *testing.T) {
 		t.Error("Expected Preset Studio modal to contain ATMOSPHERE PRESET STUDIO")
 	}
 	m.ShowPresetModal = false
+
+	// Test 5-Channel Procedural Ambient Sound Console (Cafe & Crickets)
+	cafeOn := m.Ambient.ToggleCafe()
+	if !cafeOn || !m.Ambient.CafeActive {
+		t.Error("Expected ToggleCafe to activate Cafe chatter sound")
+	}
+	cricketOn := m.Ambient.ToggleCrickets()
+	if !cricketOn || !m.Ambient.CricketsActive {
+		t.Error("Expected ToggleCrickets to activate Night Crickets sound")
+	}
+	vAmb := m.renderAmbianceView()
+	if !strings.Contains(vAmb, "5-Channel Procedural Ambient Sound Console") || !strings.Contains(vAmb, "Cafe Chatter") || !strings.Contains(vAmb, "Night Crickets") {
+		t.Error("Expected renderAmbianceView to display 5-channel console and new sound channels")
+	}
 }
 

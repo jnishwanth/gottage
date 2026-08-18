@@ -21,22 +21,28 @@ const (
 	SoundFire
 	SoundWind
 	SoundClock
+	SoundCafe
+	SoundCrickets
 )
 
 // AmbientManager handles background procedural audio playback.
 type AmbientManager struct {
-	mu           sync.Mutex
-	RainActive   bool
-	FireActive   bool
-	WindActive   bool
-	ClockActive  bool
-	Volume       float64 // 0.0 to 1.0
-	tempDir      string
-	rainCmd      *exec.Cmd
-	fireCmd      *exec.Cmd
-	windCmd      *exec.Cmd
-	playerBinary string
-	rng          *rand.Rand
+	mu             sync.Mutex
+	RainActive     bool
+	FireActive     bool
+	WindActive     bool
+	ClockActive    bool
+	CafeActive     bool
+	CricketsActive bool
+	Volume         float64 // 0.0 to 1.0
+	tempDir        string
+	rainCmd        *exec.Cmd
+	fireCmd        *exec.Cmd
+	windCmd        *exec.Cmd
+	cafeCmd        *exec.Cmd
+	cricketsCmd    *exec.Cmd
+	playerBinary   string
+	rng            *rand.Rand
 }
 
 // NewAmbientManager initializes the ambient sound engine.
@@ -100,6 +106,31 @@ func (am *AmbientManager) generateAmbientFiles() {
 		return val * 0.05 * (math.Sin(t*0.6)*0.5 + 0.5)
 	})
 	_ = os.WriteFile(filepath.Join(am.tempDir, "wind.wav"), windWav, 0644)
+
+	// Cafe Chatter WAV (4 seconds warm background hum & clink loop)
+	var prevCafe float64
+	cafeWav := am.createProceduralWAV(4.0, func(t float64) float64 {
+		hum := math.Sin(t*180.0)*0.02 + math.Sin(t*240.0)*0.015
+		raw := (am.rng.Float64()*2.0 - 1.0) * 0.04
+		prevCafe = prevCafe*0.80 + (hum+raw)*0.20
+		clink := 0.0
+		if math.Sin(t*4.0) > 0.98 {
+			clink = math.Sin(t * 2.0 * math.Pi * 3200.0) * 0.08
+		}
+		return prevCafe + clink
+	})
+	_ = os.WriteFile(filepath.Join(am.tempDir, "cafe.wav"), cafeWav, 0644)
+
+	// Night Crickets WAV (4 seconds high-pitched pulsing chirps loop)
+	cricketsWav := am.createProceduralWAV(4.0, func(t float64) float64 {
+		pulse := math.Sin(t * 2.0 * math.Pi * 6.0) // 6Hz chirping envelope
+		if pulse > 0.4 {
+			chirp := math.Sin(t * 2.0 * math.Pi * 4500.0)
+			return chirp * 0.04 * (pulse - 0.4)
+		}
+		return 0.0
+	})
+	_ = os.WriteFile(filepath.Join(am.tempDir, "crickets.wav"), cricketsWav, 0644)
 }
 
 func (am *AmbientManager) createProceduralWAV(duration float64, sampleFunc func(t float64) float64) []byte {
@@ -150,6 +181,8 @@ func (am *AmbientManager) StartAmbientLoop() {
 	go am.runLoop("rain.wav", &am.RainActive, &am.rainCmd)
 	go am.runLoop("fire.wav", &am.FireActive, &am.fireCmd)
 	go am.runLoop("wind.wav", &am.WindActive, &am.windCmd)
+	go am.runLoop("cafe.wav", &am.CafeActive, &am.cafeCmd)
+	go am.runLoop("crickets.wav", &am.CricketsActive, &am.cricketsCmd)
 }
 
 func (am *AmbientManager) runLoop(filename string, activeFlag *bool, cmdVar **exec.Cmd) {
@@ -209,6 +242,28 @@ func (am *AmbientManager) ToggleWind() bool {
 	return am.WindActive
 }
 
+// ToggleCafe toggles coffee shop chatter audio.
+func (am *AmbientManager) ToggleCafe() bool {
+	am.mu.Lock()
+	defer am.mu.Unlock()
+	am.CafeActive = !am.CafeActive
+	if !am.CafeActive && am.cafeCmd != nil && am.cafeCmd.Process != nil {
+		_ = am.cafeCmd.Process.Kill()
+	}
+	return am.CafeActive
+}
+
+// ToggleCrickets toggles night crickets audio.
+func (am *AmbientManager) ToggleCrickets() bool {
+	am.mu.Lock()
+	defer am.mu.Unlock()
+	am.CricketsActive = !am.CricketsActive
+	if !am.CricketsActive && am.cricketsCmd != nil && am.cricketsCmd.Process != nil {
+		_ = am.cricketsCmd.Process.Kill()
+	}
+	return am.CricketsActive
+}
+
 // Cleanup stops players and removes temporary audio files.
 func (am *AmbientManager) Cleanup() {
 	if am.rainCmd != nil && am.rainCmd.Process != nil {
@@ -219,6 +274,12 @@ func (am *AmbientManager) Cleanup() {
 	}
 	if am.windCmd != nil && am.windCmd.Process != nil {
 		_ = am.windCmd.Process.Kill()
+	}
+	if am.cafeCmd != nil && am.cafeCmd.Process != nil {
+		_ = am.cafeCmd.Process.Kill()
+	}
+	if am.cricketsCmd != nil && am.cricketsCmd.Process != nil {
+		_ = am.cricketsCmd.Process.Kill()
 	}
 	if am.tempDir != "" {
 		_ = os.RemoveAll(am.tempDir)
@@ -239,10 +300,18 @@ func (am *AmbientManager) StatusSummary() string {
 	if am.WindActive {
 		windStr = "Wind: ON 🍃"
 	}
+	cafeStr := "Cafe: OFF"
+	if am.CafeActive {
+		cafeStr = "Cafe: ON ☕"
+	}
+	cricketStr := "Crickets: OFF"
+	if am.CricketsActive {
+		cricketStr = "Crickets: ON 🦗"
+	}
 
 	playerStr := "Procedural Synth"
 	if am.playerBinary != "" {
 		playerStr = filepath.Base(am.playerBinary)
 	}
-	return fmt.Sprintf("%s | %s | %s [%s]", rainStr, fireStr, windStr, playerStr)
+	return fmt.Sprintf("%s | %s | %s | %s | %s [%s]", rainStr, fireStr, windStr, cafeStr, cricketStr, playerStr)
 }
