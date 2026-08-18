@@ -35,6 +35,10 @@ func (m Model) mainHeight() int {
 
 // View renders the main UI layout.
 func (m Model) View() string {
+	if m.ZenMode {
+		return m.renderZenView()
+	}
+
 	var body string
 
 	header := m.renderHeader()
@@ -63,7 +67,7 @@ func (m Model) View() string {
 	content := lipgloss.JoinHorizontal(lipgloss.Top, body, "  ", sidebar)
 
 	// Toast / Status Footer
-	footerText := "Press [?] for help • [1-4] switch tabs • [space] audio • [g] toggle GPU/Text • [q] quit"
+	footerText := "Press [?] help • [V] Scene Catalog • [Shift+F] Zen Mode • [1-4] Tabs • [space] Audio • [q] quit"
 	if m.StatusMsg != "" && time.Since(m.StatusMsgTime) < 4*time.Second {
 		footerText = m.Styles.StatusBadge.Render(" " + m.StatusMsg + " ")
 	}
@@ -76,6 +80,11 @@ func (m Model) View() string {
 		"",
 		footer,
 	)
+
+	// Scene Picker Catalog Modal
+	if m.ShowScenePicker {
+		return m.renderScenePickerModal(mainView)
+	}
 
 	// Help Overlay Popup
 	if m.ShowHelp {
@@ -153,6 +162,11 @@ func (m Model) renderTimerView() string {
 		m.timerStateStr()))
 	sb.WriteString(fmt.Sprintf("Progress: [%s] %.0f%%\n\n", m.Styles.ProgressBar.Render(progressBar), m.Timer.ProgressRatio()*100))
 	sb.WriteString(fmt.Sprintf("☕ Sessions Completed Today: %s\n\n", m.Styles.BoldAccent.Render(fmt.Sprintf("%d", m.Timer.CompletedSessions))))
+
+	breath := GetZenBreathState(m.Scene.FrameCount)
+	sb.WriteString(m.Styles.Title.Render("🧘 ZEN BREATHING RHYTHM") + "\n")
+	sb.WriteString(fmt.Sprintf("  %s %s\n", m.Styles.BoldAccent.Render(breath.PhaseName), m.Styles.Header.Render(breath.RingVisual)))
+	sb.WriteString(m.Styles.MutedText.Render("  "+breath.Instruction) + "\n\n")
 
 	sb.WriteString(m.Styles.MutedText.Render("Quick Actions: ") + m.Styles.KeyCap.Render("[x]") + " Start/Pause  " + m.Styles.KeyCap.Render("[z]") + " Reset")
 
@@ -282,6 +296,8 @@ func (m Model) renderSidebar() string {
 
 	sb.WriteString(m.Styles.Title.Render("🎵 LOFI RADIO") + "\n")
 	sb.WriteString(m.Styles.BoldAccent.Render(truncate(trackName, 22)) + "\n")
+	spec := RenderAudioSpectrum(18, st.Playing, m.Scene.FrameCount, m.Styles.BoldAccent)
+	sb.WriteString("Spectrum: " + spec + "\n")
 	sb.WriteString("State: " + stateIcon + "\n")
 	sb.WriteString(m.Styles.MutedText.Render("[Space] Play/Pause • [n/p]") + "\n\n")
 
@@ -297,6 +313,8 @@ func (m Model) renderSidebar() string {
 
 	// 3. Quick Toggles Card
 	sb.WriteString(m.Styles.Title.Render("✨ QUICK CONTROLS") + "\n")
+	sb.WriteString(fmt.Sprintf("%s Catalog: %s\n", m.Styles.KeyCap.Render("[V]"), m.Styles.MutedText.Render("Browse 370+")))
+	sb.WriteString(fmt.Sprintf("%s Zen Mode: %s\n", m.Styles.KeyCap.Render("[Shift+F]"), m.Styles.MutedText.Render("Minimal")))
 	sb.WriteString(fmt.Sprintf("%s Scene: %s\n", m.Styles.KeyCap.Render("[v]"), truncate(m.Scene.CurrentScene.String(), 12)))
 	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[Shift+T]"), truncate(m.Styles.Theme.Name, 10)))
 	sb.WriteString(fmt.Sprintf("%s Weather: %s\n", m.Styles.KeyCap.Render("[w]"), m.Scene.Weather.String()))
@@ -316,6 +334,8 @@ func (m Model) renderHelpModal(bg string) string {
   [Tab]    Cycle Views
 
   DYNAMIC BIT-ART SCENES & CONTROLS:
+  [V]      Open Categorized Scene Catalog Modal (370+ Scenes)
+  [Shift+F] Toggle Zen Minimal Focus Mode (Zero Clutter)
   [v]      Cycle Scene Preset (Rainy City, Forest Cabin, Classic, Observatory)
   [l]      Toggle Desk Lamp (ON/OFF)
   [f]      Toggle Fireplace (ON/OFF)
@@ -345,6 +365,92 @@ func (m Model) renderHelpModal(bg string) string {
 	modal := m.Styles.Box.
 		BorderForeground(m.Styles.Theme.Accent).
 		Render(helpText)
+
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal)
+}
+
+func (m Model) renderZenView() string {
+	m.Scene.RenderFrame()
+	artCanvas := strings.TrimRight(m.Scene.Canvas.Render(), "\r\n")
+
+	st := m.CLIAMP.GetStatus()
+	spec := RenderAudioSpectrum(16, st.Playing, m.Scene.FrameCount, m.Styles.BoldAccent)
+	breath := GetZenBreathState(m.Scene.FrameCount)
+
+	cardContent := fmt.Sprintf("%s\n\n⏱️ %s   |   %s\n\n%s  %s\n%s\n\n%s %s",
+		m.Styles.Title.Render("🌿 ZEN FOCUS MODE"),
+		m.Styles.BoldAccent.Render(m.Timer.FormattedTime()),
+		m.timerStateStr(),
+		m.Styles.Title.Render(breath.PhaseName),
+		m.Styles.Header.Render(breath.RingVisual),
+		m.Styles.MutedText.Render("  "+breath.Instruction),
+		m.Styles.MutedText.Render("Spectrum: "),
+		spec,
+	)
+
+	floatingCard := m.Styles.Box.
+		BorderForeground(m.Styles.Theme.Title).
+		Padding(1, 3).
+		Render(cardContent)
+
+	overlay := lipgloss.Place(m.Width, m.Height-2, lipgloss.Center, lipgloss.Center, floatingCard)
+	footer := m.Styles.Footer.Render("Press [Esc] or [Shift+F] to exit Zen Mode • [Space] Audio • [x] Timer • [v] Cycle Scene")
+
+	return artCanvas + "\n" + overlay + "\n" + footer
+}
+
+func (m Model) renderScenePickerModal(bg string) string {
+	catName := art.SceneCategories[m.PickerCategoryIdx]
+	scenes := art.GetScenesByCategory(m.PickerCategoryIdx)
+
+	var categoryTabs []string
+	for i, cName := range art.SceneCategories {
+		if i == m.PickerCategoryIdx {
+			categoryTabs = append(categoryTabs, m.Styles.ActiveTab.Render(cName))
+		} else {
+			categoryTabs = append(categoryTabs, m.Styles.InactiveTab.Render(cName))
+		}
+	}
+	tabsRow := strings.Join(categoryTabs, " ")
+
+	var listLines []string
+	startIdx := 0
+	if m.PickerSceneIdx > 8 {
+		startIdx = m.PickerSceneIdx - 8
+	}
+	endIdx := startIdx + 12
+	if endIdx > len(scenes) {
+		endIdx = len(scenes)
+	}
+
+	for i := startIdx; i < endIdx; i++ {
+		st := scenes[i]
+		cursor := "  "
+		style := m.Styles.MutedText
+		if i == m.PickerSceneIdx {
+			cursor = "👉"
+			style = m.Styles.BoldAccent
+		}
+		activeBadge := ""
+		if st == m.Scene.CurrentScene {
+			activeBadge = " " + m.Styles.StatusBadge.Render("ACTIVE")
+		}
+		listLines = append(listLines, fmt.Sprintf("%s %s%s", cursor, style.Render(st.String()), activeBadge))
+	}
+
+	modalText := fmt.Sprintf("🎨 SCENE CATALOG BROWSER (%d Total Scenes)\n\n%s\n\nCategory: %s (%d scenes)\n\n%s\n\n%s",
+		len(art.SceneOrder),
+		tabsRow,
+		m.Styles.Title.Render(catName),
+		len(scenes),
+		strings.Join(listLines, "\n"),
+		m.Styles.MutedText.Render("Nav: [h/l] Category • [j/k] Select • [Enter] Apply • [Esc/V] Close"),
+	)
+
+	modal := m.Styles.Box.
+		BorderForeground(m.Styles.Theme.Accent).
+		Width(80).
+		Render(modalText)
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal)
 }

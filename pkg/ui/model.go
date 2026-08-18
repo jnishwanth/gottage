@@ -44,21 +44,25 @@ type timerTickMsg time.Time
 
 // Model is the main Bubbletea model.
 type Model struct {
-	Width         int
-	Height        int
-	Styles        Styles
-	ActiveTab     ActiveTab
-	ShowHelp      bool
-	StatusMsg     string
-	StatusMsgTime time.Time
-	UseGPURender  bool
+	Width             int
+	Height            int
+	Styles            Styles
+	ActiveTab         ActiveTab
+	ShowHelp          bool
+	ShowScenePicker   bool
+	PickerCategoryIdx int
+	PickerSceneIdx    int
+	ZenMode           bool
+	StatusMsg         string
+	StatusMsgTime     time.Time
+	UseGPURender      bool
 
 	// Core Components
-	Scene     *art.CottageScene
-	CLIAMP    *audio.CLIAMPController
-	Ambient   *audio.AmbientManager
-	Timer     *features.FocusTimer
-	Tasks     *features.TaskList
+	Scene   *art.CottageScene
+	CLIAMP  *audio.CLIAMPController
+	Ambient *audio.AmbientManager
+	Timer   *features.FocusTimer
+	Tasks   *features.TaskList
 
 	// Sub-view State
 	AddingTask bool
@@ -155,6 +159,58 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds = append(cmds, m.timerTick())
 
 	case tea.KeyMsg:
+		// Modal: Interactive Scene Picker
+		if m.ShowScenePicker {
+			catScenes := art.GetScenesByCategory(m.PickerCategoryIdx)
+			switch msg.String() {
+			case "esc", "q", "V":
+				m.ShowScenePicker = false
+			case "h", "left":
+				m.PickerCategoryIdx = (m.PickerCategoryIdx + len(art.SceneCategories) - 1) % len(art.SceneCategories)
+				m.PickerSceneIdx = 0
+			case "l", "right":
+				m.PickerCategoryIdx = (m.PickerCategoryIdx + 1) % len(art.SceneCategories)
+				m.PickerSceneIdx = 0
+			case "j", "down":
+				if m.PickerSceneIdx < len(catScenes)-1 {
+					m.PickerSceneIdx++
+				}
+			case "k", "up":
+				if m.PickerSceneIdx > 0 {
+					m.PickerSceneIdx--
+				}
+			case "enter":
+				if len(catScenes) > 0 && m.PickerSceneIdx < len(catScenes) {
+					m.Scene.CurrentScene = catScenes[m.PickerSceneIdx]
+					m.SetStatusMsg("Switched Scene: " + m.Scene.CurrentScene.String() + " ✨")
+				}
+				m.ShowScenePicker = false
+			}
+			return m, nil
+		}
+
+		// Modal: Zen Focus Mode
+		if m.ZenMode {
+			switch msg.String() {
+			case "esc", "F":
+				m.ZenMode = false
+				m.SetStatusMsg("Exited Zen Focus Mode 🌿")
+				return m, nil
+			case "space", " ":
+				if m.CLIAMP != nil {
+					_ = m.CLIAMP.TogglePlayPause()
+				}
+			case "x":
+				m.Timer.Toggle()
+			case "z":
+				m.Timer.Reset()
+			case "v":
+				newScene := m.Scene.CycleScene()
+				m.SetStatusMsg("Switched Scene: " + newScene.String())
+			}
+			return m, nil
+		}
+
 		// Task text input capture
 		if m.AddingTask {
 			switch msg.String() {
@@ -186,6 +242,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "?":
 			m.ShowHelp = !m.ShowHelp
+
+		case "V":
+			m.ShowScenePicker = !m.ShowScenePicker
+			m.PickerSceneIdx = 0
+
+		case "F":
+			m.ZenMode = !m.ZenMode
+			if m.ZenMode {
+				m.SetStatusMsg("Zen Minimal Focus Mode Active 🌿 (Press Esc to exit)")
+			} else {
+				m.SetStatusMsg("Exited Zen Focus Mode 🌿")
+			}
 
 		case "tab":
 			m.ActiveTab = (m.ActiveTab + 1) % 4
