@@ -45,29 +45,33 @@ type timerTickMsg time.Time
 
 // Model is the main Bubbletea model.
 type Model struct {
-	Width             int
-	Height            int
-	Styles            Styles
-	ActiveTab         ActiveTab
-	ShowHelp          bool
-	ShowScenePicker   bool
-	PickerCategoryIdx int
-	PickerSceneIdx    int
-	PickerSearchMode  bool
-	PickerSearchInput textinput.Model
+	Width              int
+	Height             int
+	Styles             Styles
+	ActiveTab          ActiveTab
+	ShowHelp           bool
+	ShowScenePicker    bool
+	PickerCategoryIdx  int
+	PickerSceneIdx     int
+	PickerSearchMode   bool
+	PickerSearchInput  textinput.Model
 	ShowThemePicker    bool
 	PickerThemeIdx     int
 	ShowSceneInfoModal bool
 	ShowCommandPalette bool
 	CommandInput       textinput.Model
 	CommandIdx         int
+	ShowPresetModal    bool
+	PresetIdx          int
+	PresetSaving       bool
+	PresetInputText    textinput.Model
 	SpectrumMode       SpectrumStyle
-	ZenMode           bool
-	AutoSyncAudio     bool
-	StatusMsg         string
-	StatusMsgTime     time.Time
-	UseGPURender      bool
-	FavoriteScenes    map[art.SceneType]bool
+	ZenMode            bool
+	AutoSyncAudio      bool
+	StatusMsg          string
+	StatusMsgTime      time.Time
+	UseGPURender       bool
+	FavoriteScenes     map[art.SceneType]bool
 
 	// Core Components
 	Scene   *art.CottageScene
@@ -75,6 +79,7 @@ type Model struct {
 	Ambient *audio.AmbientManager
 	Timer   *features.FocusTimer
 	Tasks   *features.TaskList
+	Presets *features.PresetManager
 
 	// Sub-view State
 	AddingTask bool
@@ -98,6 +103,11 @@ func NewModel() Model {
 	ci.CharLimit = 40
 	ci.Width = 44
 
+	pi := textinput.New()
+	pi.Placeholder = "Enter preset name (e.g. My Study Haven)..."
+	pi.CharLimit = 32
+	pi.Width = 36
+
 	styles := NewStyles(ThemeCozyAutumn)
 	scene := art.NewCottageScene(160, 90)
 
@@ -115,16 +125,19 @@ func NewModel() Model {
 		ShowCommandPalette: false,
 		CommandInput:       ci,
 		ShowThemePicker:    false,
+		ShowPresetModal:    false,
+		PresetInputText:    pi,
 		SpectrumMode:       SpectrumBars,
-		AutoSyncAudio:     true,
-		UseGPURender:      art.DetectTerminalProtocol() == art.ProtocolKitty,
-		FavoriteScenes:    favs,
+		AutoSyncAudio:      true,
+		UseGPURender:       art.DetectTerminalProtocol() == art.ProtocolKitty,
+		FavoriteScenes:     favs,
 
 		Scene:   scene,
 		CLIAMP:  audio.NewCLIAMPController(),
 		Ambient: audio.NewAmbientManager(),
 		Timer:   features.NewFocusTimer(),
 		Tasks:   features.NewTaskList(),
+		Presets: features.NewPresetManager("user_presets.json"),
 
 		AddingTask: false,
 		TextInput:  ti,
@@ -138,6 +151,42 @@ func (m *Model) ToggleFavorite(st art.SceneType) bool {
 	}
 	m.FavoriteScenes[st] = !m.FavoriteScenes[st]
 	return m.FavoriteScenes[st]
+}
+
+// ApplyPreset applies a complete atmosphere preset to Model state.
+func (m *Model) ApplyPreset(p features.AtmospherePreset) {
+	m.Scene.CurrentScene = p.Scene
+	m.Scene.ColorFilter = p.ColorFilter
+	m.Scene.ParticleOverlay = p.ParticleOverlay
+	m.Scene.ShaderEffect = p.ShaderEffect
+	m.Scene.AnimSpeed = p.AnimSpeed
+
+	for _, theme := range AllThemes {
+		if strings.EqualFold(theme.Name, p.Theme) {
+			m.Styles = NewStyles(theme)
+			break
+		}
+	}
+
+	if p.RainAudio && !m.Ambient.RainActive {
+		m.Ambient.ToggleRain()
+	} else if !p.RainAudio && m.Ambient.RainActive {
+		m.Ambient.ToggleRain()
+	}
+
+	if p.FireAudio && !m.Ambient.FireActive {
+		m.Ambient.ToggleFire()
+	} else if !p.FireAudio && m.Ambient.FireActive {
+		m.Ambient.ToggleFire()
+	}
+
+	if p.WindAudio && !m.Ambient.WindActive {
+		m.Ambient.ToggleWind()
+	} else if !p.WindAudio && m.Ambient.WindActive {
+		m.Ambient.ToggleWind()
+	}
+
+	m.SetStatusMsg(fmt.Sprintf("Activated Preset: %s ✨", p.Name))
 }
 
 // Init initializes Bubbletea commands (animation ticks & audio polling).
@@ -257,6 +306,78 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Styles = NewStyles(selectedTheme)
 				m.SetStatusMsg("Applied Theme: " + selectedTheme.Name + " ✨")
 				m.ShowThemePicker = false
+			}
+			return m, nil
+		}
+
+		// Modal: Atmosphere Preset Studio & Custom Preset Manager
+		if m.ShowPresetModal {
+			if m.PresetSaving {
+				switch msg.String() {
+				case "esc":
+					m.PresetSaving = false
+					m.PresetInputText.Blur()
+				case "enter":
+					name := strings.TrimSpace(m.PresetInputText.Value())
+					if name != "" {
+						themeName := m.Styles.Theme.Name
+						preset := features.AtmospherePreset{
+							Name:            name,
+							Description:     fmt.Sprintf("Custom user preset created in %s", themeName),
+							Scene:           m.Scene.CurrentScene,
+							Theme:           themeName,
+							ColorFilter:     m.Scene.ColorFilter,
+							ParticleOverlay: m.Scene.ParticleOverlay,
+							ShaderEffect:    m.Scene.ShaderEffect,
+							RainAudio:       m.Ambient.RainActive,
+							FireAudio:       m.Ambient.FireActive,
+							WindAudio:       m.Ambient.WindActive,
+							AnimSpeed:       m.Scene.AnimSpeed,
+						}
+						m.Presets.SavePreset(preset)
+						m.SetStatusMsg(fmt.Sprintf("Saved Preset: %s 💾", name))
+					}
+					m.PresetSaving = false
+					m.PresetInputText.Blur()
+				default:
+					var cmd tea.Cmd
+					m.PresetInputText, cmd = m.PresetInputText.Update(msg)
+					return m, cmd
+				}
+				return m, nil
+			}
+
+			switch msg.String() {
+			case "esc", "q", "S":
+				m.ShowPresetModal = false
+			case "j", "down":
+				if m.PresetIdx < len(m.Presets.Presets)-1 {
+					m.PresetIdx++
+				}
+			case "k", "up":
+				if m.PresetIdx > 0 {
+					m.PresetIdx--
+				}
+			case "enter":
+				if len(m.Presets.Presets) > 0 && m.PresetIdx < len(m.Presets.Presets) {
+					p := m.Presets.Presets[m.PresetIdx]
+					m.ApplyPreset(p)
+					m.ShowPresetModal = false
+				}
+			case "a":
+				m.PresetSaving = true
+				m.PresetInputText.Reset()
+				m.PresetInputText.Focus()
+				return m, textinput.Blink
+			case "d":
+				if len(m.Presets.Presets) > 0 && m.PresetIdx < len(m.Presets.Presets) {
+					delName := m.Presets.Presets[m.PresetIdx].Name
+					m.Presets.DeletePreset(m.PresetIdx)
+					if m.PresetIdx >= len(m.Presets.Presets) && m.PresetIdx > 0 {
+						m.PresetIdx--
+					}
+					m.SetStatusMsg(fmt.Sprintf("Deleted Preset: %s 🗑️", delName))
+				}
 			}
 			return m, nil
 		}
@@ -456,6 +577,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			overlay := m.Scene.CycleParticleOverlay()
 			m.SetStatusMsg("Particle Overlay: " + overlay.String() + " ✨")
 
+		case "H", "h":
+			shader := m.Scene.CycleShaderEffect()
+			m.SetStatusMsg("Canvas Shader: " + shader.String() + " ✨")
+
+		case "S":
+			m.ShowPresetModal = !m.ShowPresetModal
+			m.PresetIdx = 0
+			m.PresetSaving = false
+
 		case "*":
 			fav := m.ToggleFavorite(m.Scene.CurrentScene)
 			if fav {
@@ -515,7 +645,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SetStatusMsg("Atmospheric Audio Auto-Sync: OFF")
 			}
 
-		case "S":
+		case "K":
 			speed := m.Scene.CycleAnimSpeed()
 			m.SetStatusMsg("Animation Speed: " + speed.String())
 

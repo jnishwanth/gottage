@@ -107,6 +107,11 @@ func (m Model) View() string {
 		return m.renderCommandPaletteModal(mainView)
 	}
 
+	// Preset Studio & Custom Preset Manager Modal
+	if m.ShowPresetModal {
+		return m.renderPresetModal(mainView)
+	}
+
 	// Scene Info & Palette Inspector Modal
 	if m.ShowSceneInfoModal {
 		return m.renderSceneInfoModal(mainView)
@@ -439,6 +444,8 @@ func (m Model) renderHelpModal(bg string) string {
   [Tab]    Cycle Views
 
   DYNAMIC BIT-ART SCENES & CONTROLS:
+  [Shift+S] Open Preset Studio & Custom Manager Modal
+  [H]      Cycle Canvas Animation Shader (Rain-on-Glass, Fireflies, Aurora, Waveform)
   [V]      Open Categorized Scene Catalog Modal (370+ Scenes)
   [/]      Search / Filter Scenes by Keyword (in Catalog)
   [*]      Bookmark / Toggle Favorite Scene Preset
@@ -446,7 +453,7 @@ func (m Model) renderHelpModal(bg string) string {
   [v/b]    Cycle Next / Previous Scene Preset
   [C]      Cycle Color Filter (Natural, Warm Amber, Cool Synth, Phosphor, Sepia, Midnight)
   [P]      Cycle Screen Particle Overlay (Sakura, Embers, Snow, Matrix, Stars)
-  [S]      Cycle Animation Speed (Normal 1.0x, Relaxing 0.5x, Fast 2.0x, Paused)
+  [S]      Open Preset Studio Modal (Shift+S) / Cycle Speed
   [A]      Toggle Weather-Audio Auto-Sync (ON/OFF)
   [T]      Open Interactive Theme Palette Selector Modal (10 Themes)
   [M]      Cycle Audio Spectrum Visualizer Style (Bars, Dots, Braille, EQ, Wave)
@@ -514,6 +521,68 @@ func (m Model) renderZenView() string {
 	footer := m.Styles.Footer.Render("Press [Esc] or [Shift+F] to exit Zen Mode • [Space] Audio • [x] Timer • [v] Cycle Scene")
 
 	return artCanvas + "\n" + overlay + "\n" + footer
+}
+
+func (m Model) renderPresetModal(bg string) string {
+	dialogWidth := 76
+	title := m.Styles.Title.Render(" 💾 ATMOSPHERE PRESET STUDIO & CUSTOM MANAGER ")
+
+	var content string
+
+	if m.PresetSaving {
+		content = fmt.Sprintf(
+			"%s\n\n%s\n\n%s  %s",
+			m.Styles.BoldAccent.Render("Save Current Ambiance as Custom Preset:"),
+			m.PresetInputText.View(),
+			m.Styles.KeyCap.Render(" Enter ") + " Save Preset",
+			m.Styles.KeyCap.Render(" Esc ") + " Cancel",
+		)
+	} else {
+		var presetRows []string
+		presets := m.Presets.Presets
+
+		for i, p := range presets {
+			cursor := "  "
+			rowStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#A3A6B4"))
+			if i == m.PresetIdx {
+				cursor = "▶ "
+				rowStyle = m.Styles.BoldAccent
+			}
+
+			details := fmt.Sprintf("%s • %s • Shader: %s", p.Scene.String(), p.Theme, p.ShaderEffect.String())
+			row := fmt.Sprintf("%s%s\n   %s", cursor, rowStyle.Render(p.Name), m.Styles.MutedText.Render(details))
+			presetRows = append(presetRows, row)
+		}
+
+		selectedDesc := ""
+		if len(presets) > 0 && m.PresetIdx < len(presets) {
+			p := presets[m.PresetIdx]
+			selectedDesc = fmt.Sprintf("\n%s\n  %s",
+				m.Styles.Header.Render("Preset Description:"),
+				m.Styles.MutedText.Render(p.Description),
+			)
+		}
+
+		controls := fmt.Sprintf(
+			"%s Apply  %s Save Current Ambiance  %s Delete  %s Close",
+			m.Styles.KeyCap.Render(" Enter "),
+			m.Styles.KeyCap.Render(" a "),
+			m.Styles.KeyCap.Render(" d "),
+			m.Styles.KeyCap.Render(" Esc "),
+		)
+
+		content = strings.Join(presetRows, "\n") + selectedDesc + "\n\n" + controls
+	}
+
+	dialogBox := m.Styles.Box.Width(dialogWidth).Render(
+		lipgloss.JoinVertical(lipgloss.Left,
+			title,
+			"",
+			content,
+		),
+	)
+
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, dialogBox)
 }
 
 func (m Model) renderThemePickerModal(bg string) string {

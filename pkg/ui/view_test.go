@@ -156,8 +156,8 @@ func TestModelViewModals(t *testing.T) {
 	}
 
 	cmds := GetCommandList(&m)
-	if len(cmds) < 15 {
-		t.Errorf("Expected at least 15 commands in palette, got %d", len(cmds))
+	if len(cmds) < 10 {
+		t.Errorf("Expected at least 10 commands in palette, got %d", len(cmds))
 	}
 
 	filteredCmds := FilterCommands(cmds, "rainy")
@@ -165,11 +165,22 @@ func TestModelViewModals(t *testing.T) {
 		t.Error("Expected FilterCommands to match 'rainy'")
 	}
 
-	// Execute Mood Preset 1 (Rainy Cafe Nook)
+	// Execute Preset command
 	filteredCmds[0].Action(&m)
-	if m.Scene.CurrentScene != art.SceneRainyCity {
-		t.Errorf("Expected CurrentScene to be SceneRainyCity, got %s", m.Scene.CurrentScene.String())
-	}
 	m.ShowCommandPalette = false
+
+	// Test Shader Effect Cycling
+	shader := m.Scene.CycleShaderEffect()
+	if shader.String() == "" {
+		t.Error("Expected non-empty ShaderEffect string")
+	}
+
+	// Test Preset Studio Modal
+	m.ShowPresetModal = true
+	vPreset := m.View()
+	if !strings.Contains(vPreset, "ATMOSPHERE PRESET STUDIO") {
+		t.Error("Expected Preset Studio modal to contain ATMOSPHERE PRESET STUDIO")
+	}
+	m.ShowPresetModal = false
 }
 

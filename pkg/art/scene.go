@@ -144,6 +144,32 @@ func (s AnimSpeed) String() string {
 	}
 }
 
+// ShaderEffect specifies dynamic procedural canvas animation shaders.
+type ShaderEffect int
+
+const (
+	ShaderNone ShaderEffect = iota
+	ShaderRainGlass
+	ShaderFireflies
+	ShaderAuroraWaves
+	ShaderAudioWaveform
+)
+
+func (s ShaderEffect) String() string {
+	switch s {
+	case ShaderRainGlass:
+		return "Rain-on-Glass Window Drops 🌧️"
+	case ShaderFireflies:
+		return "Bioluminescent Firefly Swarm 🌌"
+	case ShaderAuroraWaves:
+		return "Atmospheric Aurora Waves 🌅"
+	case ShaderAudioWaveform:
+		return "8-Bit Audio Waveform Spectrum 🌊"
+	default:
+		return "None ❌"
+	}
+}
+
 // CatBreed specifies cat color theme.
 type CatBreed int
 
@@ -189,6 +215,7 @@ type CottageScene struct {
 	CatBreed        CatBreed
 	ColorFilter     ColorFilter
 	ParticleOverlay ParticleOverlay
+	ShaderEffect    ShaderEffect
 	AnimSpeed       AnimSpeed
 	LampOn          bool
 	FireOn          bool
@@ -201,6 +228,7 @@ type CottageScene struct {
 	SnowParticles    []Particle
 	SteamParticles   []Particle
 	OverlayParticles []Particle
+	ShaderParticles  []Particle
 	Stars            []struct{ X, Y int; Phase float64 }
 
 	rng *rand.Rand
@@ -220,6 +248,7 @@ func NewCottageScene(width, height int) *CottageScene {
 		CatBreed:              CatOrange,
 		ColorFilter:           FilterNormal,
 		ParticleOverlay:       OverlayNone,
+		ShaderEffect:          ShaderNone,
 		AnimSpeed:             SpeedNormal,
 		LampOn:                true,
 		FireOn:                true,
@@ -231,7 +260,15 @@ func NewCottageScene(width, height int) *CottageScene {
 
 	cs.initStars()
 	cs.initParticles()
+	cs.initShaderParticles()
 	return cs
+}
+
+// CycleShaderEffect cycles to the next procedural canvas shader animation.
+func (cs *CottageScene) CycleShaderEffect() ShaderEffect {
+	cs.ShaderEffect = (cs.ShaderEffect + 1) % 5
+	cs.initShaderParticles()
+	return cs.ShaderEffect
 }
 
 // CycleAnimSpeed cycles animation playback speed (Normal -> Slow -> Fast -> Paused -> Normal).
@@ -461,6 +498,25 @@ func (cs *CottageScene) Update() {
 			}
 		}
 	}
+
+	// Shader Particle physics
+	if cs.ShaderEffect != ShaderNone {
+		for i := range cs.ShaderParticles {
+			p := &cs.ShaderParticles[i]
+			p.Life += 0.1
+			switch cs.ShaderEffect {
+			case ShaderRainGlass:
+				p.Y += 0.8 + cs.rng.Float64()*0.4
+			case ShaderFireflies:
+				p.Y += math.Sin(p.Life*0.4) * 0.3
+				p.X += math.Cos(p.Life*0.4) * 0.3
+			}
+			if p.Y >= float64(cs.Canvas.Height) || p.Y < 0 || p.X >= float64(cs.Canvas.Width) || p.X < 0 {
+				p.X = float64(cs.rng.Intn(cs.Canvas.Width))
+				p.Y = float64(cs.rng.Intn(cs.Canvas.Height))
+			}
+		}
+	}
 }
 
 func (cs *CottageScene) initOverlayParticles() {
@@ -481,12 +537,36 @@ func (cs *CottageScene) initOverlayParticles() {
 	}
 }
 
+func (cs *CottageScene) initShaderParticles() {
+	cs.ShaderParticles = nil
+	if cs.ShaderEffect == ShaderNone {
+		return
+	}
+	count := 30
+	if cs.ShaderEffect == ShaderRainGlass {
+		count = 25
+	} else if cs.ShaderEffect == ShaderFireflies {
+		count = 20
+	}
+	for i := 0; i < count; i++ {
+		cs.ShaderParticles = append(cs.ShaderParticles, Particle{
+			X:       float64(cs.rng.Intn(cs.Canvas.Width)),
+			Y:       float64(cs.rng.Intn(cs.Canvas.Height)),
+			Vx:      (cs.rng.Float64() - 0.5) * 0.2,
+			Vy:      0.3 + cs.rng.Float64()*0.5,
+			Life:    cs.rng.Float64() * 30,
+			MaxLife: 30,
+		})
+	}
+}
+
 // RenderFrame executes the modular 6-step layered rendering pipeline:
 // Step 1: Render Sky, Stars, Moon, Mountains/Buildings outside window (Layer 1)
 // Step 2: Render Weather Particles (Rain/Snow) clipped strictly to WindowBounds (Layer 2)
 // Step 3: Render Window Frames, Room Interior, Desk, Objects, and Focus Buddy (Layers 3-5)
 // Step 4: Apply Dynamic Lighting Cones, Hearth Glows, and Lightning Flashes (Layer 6)
 // Step 5: Render Organic Screen Particle Overlays (Sakura, Embers, Matrix Rain)
+// Step 5.5: Render Procedural Canvas Shader Effects (Rain-on-Glass, Fireflies, Aurora, Audio Waveform)
 // Step 6: Apply Visual Color Filter Post-Processing Tint
 func (cs *CottageScene) RenderFrame() {
 	c := cs.Canvas
@@ -507,9 +587,86 @@ func (cs *CottageScene) RenderFrame() {
 	// Step 5: Organic Screen Particle Overlay
 	cs.renderOverlayParticles(c)
 
+	// Step 5.5: Procedural Canvas Shader Effects
+	if cs.ShaderEffect != ShaderNone {
+		cs.renderShaderEffect(c)
+	}
+
 	// Step 6: Visual Color Filter Post-Processing
 	if cs.ColorFilter != FilterNormal {
 		cs.applyColorFilter(c)
+	}
+}
+
+func (cs *CottageScene) renderShaderEffect(c *Canvas) {
+	if cs.ShaderEffect == ShaderNone {
+		return
+	}
+	switch cs.ShaderEffect {
+	case ShaderRainGlass:
+		for _, p := range cs.ShaderParticles {
+			px, py := int(p.X), int(p.Y)
+			if px >= 0 && px < c.Width && py >= 0 && py < c.Height {
+				c.BlendPixel(px, py, PicoCyan, 0.75)
+				if py > 0 && py < c.Height {
+					c.BlendPixel(px, py-1, PicoNavy, 0.4)
+				}
+				c.DrawGlyph(px, py/2, '💧', PicoCyan)
+			}
+		}
+
+	case ShaderFireflies:
+		for i, p := range cs.ShaderParticles {
+			px, py := int(p.X), int(p.Y)
+			if px >= 0 && px < c.Width && py >= 0 && py < c.Height {
+				phase := math.Sin(float64(cs.FrameCount)*0.1 + float64(i)*0.8)
+				if phase > 0 {
+					glowColor := PicoYellow
+					if i%2 == 0 {
+						glowColor = PicoGreen
+					}
+					c.BlendPixel(px, py, glowColor, phase*0.85)
+					if phase > 0.5 {
+						c.DrawGlyph(px, py/2, '✦', glowColor)
+					}
+				}
+			}
+		}
+
+	case ShaderAuroraWaves:
+		t := float64(cs.FrameCount) * 0.05
+		for x := 0; x < c.Width; x++ {
+			waveY := int(8.0 + math.Sin(t+float64(x)*0.08)*4.0 + math.Cos(t*0.5+float64(x)*0.04)*2.0)
+			for dy := -2; dy <= 2; dy++ {
+				py := waveY + dy
+				if py >= 0 && py < c.Height/2 {
+					col := PicoGreen
+					if dy == -2 || dy == 2 {
+						col = PicoPink
+					} else if dy == -1 || dy == 1 {
+						col = PicoCyan
+					}
+					c.BlendPixel(x, py, col, 0.35-math.Abs(float64(dy))*0.08)
+				}
+			}
+		}
+
+	case ShaderAudioWaveform:
+		t := float64(cs.FrameCount) * 0.15
+		baseY := c.Height - 6
+		for x := 0; x < c.Width; x++ {
+			h := int(math.Abs(math.Sin(t+float64(x)*0.15)*4.0) + math.Abs(math.Cos(t*0.8+float64(x)*0.25)*3.0))
+			for dy := 0; dy <= h; dy++ {
+				py := baseY - dy
+				if py >= 0 && py < c.Height {
+					col := PicoCyan
+					if dy > 2 {
+						col = PicoPink
+					}
+					c.BlendPixel(x, py, col, 0.7)
+				}
+			}
+		}
 	}
 }
 
