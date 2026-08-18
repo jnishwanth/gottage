@@ -47,13 +47,15 @@ type CLIAMPController struct {
 	status          CLIAMPStatus
 	lastChecked     time.Time
 	ActivePreset    int
+	VolumePercent   int
 	nativePlayerCmd *exec.Cmd
 }
 
 // NewCLIAMPController initializes the CLIAMP & Native Lofi Player controller.
 func NewCLIAMPController() *CLIAMPController {
 	c := &CLIAMPController{
-		ActivePreset: 0,
+		ActivePreset:  0,
+		VolumePercent: 80,
 	}
 	path, err := exec.LookPath("cliamp")
 	if err == nil {
@@ -67,8 +69,30 @@ func NewCLIAMPController() *CLIAMPController {
 			c.status.Installed = false
 		}
 	}
+	c.status.Volume = "80%"
 	c.PollStatus()
 	return c
+}
+
+// AdjustVolume adjusts playback volume percentage (0 - 100%).
+func (c *CLIAMPController) AdjustVolume(delta int) int {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	c.VolumePercent += delta
+	if c.VolumePercent < 0 {
+		c.VolumePercent = 0
+	}
+	if c.VolumePercent > 100 {
+		c.VolumePercent = 100
+	}
+	c.status.Volume = fmt.Sprintf("%d%%", c.VolumePercent)
+
+	if c.status.Installed {
+		cmd := exec.Command(c.cliampPath, "volume", fmt.Sprintf("%d%%", c.VolumePercent))
+		_ = cmd.Run()
+	}
+	return c.VolumePercent
 }
 
 // PollStatus queries cliamp or native player for current state.

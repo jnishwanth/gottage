@@ -59,6 +59,7 @@ type Model struct {
 	PickerThemeIdx    int
 	SpectrumMode      SpectrumStyle
 	ZenMode           bool
+	AutoSyncAudio     bool
 	StatusMsg         string
 	StatusMsgTime     time.Time
 	UseGPURender      bool
@@ -104,6 +105,7 @@ func NewModel() Model {
 		PickerSearchInput: si,
 		ShowThemePicker:   false,
 		SpectrumMode:      SpectrumBars,
+		AutoSyncAudio:     true,
 		UseGPURender:      art.DetectTerminalProtocol() == art.ProtocolKitty,
 		FavoriteScenes:    favs,
 
@@ -424,29 +426,56 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SetStatusMsg("Desk Lamp OFF 🌙")
 			}
 
-		case "f":
-			m.Scene.FireOn = !m.Scene.FireOn
-			if m.Scene.FireOn {
-				m.SetStatusMsg("Fireplace ON 🔥")
+		case "A":
+			m.AutoSyncAudio = !m.AutoSyncAudio
+			if m.AutoSyncAudio {
+				m.SetStatusMsg("Atmospheric Audio Auto-Sync: ON 🌿")
 			} else {
-				m.SetStatusMsg("Fireplace OFF 💤")
+				m.SetStatusMsg("Atmospheric Audio Auto-Sync: OFF")
 			}
 
-		case "s":
-			m.Scene.FairyLightsOn = !m.Scene.FairyLightsOn
-			if m.Scene.FairyLightsOn {
-				m.SetStatusMsg("Fairy Lights ON ✨")
+		case "S":
+			speed := m.Scene.CycleAnimSpeed()
+			m.SetStatusMsg("Animation Speed: " + speed.String())
+
+		case "+", "=":
+			if m.CLIAMP != nil {
+				vol := m.CLIAMP.AdjustVolume(10)
+				m.SetStatusMsg(fmt.Sprintf("Lofi Volume: %d%% 🔊", vol))
+			}
+
+		case "-", "_":
+			if m.CLIAMP != nil {
+				vol := m.CLIAMP.AdjustVolume(-10)
+				m.SetStatusMsg(fmt.Sprintf("Lofi Volume: %d%% 🔉", vol))
+			}
+
+		case "f":
+			if m.ActiveTab == TabTasks {
+				flt := m.Tasks.CycleFilter()
+				m.SetStatusMsg("Task Filter: " + flt.String())
 			} else {
-				m.SetStatusMsg("Fairy Lights OFF 💤")
+				m.Scene.FireOn = !m.Scene.FireOn
+				if m.AutoSyncAudio {
+					m.Ambient.FireActive = m.Scene.FireOn
+				}
+				if m.Scene.FireOn {
+					m.SetStatusMsg("Fireplace ON 🔥")
+				} else {
+					m.SetStatusMsg("Fireplace OFF 💤")
+				}
 			}
 
 		case "w":
 			m.Scene.Weather = (m.Scene.Weather + 1) % 5
+			if m.AutoSyncAudio {
+				if m.Scene.Weather == art.WeatherRain || m.Scene.Weather == art.WeatherStorm {
+					m.Ambient.RainActive = true
+				} else {
+					m.Ambient.RainActive = false
+				}
+			}
 			m.SetStatusMsg("Weather: " + m.Scene.Weather.String())
-
-		case "t":
-			m.Scene.TimeOfDay = (m.Scene.TimeOfDay + 1) % 5
-			m.SetStatusMsg("Time of Day: " + m.Scene.TimeOfDay.String())
 
 		case "c":
 			m.Scene.CatBreed = (m.Scene.CatBreed + 1) % 4
@@ -472,7 +501,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case "p":
-			if m.CLIAMP != nil {
+			if m.ActiveTab == TabTasks {
+				pri := m.Tasks.CyclePriorityCurrent()
+				m.SetStatusMsg("Task Priority: " + pri.String())
+			} else if m.CLIAMP != nil {
 				_ = m.CLIAMP.PrevTrack()
 				st := m.CLIAMP.GetStatus()
 				m.SetStatusMsg(fmt.Sprintf("Playing Lofi: %s 🎶", st.TrackTitle))

@@ -121,6 +121,29 @@ func (p ParticleOverlay) String() string {
 	}
 }
 
+// AnimSpeed specifies scene animation playback speed.
+type AnimSpeed int
+
+const (
+	SpeedNormal AnimSpeed = iota
+	SpeedSlow
+	SpeedFast
+	SpeedPaused
+)
+
+func (s AnimSpeed) String() string {
+	switch s {
+	case SpeedSlow:
+		return "Relaxing (0.5x) 🐢"
+	case SpeedFast:
+		return "Fast Focus (2.0x) ⚡"
+	case SpeedPaused:
+		return "Paused ⏸️"
+	default:
+		return "Normal (1.0x) 🎬"
+	}
+}
+
 // CatBreed specifies cat color theme.
 type CatBreed int
 
@@ -166,6 +189,7 @@ type CottageScene struct {
 	CatBreed        CatBreed
 	ColorFilter     ColorFilter
 	ParticleOverlay ParticleOverlay
+	AnimSpeed       AnimSpeed
 	LampOn          bool
 	FireOn          bool
 	FairyLightsOn   bool
@@ -194,6 +218,7 @@ func NewCottageScene(width, height int) *CottageScene {
 		CatBreed:        CatOrange,
 		ColorFilter:     FilterNormal,
 		ParticleOverlay: OverlayNone,
+		AnimSpeed:       SpeedNormal,
 		LampOn:          true,
 		FireOn:          true,
 		FairyLightsOn:   false,
@@ -203,6 +228,12 @@ func NewCottageScene(width, height int) *CottageScene {
 	cs.initStars()
 	cs.initParticles()
 	return cs
+}
+
+// CycleAnimSpeed cycles animation playback speed (Normal -> Slow -> Fast -> Paused -> Normal).
+func (cs *CottageScene) CycleAnimSpeed() AnimSpeed {
+	cs.AnimSpeed = (cs.AnimSpeed + 1) % 4
+	return cs.AnimSpeed
 }
 
 // CycleColorFilter cycles to the next color grading filter preset.
@@ -316,6 +347,14 @@ func (cs *CottageScene) EffectiveTimeOfDay() TimeOfDay {
 
 // Update advances the animation frame and updates scene-aware particle physics.
 func (cs *CottageScene) Update() {
+	if cs.AnimSpeed == SpeedPaused {
+		return
+	}
+	if cs.AnimSpeed == SpeedSlow && cs.FrameCount%2 != 0 {
+		cs.FrameCount++
+		return
+	}
+
 	cs.FrameCount++
 
 	if cs.Weather == WeatherStorm {

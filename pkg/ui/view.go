@@ -157,13 +157,19 @@ func (m Model) renderArtView() string {
 		favBadge = " ⭐"
 	}
 
-	metaHeader := fmt.Sprintf("🎨 %s%s  |  ☀️ %s  |  🌧️ %s  |  🎨 %s  |  ✨ %s",
+	speedBadge := ""
+	if m.Scene.AnimSpeed != art.SpeedNormal {
+		speedBadge = fmt.Sprintf("  |  ⚡ %s", m.Scene.AnimSpeed.String())
+	}
+
+	metaHeader := fmt.Sprintf("🎨 %s%s  |  ☀️ %s  |  🌧️ %s  |  🎨 %s  |  ✨ %s%s",
 		m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String()),
 		favBadge,
 		m.Scene.EffectiveTimeOfDay().String(),
 		m.Scene.Weather.String(),
 		m.Scene.ColorFilter.String(),
 		m.Scene.ParticleOverlay.String(),
+		speedBadge,
 	)
 
 	content := metaHeader + "\n\n" + artStr
@@ -227,15 +233,42 @@ func (m Model) renderTasksView() string {
 	h := m.mainHeight()
 
 	var sb strings.Builder
+	items := m.Tasks.Items
+	filtered := m.Tasks.FilteredItems()
+
 	completedCount := 0
-	for _, item := range m.Tasks.Items {
+	for _, item := range items {
 		if item.Completed {
 			completedCount++
 		}
 	}
 
-	header := fmt.Sprintf("📝 COTTAGE TO-DO NOTEBOOK  (%d/%d Completed)", completedCount, len(m.Tasks.Items))
+	total := len(items)
+	ratio := 0.0
+	if total > 0 {
+		ratio = float64(completedCount) / float64(total)
+	}
+
+	barWidth := w - 42
+	if barWidth < 15 {
+		barWidth = 15
+	}
+	filled := int(ratio * float64(barWidth))
+	if filled > barWidth {
+		filled = barWidth
+	}
+	pBar := strings.Repeat("█", filled) + strings.Repeat("░", barWidth-filled)
+
+	header := fmt.Sprintf("📝 COTTAGE TO-DO NOTEBOOK  [%s] %.0f%% (%d/%d Completed)",
+		m.Styles.ProgressBar.Render(pBar),
+		ratio*100,
+		completedCount,
+		total,
+	)
 	sb.WriteString(m.Styles.Header.Render(header) + "\n\n")
+
+	filterTabs := fmt.Sprintf("Filter Mode: %s    (Press [f] to cycle)", m.Styles.BoldAccent.Render(m.Tasks.Filter.String()))
+	sb.WriteString(filterTabs + "\n\n")
 
 	if m.AddingTask {
 		sb.WriteString(m.Styles.Title.Render("Add New Focus Task:") + "\n\n")
@@ -244,10 +277,10 @@ func (m Model) renderTasksView() string {
 		return m.Styles.Box.Width(w).Height(h).Render(sb.String())
 	}
 
-	if len(m.Tasks.Items) == 0 {
-		sb.WriteString(m.Styles.MutedText.Render("Notebook is empty! Press [a] to add your first cozy focus task."))
+	if len(filtered) == 0 {
+		sb.WriteString(m.Styles.MutedText.Render("No tasks in current filter! Press [f] to change filter or [a] to add a task."))
 	} else {
-		for i, item := range m.Tasks.Items {
+		for i, item := range filtered {
 			cursor := "  "
 			if i == m.Tasks.Cursor {
 				cursor = "👉"
@@ -260,7 +293,8 @@ func (m Model) renderTasksView() string {
 				titleStyle = titleStyle.Strikethrough(true).Foreground(m.Styles.Theme.Subdued)
 			}
 
-			line := fmt.Sprintf("%s %s %s", cursor, m.Styles.BoldAccent.Render(box), titleStyle.Render(item.Title))
+			priBadge := fmt.Sprintf("[%s]", item.Priority.String())
+			line := fmt.Sprintf("%s %s %s %s", cursor, m.Styles.BoldAccent.Render(box), m.Styles.MutedText.Render(priBadge), titleStyle.Render(item.Title))
 			sb.WriteString(line + "\n")
 		}
 	}
@@ -269,6 +303,8 @@ func (m Model) renderTasksView() string {
 	sb.WriteString(m.Styles.MutedText.Render("Actions: ") +
 		m.Styles.KeyCap.Render("[a]") + " Add  " +
 		m.Styles.KeyCap.Render("[Enter]") + " Toggle  " +
+		m.Styles.KeyCap.Render("[p]") + " Priority  " +
+		m.Styles.KeyCap.Render("[f]") + " Filter  " +
 		m.Styles.KeyCap.Render("[d]") + " Delete  " +
 		m.Styles.KeyCap.Render("[j/k]") + " Navigate")
 
@@ -286,7 +322,9 @@ func (m Model) renderAmbianceView() string {
 	sb.WriteString(fmt.Sprintf("  %s Scene Preset:   %s    %s Random Scene: %s\n",
 		m.Styles.KeyCap.Render("[v/b]"), m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String()),
 		m.Styles.KeyCap.Render("[R]"), m.Styles.MutedText.Render("Surprise Me")))
-	sb.WriteString(fmt.Sprintf("  %s Color Filter:   %s\n", m.Styles.KeyCap.Render("[C]"), m.Scene.ColorFilter.String()))
+	sb.WriteString(fmt.Sprintf("  %s Color Filter:   %s    %s Animation Speed: %s\n",
+		m.Styles.KeyCap.Render("[C]"), m.Scene.ColorFilter.String(),
+		m.Styles.KeyCap.Render("[S]"), m.Scene.AnimSpeed.String()))
 	sb.WriteString(fmt.Sprintf("  %s Screen Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), m.Scene.ParticleOverlay.String()))
 	sb.WriteString(fmt.Sprintf("  %s Time of Day:    %s\n", m.Styles.KeyCap.Render("[t]"), m.Scene.EffectiveTimeOfDay().String()))
 	sb.WriteString(fmt.Sprintf("  %s Weather Mode:   %s\n", m.Styles.KeyCap.Render("[w]"), m.Scene.Weather.String()))
@@ -296,13 +334,23 @@ func (m Model) renderAmbianceView() string {
 		m.Styles.KeyCap.Render("[f]"), onOffStr(m.Scene.FireOn),
 		m.Styles.KeyCap.Render("[s]"), onOffStr(m.Scene.FairyLightsOn)))
 
-	sb.WriteString(m.Styles.Title.Render("🌧️ Procedural Audio Channels") + "\n")
-	sb.WriteString(fmt.Sprintf("  %s Rain Sound: %s    %s Fire Sound: %s    %s Wind Sound: %s\n\n",
+	sb.WriteString(m.Styles.Title.Render("🌧️ Procedural Audio Channels & Auto-Sync") + "\n")
+	sb.WriteString(fmt.Sprintf("  %s Rain Sound: %s    %s Fire Sound: %s    %s Wind Sound: %s\n",
 		m.Styles.KeyCap.Render("[r]"), onOffStr(m.Ambient.RainActive),
 		m.Styles.KeyCap.Render("[m]"), onOffStr(m.Ambient.FireActive),
 		m.Styles.KeyCap.Render("[W]"), onOffStr(m.Ambient.WindActive)))
+	sb.WriteString(fmt.Sprintf("  %s Weather Audio Auto-Sync: %s\n\n",
+		m.Styles.KeyCap.Render("[A]"), onOffStr(m.AutoSyncAudio)))
 
-	sb.WriteString(m.Styles.Title.Render("🎵 Curated Lofi Streams (Press n/p to cycle)") + "\n")
+	sb.WriteString(m.Styles.Title.Render("🎵 Curated Lofi Streams & Volume (Press n/p to cycle, +/- volume)") + "\n")
+	volStr := "80%"
+	if m.CLIAMP != nil {
+		volStr = m.CLIAMP.GetStatus().Volume
+		if volStr == "" {
+			volStr = fmt.Sprintf("%d%%", m.CLIAMP.VolumePercent)
+		}
+	}
+	sb.WriteString(fmt.Sprintf("  Volume: %s %s\n", m.Styles.BoldAccent.Render("🔊 "+volStr), m.Styles.MutedText.Render("([+] Up / [-] Down)")))
 	for i, preset := range audio.CuratedLofiPresets {
 		prefix := "  "
 		style := m.Styles.MutedText
@@ -330,13 +378,19 @@ func (m Model) renderSidebar() string {
 	if st.Playing {
 		stateIcon = "▶️ Playing"
 	}
+	volStr := "80%"
+	if st.Volume != "" {
+		volStr = st.Volume
+	} else if m.CLIAMP != nil {
+		volStr = fmt.Sprintf("%d%%", m.CLIAMP.VolumePercent)
+	}
 
 	sb.WriteString(m.Styles.Title.Render("🎵 LOFI RADIO") + "\n")
 	sb.WriteString(m.Styles.BoldAccent.Render(truncate(trackName, 22)) + "\n")
 	spec := RenderAudioSpectrum(18, st.Playing, m.Scene.FrameCount, m.SpectrumMode, m.Styles.BoldAccent)
 	sb.WriteString("Spectrum: " + spec + "\n")
-	sb.WriteString("State: " + stateIcon + "\n")
-	sb.WriteString(m.Styles.MutedText.Render("[Space] Play/Pause • [n/p]") + "\n\n")
+	sb.WriteString("State: " + stateIcon + " • 🔊 " + volStr + "\n")
+	sb.WriteString(m.Styles.MutedText.Render("[Space] Play/Pause • [n/p] • [+/-]") + "\n\n")
 
 	sb.WriteString(strings.Repeat("─", 24) + "\n\n")
 
@@ -354,9 +408,10 @@ func (m Model) renderSidebar() string {
 	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[T]"), truncate(m.Styles.Theme.Name, 10)))
 	sb.WriteString(fmt.Sprintf("%s Filter: %s\n", m.Styles.KeyCap.Render("[C]"), truncate(m.Scene.ColorFilter.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), truncate(m.Scene.ParticleOverlay.String(), 10)))
+	sb.WriteString(fmt.Sprintf("%s Speed: %s\n", m.Styles.KeyCap.Render("[S]"), truncate(m.Scene.AnimSpeed.String(), 10)))
+	sb.WriteString(fmt.Sprintf("%s AutoSync: %s\n", m.Styles.KeyCap.Render("[A]"), onOffStr(m.AutoSyncAudio)))
 	sb.WriteString(fmt.Sprintf("%s Spectrum: %s\n", m.Styles.KeyCap.Render("[M]"), truncate(m.SpectrumMode.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Zen Mode: %s\n", m.Styles.KeyCap.Render("[Shift+F]"), m.Styles.MutedText.Render("Minimal")))
-	sb.WriteString(fmt.Sprintf("%s Favorite: %s\n", m.Styles.KeyCap.Render("[*]"), m.Styles.MutedText.Render("Toggle")))
 
 	return m.Styles.Box.Width(28).Height(h).Render(sb.String())
 }
@@ -379,11 +434,13 @@ func (m Model) renderHelpModal(bg string) string {
   [v/b]    Cycle Next / Previous Scene Preset
   [C]      Cycle Color Filter (Natural, Warm Amber, Cool Synth, Phosphor, Sepia, Midnight)
   [P]      Cycle Screen Particle Overlay (Sakura, Embers, Snow, Matrix, Stars)
+  [S]      Cycle Animation Speed (Normal 1.0x, Relaxing 0.5x, Fast 2.0x, Paused)
+  [A]      Toggle Weather-Audio Auto-Sync (ON/OFF)
   [T]      Open Interactive Theme Palette Selector Modal (10 Themes)
   [M]      Cycle Audio Spectrum Visualizer Style (Bars, Dots, Braille, EQ, Wave)
   [Shift+F] Toggle Zen Minimal Focus Mode (Zero Clutter)
   [l]      Toggle Desk Lamp (ON/OFF)
-  [f]      Toggle Fireplace (ON/OFF)
+  [f]      Toggle Fireplace (ON/OFF) (in Art View)
   [s]      Toggle Fairy Lights (ON/OFF)
   [w]      Cycle Weather (Clear, Rain, Snow, Storm, Fog)
   [t]      Cycle Time of Day (Dawn, Day, Sunset, Night, Auto)
@@ -392,8 +449,8 @@ func (m Model) renderHelpModal(bg string) string {
 
   AUDIO & LOFI CONTROLS:
   [space]  Play/Pause CLIAMP / Audio
-  [n]      Next Lofi Track Preset
-  [p]      Previous Lofi Track Preset
+  [n/p]    Next / Previous Lofi Track Preset
+  [+/-]    Adjust Lofi Audio Volume (Up / Down)
   [r]      Toggle Rain Ambient Sound
   [m]      Toggle Fireplace Ambient Sound
   [W]      Toggle Wind Ambient Sound
@@ -402,6 +459,8 @@ func (m Model) renderHelpModal(bg string) string {
   [x]      Start / Pause Pomodoro Timer
   [z]      Reset Pomodoro Timer
   [a]      Add new Task (in Tasks View)
+  [p]      Cycle Task Priority (High, Med, Low) (in Tasks View)
+  [f]      Cycle Task Filter (All, Active, Completed) (in Tasks View)
   [Enter]  Toggle Task Done
   [d]      Delete Task
 

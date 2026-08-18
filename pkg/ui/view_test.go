@@ -106,4 +106,21 @@ func TestModelViewModals(t *testing.T) {
 	if len(favScenes) == 0 {
 		t.Error("Expected favorites list to contain at least 1 scene")
 	}
+
+	// Test Volume & Animation Speed & Task Priority
+	vol := m.CLIAMP.AdjustVolume(10)
+	if vol != 90 {
+		t.Errorf("Expected volume 90, got %d", vol)
+	}
+
+	speed := m.Scene.CycleAnimSpeed()
+	if speed.String() == "" {
+		t.Error("Expected non-empty AnimSpeed string")
+	}
+
+	m.ActiveTab = TabTasks
+	vTasks := m.View()
+	if !strings.Contains(vTasks, "COTTAGE TO-DO NOTEBOOK") {
+		t.Error("Expected tasks view to contain COTTAGE TO-DO NOTEBOOK")
+	}
 }
