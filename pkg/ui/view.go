@@ -131,11 +131,18 @@ func (m Model) renderArtView() string {
 		artStr = strings.TrimRight(m.Scene.Canvas.Render(), "\r\n")
 	}
 
-	metaHeader := fmt.Sprintf("🎨 %s  |  ☀️ %s  |  🌧️ %s  |  🐱 %s",
+	favBadge := ""
+	if m.FavoriteScenes != nil && m.FavoriteScenes[m.Scene.CurrentScene] {
+		favBadge = " ⭐"
+	}
+
+	metaHeader := fmt.Sprintf("🎨 %s%s  |  ☀️ %s  |  🌧️ %s  |  🎨 %s  |  ✨ %s",
 		m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String()),
+		favBadge,
 		m.Scene.EffectiveTimeOfDay().String(),
 		m.Scene.Weather.String(),
-		m.Scene.CatBreed.String(),
+		m.Scene.ColorFilter.String(),
+		m.Scene.ParticleOverlay.String(),
 	)
 
 	content := metaHeader + "\n\n" + artStr
@@ -256,6 +263,8 @@ func (m Model) renderAmbianceView() string {
 
 	sb.WriteString(m.Styles.Title.Render("🎨 Visual Environment Settings") + "\n")
 	sb.WriteString(fmt.Sprintf("  %s Scene Preset:   %s\n", m.Styles.KeyCap.Render("[v]"), m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String())))
+	sb.WriteString(fmt.Sprintf("  %s Color Filter:   %s\n", m.Styles.KeyCap.Render("[C]"), m.Scene.ColorFilter.String()))
+	sb.WriteString(fmt.Sprintf("  %s Screen Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), m.Scene.ParticleOverlay.String()))
 	sb.WriteString(fmt.Sprintf("  %s Time of Day:    %s\n", m.Styles.KeyCap.Render("[t]"), m.Scene.EffectiveTimeOfDay().String()))
 	sb.WriteString(fmt.Sprintf("  %s Weather Mode:   %s\n", m.Styles.KeyCap.Render("[w]"), m.Scene.Weather.String()))
 	sb.WriteString(fmt.Sprintf("  %s Cat Companion:  %s\n", m.Styles.KeyCap.Render("[c]"), m.Scene.CatBreed.String()))
@@ -320,11 +329,11 @@ func (m Model) renderSidebar() string {
 	sb.WriteString(m.Styles.Title.Render("✨ QUICK CONTROLS") + "\n")
 	sb.WriteString(fmt.Sprintf("%s Catalog: %s\n", m.Styles.KeyCap.Render("[V]"), m.Styles.MutedText.Render("Browse 370+")))
 	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[T]"), truncate(m.Styles.Theme.Name, 10)))
+	sb.WriteString(fmt.Sprintf("%s Filter: %s\n", m.Styles.KeyCap.Render("[C]"), truncate(m.Scene.ColorFilter.String(), 10)))
+	sb.WriteString(fmt.Sprintf("%s Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), truncate(m.Scene.ParticleOverlay.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Spectrum: %s\n", m.Styles.KeyCap.Render("[M]"), truncate(m.SpectrumMode.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Zen Mode: %s\n", m.Styles.KeyCap.Render("[Shift+F]"), m.Styles.MutedText.Render("Minimal")))
-	sb.WriteString(fmt.Sprintf("%s Scene: %s\n", m.Styles.KeyCap.Render("[v]"), truncate(m.Scene.CurrentScene.String(), 12)))
-	sb.WriteString(fmt.Sprintf("%s Weather: %s\n", m.Styles.KeyCap.Render("[w]"), m.Scene.Weather.String()))
-	sb.WriteString(fmt.Sprintf("%s GPU: %s\n", m.Styles.KeyCap.Render("[g]"), onOffStr(m.UseGPURender)))
+	sb.WriteString(fmt.Sprintf("%s Favorite: %s\n", m.Styles.KeyCap.Render("[*]"), m.Styles.MutedText.Render("Toggle")))
 
 	return m.Styles.Box.Width(28).Height(h).Render(sb.String())
 }
@@ -342,7 +351,10 @@ func (m Model) renderHelpModal(bg string) string {
   DYNAMIC BIT-ART SCENES & CONTROLS:
   [V]      Open Categorized Scene Catalog Modal (370+ Scenes)
   [/]      Search / Filter Scenes by Keyword (in Catalog)
-  [T]      Open Interactive Theme Palette Selector Modal
+  [*]      Bookmark / Toggle Favorite Scene Preset
+  [C]      Cycle Color Filter (Natural, Warm Amber, Cool Synth, Phosphor, Sepia)
+  [P]      Cycle Screen Particle Overlay (Sakura, Embers, Snow, Matrix)
+  [T]      Open Interactive Theme Palette Selector Modal (10 Themes)
   [M]      Cycle Audio Spectrum Visualizer Style (Bars, Dots, Braille, EQ)
   [Shift+F] Toggle Zen Minimal Focus Mode (Zero Clutter)
   [v]      Cycle Scene Preset (Rainy City, Forest Cabin, Classic, Observatory)
@@ -496,7 +508,11 @@ func (m Model) renderScenePickerModal(bg string) string {
 			if st == m.Scene.CurrentScene {
 				activeBadge = " " + m.Styles.StatusBadge.Render("ACTIVE")
 			}
-			listLines = append(listLines, fmt.Sprintf("%s %s%s", cursor, style.Render(st.String()), activeBadge))
+			favBadge := ""
+			if m.FavoriteScenes != nil && m.FavoriteScenes[st] {
+				favBadge = " ⭐"
+			}
+			listLines = append(listLines, fmt.Sprintf("%s %s%s%s", cursor, style.Render(st.String()), favBadge, activeBadge))
 		}
 	}
 
@@ -505,7 +521,7 @@ func (m Model) renderScenePickerModal(bg string) string {
 		tabsRow,
 		searchHeader,
 		strings.Join(listLines, "\n"),
-		m.Styles.MutedText.Render("Nav: [h/l] Category • [/] Search • [j/k] Select • [Enter] Apply • [Esc/V] Close"),
+		m.Styles.MutedText.Render("Nav: [h/l] Category • [/] Search • [f/*] Toggle Favorite • [j/k] Select • [Enter] Apply • [Esc/V] Close"),
 	)
 
 	modal := m.Styles.Box.

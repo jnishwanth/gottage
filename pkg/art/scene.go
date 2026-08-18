@@ -5,6 +5,8 @@ import (
 	"math"
 	"math/rand"
 	"time"
+
+	"github.com/lucasb-eyer/go-colorful"
 )
 
 // TimeOfDay specifies the ambient sky/lighting mode.
@@ -61,6 +63,64 @@ func (w WeatherMode) String() string {
 	}
 }
 
+// ColorFilter specifies visual color grading overlay filter.
+type ColorFilter int
+
+const (
+	FilterNormal ColorFilter = iota
+	FilterWarmAmber
+	FilterCoolSynth
+	FilterPhosphor
+	FilterSepia
+	FilterMidnight
+)
+
+func (f ColorFilter) String() string {
+	switch f {
+	case FilterWarmAmber:
+		return "Warm Amber 🌅"
+	case FilterCoolSynth:
+		return "Cool Synth 🌌"
+	case FilterPhosphor:
+		return "CRT Phosphor 📟"
+	case FilterSepia:
+		return "Vintage Sepia 📜"
+	case FilterMidnight:
+		return "Midnight Blue 🌙"
+	default:
+		return "Natural 🎨"
+	}
+}
+
+// ParticleOverlay specifies organic screen-wide particle animation overlays.
+type ParticleOverlay int
+
+const (
+	OverlayNone ParticleOverlay = iota
+	OverlaySakura
+	OverlayEmbers
+	OverlaySnow
+	OverlayMatrix
+	OverlayStars
+)
+
+func (p ParticleOverlay) String() string {
+	switch p {
+	case OverlaySakura:
+		return "Sakura Petals 🌸"
+	case OverlayEmbers:
+		return "Hearth Embers 🔥"
+	case OverlaySnow:
+		return "Gentle Snow ❄️"
+	case OverlayMatrix:
+		return "Matrix Rain 📟"
+	case OverlayStars:
+		return "Starlight 🌟"
+	default:
+		return "None ❌"
+	}
+}
+
 // CatBreed specifies cat color theme.
 type CatBreed int
 
@@ -97,22 +157,25 @@ type Particle struct {
 
 // CottageScene encapsulates dynamic state for the 8-bit retro scene engine.
 type CottageScene struct {
-	Canvas        *Canvas
-	CurrentScene  SceneType
-	Buddy         *FocusBuddy
-	FrameCount    uint64
-	TimeOfDay     TimeOfDay
-	Weather       WeatherMode
-	CatBreed      CatBreed
-	LampOn        bool
-	FireOn        bool
-	FairyLightsOn bool
-	Lightning     bool
+	Canvas          *Canvas
+	CurrentScene    SceneType
+	Buddy           *FocusBuddy
+	FrameCount      uint64
+	TimeOfDay       TimeOfDay
+	Weather         WeatherMode
+	CatBreed        CatBreed
+	ColorFilter     ColorFilter
+	ParticleOverlay ParticleOverlay
+	LampOn          bool
+	FireOn          bool
+	FairyLightsOn   bool
+	Lightning       bool
 
-	RainParticles  []Particle
-	SnowParticles  []Particle
-	SteamParticles []Particle
-	Stars          []struct{ X, Y int; Phase float64 }
+	RainParticles    []Particle
+	SnowParticles    []Particle
+	SteamParticles   []Particle
+	OverlayParticles []Particle
+	Stars            []struct{ X, Y int; Phase float64 }
 
 	rng *rand.Rand
 }
@@ -123,21 +186,36 @@ func NewCottageScene(width, height int) *CottageScene {
 	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	cs := &CottageScene{
-		Canvas:        canvas,
-		CurrentScene:  SceneRainyCity,
-		Buddy:         NewFocusBuddy(),
-		TimeOfDay:     TimeAuto,
-		Weather:       WeatherRain,
-		CatBreed:      CatOrange,
-		LampOn:        true,
-		FireOn:        true,
-		FairyLightsOn: false,
-		rng:           rng,
+		Canvas:          canvas,
+		CurrentScene:    SceneRainyCity,
+		Buddy:           NewFocusBuddy(),
+		TimeOfDay:       TimeAuto,
+		Weather:         WeatherRain,
+		CatBreed:        CatOrange,
+		ColorFilter:     FilterNormal,
+		ParticleOverlay: OverlayNone,
+		LampOn:          true,
+		FireOn:          true,
+		FairyLightsOn:   false,
+		rng:             rng,
 	}
 
 	cs.initStars()
 	cs.initParticles()
 	return cs
+}
+
+// CycleColorFilter cycles to the next color grading filter preset.
+func (cs *CottageScene) CycleColorFilter() ColorFilter {
+	cs.ColorFilter = (cs.ColorFilter + 1) % 6
+	return cs.ColorFilter
+}
+
+// CycleParticleOverlay cycles to the next organic screen particle overlay mode.
+func (cs *CottageScene) CycleParticleOverlay() ParticleOverlay {
+	cs.ParticleOverlay = (cs.ParticleOverlay + 1) % 6
+	cs.initOverlayParticles()
+	return cs.ParticleOverlay
 }
 
 // CycleScene cycles to the next 8-bit retro scene preset.
@@ -270,13 +348,64 @@ func (cs *CottageScene) Update() {
 			cs.SteamParticles = append(cs.SteamParticles[:i], cs.SteamParticles[i+1:]...)
 		}
 	}
+
+	// Overlay Particle physics
+	if cs.ParticleOverlay != OverlayNone {
+		for i := range cs.OverlayParticles {
+			p := &cs.OverlayParticles[i]
+			p.Life += 0.1
+			switch cs.ParticleOverlay {
+			case OverlaySakura:
+				p.Y += 0.35 + cs.rng.Float64()*0.2
+				p.X += math.Sin(p.Life)*0.4 + 0.1
+			case OverlayEmbers:
+				p.Y -= 0.35 + cs.rng.Float64()*0.2
+				p.X += math.Sin(p.Life) * 0.3
+			case OverlaySnow:
+				p.Y += 0.2 + cs.rng.Float64()*0.15
+				p.X += math.Sin(p.Life*0.5) * 0.2
+			case OverlayMatrix:
+				p.Y += 1.2 + cs.rng.Float64()*0.5
+			case OverlayStars:
+				p.Life += 0.05
+			}
+			if p.Y >= float64(cs.Canvas.Height) || p.Y < 0 || p.X >= float64(cs.Canvas.Width) || p.X < 0 {
+				p.X = float64(cs.rng.Intn(cs.Canvas.Width))
+				if cs.ParticleOverlay == OverlayEmbers {
+					p.Y = float64(cs.Canvas.Height - 1)
+				} else {
+					p.Y = 0
+				}
+			}
+		}
+	}
 }
 
-// RenderFrame executes the modular 4-step layered rendering pipeline:
+func (cs *CottageScene) initOverlayParticles() {
+	cs.OverlayParticles = nil
+	if cs.ParticleOverlay == OverlayNone {
+		return
+	}
+	count := 32
+	for i := 0; i < count; i++ {
+		cs.OverlayParticles = append(cs.OverlayParticles, Particle{
+			X:       float64(cs.rng.Intn(cs.Canvas.Width)),
+			Y:       float64(cs.rng.Intn(cs.Canvas.Height)),
+			Vx:      (cs.rng.Float64() - 0.5) * 0.3,
+			Vy:      0.2 + cs.rng.Float64()*0.4,
+			Life:    cs.rng.Float64() * 20,
+			MaxLife: 20,
+		})
+	}
+}
+
+// RenderFrame executes the modular 6-step layered rendering pipeline:
 // Step 1: Render Sky, Stars, Moon, Mountains/Buildings outside window (Layer 1)
 // Step 2: Render Weather Particles (Rain/Snow) clipped strictly to WindowBounds (Layer 2)
 // Step 3: Render Window Frames, Room Interior, Desk, Objects, and Focus Buddy (Layers 3-5)
-// Step 4: Apply Dynamic Lighting & Lightning Flashes (Layer 6)
+// Step 4: Apply Dynamic Lighting Cones, Hearth Glows, and Lightning Flashes (Layer 6)
+// Step 5: Render Organic Screen Particle Overlays (Sakura, Embers, Matrix Rain)
+// Step 6: Apply Visual Color Filter Post-Processing Tint
 func (cs *CottageScene) RenderFrame() {
 	c := cs.Canvas
 	s := GetScene(cs.CurrentScene)
@@ -292,6 +421,85 @@ func (cs *CottageScene) RenderFrame() {
 
 	// Step 4: Dynamic Lighting Cones, Hearth Glows, and Lightning Flashes (Layer 6)
 	s.ApplyLighting(c, cs.LampOn, cs.FireOn, cs.Lightning)
+
+	// Step 5: Organic Screen Particle Overlay
+	cs.renderOverlayParticles(c)
+
+	// Step 6: Visual Color Filter Post-Processing
+	if cs.ColorFilter != FilterNormal {
+		cs.applyColorFilter(c)
+	}
+}
+
+func (cs *CottageScene) renderOverlayParticles(c *Canvas) {
+	if cs.ParticleOverlay == OverlayNone {
+		return
+	}
+	for _, p := range cs.OverlayParticles {
+		px, py := int(p.X), int(p.Y)
+		if px < 0 || px >= c.Width || py < 0 || py >= c.Height {
+			continue
+		}
+		switch cs.ParticleOverlay {
+		case OverlaySakura:
+			c.BlendPixel(px, py, PicoPink, 0.85)
+			c.DrawGlyph(px, py/2, '🌸', PicoPink)
+		case OverlayEmbers:
+			c.BlendPixel(px, py, PicoOrange, 0.9)
+			c.DrawGlyph(px, py/2, '•', PicoOrange)
+		case OverlaySnow:
+			c.BlendPixel(px, py, PicoWhite, 0.8)
+			c.DrawGlyph(px, py/2, '•', PicoWhite)
+		case OverlayMatrix:
+			c.BlendPixel(px, py, PicoGreen, 0.9)
+			r := rune('0' + cs.rng.Intn(10))
+			c.DrawGlyph(px, py/2, r, PicoGreen)
+		case OverlayStars:
+			phase := math.Sin(p.Life)
+			if phase > 0.3 {
+				c.BlendPixel(px, py, PicoYellow, phase*0.8)
+				c.DrawGlyph(px, py/2, '✦', PicoYellow)
+			}
+		}
+	}
+}
+
+func (cs *CottageScene) applyColorFilter(c *Canvas) {
+	for y := 0; y < c.Height; y++ {
+		for x := 0; x < c.Width; x++ {
+			col := c.Pixels[y][x]
+			r, g, b := col.R, col.G, col.B
+			switch cs.ColorFilter {
+			case FilterWarmAmber:
+				r = math.Min(1.0, r*1.2)
+				g = math.Min(1.0, g*0.95)
+				b = math.Min(1.0, b*0.7)
+			case FilterCoolSynth:
+				r = math.Min(1.0, r*0.85+b*0.25)
+				g = math.Min(1.0, g*0.8)
+				b = math.Min(1.0, b*1.25)
+			case FilterPhosphor:
+				lum := 0.299*r + 0.587*g + 0.114*b
+				r = lum * 0.15
+				g = lum * 1.15
+				b = lum * 0.15
+			case FilterSepia:
+				lum := 0.299*r + 0.587*g + 0.114*b
+				r = math.Min(1.0, lum*1.2)
+				g = math.Min(1.0, lum*1.0)
+				b = math.Min(1.0, lum*0.75)
+			case FilterMidnight:
+				r = math.Min(1.0, r*0.45)
+				g = math.Min(1.0, g*0.65)
+				b = math.Min(1.0, b*1.3)
+			}
+			c.Pixels[y][x] = colorful.Color{
+				R: math.Max(0, math.Min(1.0, r)),
+				G: math.Max(0, math.Min(1.0, g)),
+				B: math.Max(0, math.Min(1.0, b)),
+			}
+		}
+	}
 }
 
 func (cs *CottageScene) renderSceneWindowParticles(c *Canvas, wRect Rect) {

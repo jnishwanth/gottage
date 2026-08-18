@@ -3,6 +3,8 @@ package ui
 import (
 	"strings"
 	"testing"
+
+	"gottage/pkg/art"
 )
 
 func TestVisualizers(t *testing.T) {
@@ -66,5 +68,30 @@ func TestModelViewModals(t *testing.T) {
 	vT := m.View()
 	if !strings.Contains(vT, "THEME PALETTE CUSTOMIZER") {
 		t.Error("Expected Theme Picker modal to contain THEME PALETTE CUSTOMIZER")
+	}
+	if len(AllThemes) != 10 {
+		t.Errorf("Expected 10 themes in AllThemes, got %d", len(AllThemes))
+	}
+	m.ShowThemePicker = false
+
+	// Test ColorFilter & ParticleOverlay Cycling
+	cf := m.Scene.CycleColorFilter()
+	if cf.String() == "" {
+		t.Error("Expected non-empty ColorFilter string")
+	}
+	po := m.Scene.CycleParticleOverlay()
+	if po.String() == "" {
+		t.Error("Expected non-empty ParticleOverlay string")
+	}
+
+	// Test Favorites Toggling
+	isFav := m.ToggleFavorite(art.SceneForestCabin)
+	if !isFav {
+		t.Error("Expected ToggleFavorite to mark scene as favorite")
+	}
+	m.PickerCategoryIdx = 0
+	favScenes := m.getFilteredScenes()
+	if len(favScenes) == 0 {
+		t.Error("Expected favorites list to contain at least 1 scene")
 	}
 }

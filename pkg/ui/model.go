@@ -62,6 +62,7 @@ type Model struct {
 	StatusMsg         string
 	StatusMsgTime     time.Time
 	UseGPURender      bool
+	FavoriteScenes    map[art.SceneType]bool
 
 	// Core Components
 	Scene   *art.CottageScene
@@ -90,6 +91,9 @@ func NewModel() Model {
 	styles := NewStyles(ThemeCozyAutumn)
 	scene := art.NewCottageScene(160, 90)
 
+	favs := make(map[art.SceneType]bool)
+	favs[art.SceneRainyCity] = true
+
 	return Model{
 		Width:             120,
 		Height:            40,
@@ -101,6 +105,7 @@ func NewModel() Model {
 		ShowThemePicker:   false,
 		SpectrumMode:      SpectrumBars,
 		UseGPURender:      art.DetectTerminalProtocol() == art.ProtocolKitty,
+		FavoriteScenes:    favs,
 
 		Scene:   scene,
 		CLIAMP:  audio.NewCLIAMPController(),
@@ -111,6 +116,15 @@ func NewModel() Model {
 		AddingTask: false,
 		TextInput:  ti,
 	}
+}
+
+// ToggleFavorite toggles bookmark status for a scene.
+func (m *Model) ToggleFavorite(st art.SceneType) bool {
+	if m.FavoriteScenes == nil {
+		m.FavoriteScenes = make(map[art.SceneType]bool)
+	}
+	m.FavoriteScenes[st] = !m.FavoriteScenes[st]
+	return m.FavoriteScenes[st]
 }
 
 // Init initializes Bubbletea commands (animation ticks & audio polling).
@@ -230,7 +244,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 
-			catScenes := art.GetScenesByCategory(m.PickerCategoryIdx)
+			catScenes := m.getFilteredScenes()
 			switch msg.String() {
 			case "esc", "q", "V":
 				m.ShowScenePicker = false
@@ -238,6 +252,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.PickerSearchMode = true
 				m.PickerSearchInput.Focus()
 				return m, textinput.Blink
+			case "f", "*":
+				if len(catScenes) > 0 && m.PickerSceneIdx < len(catScenes) {
+					target := catScenes[m.PickerSceneIdx]
+					fav := m.ToggleFavorite(target)
+					if fav {
+						m.SetStatusMsg("Added to Favorites: " + target.String() + " ⭐")
+					} else {
+						m.SetStatusMsg("Removed from Favorites: " + target.String())
+					}
+				}
 			case "h", "left":
 				m.PickerCategoryIdx = (m.PickerCategoryIdx + len(art.SceneCategories) - 1) % len(art.SceneCategories)
 				m.PickerSceneIdx = 0
@@ -332,6 +356,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "M":
 			m.SpectrumMode = (m.SpectrumMode + 1) % 4
 			m.SetStatusMsg("Visualizer Mode: " + m.SpectrumMode.String() + " 🎶")
+
+		case "C":
+			filter := m.Scene.CycleColorFilter()
+			m.SetStatusMsg("Color Filter: " + filter.String() + " 🎨")
+
+		case "P":
+			overlay := m.Scene.CycleParticleOverlay()
+			m.SetStatusMsg("Particle Overlay: " + overlay.String() + " ✨")
+
+		case "*":
+			fav := m.ToggleFavorite(m.Scene.CurrentScene)
+			if fav {
+				m.SetStatusMsg("Added to Favorites: " + m.Scene.CurrentScene.String() + " ⭐")
+			} else {
+				m.SetStatusMsg("Removed from Favorites: " + m.Scene.CurrentScene.String())
+			}
 
 		case "tab":
 			m.ActiveTab = (m.ActiveTab + 1) % 4
@@ -492,7 +532,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) getFilteredScenes() []art.SceneType {
 	query := strings.TrimSpace(strings.ToLower(m.PickerSearchInput.Value()))
 	if query == "" {
-		return art.GetScenesByCategory(m.PickerCategoryIdx)
+		return art.GetScenesByCategoryAndFavorites(m.PickerCategoryIdx, m.FavoriteScenes)
 	}
 
 	var matched []art.SceneType

@@ -76,6 +76,46 @@ var (
 		Background: lipgloss.Color("#121b16"),
 	}
 
+	ThemeCatppuccinMocha = Theme{
+		Name:       "Catppuccin Mocha 🌿",
+		Border:     lipgloss.Color("#cba6f7"),
+		Title:      lipgloss.Color("#89b4fa"),
+		Accent:     lipgloss.Color("#f5e0dc"),
+		Highlight:  lipgloss.Color("#a6e3a1"),
+		Subdued:    lipgloss.Color("#6c7086"),
+		Background: lipgloss.Color("#1e1e2e"),
+	}
+
+	ThemeTokyoNight = Theme{
+		Name:       "Tokyo Night 🌌",
+		Border:     lipgloss.Color("#7aa2f7"),
+		Title:      lipgloss.Color("#bb9af7"),
+		Accent:     lipgloss.Color("#f7768e"),
+		Highlight:  lipgloss.Color("#9ece6a"),
+		Subdued:    lipgloss.Color("#565f89"),
+		Background: lipgloss.Color("#1a1b26"),
+	}
+
+	ThemeGruvboxDark = Theme{
+		Name:       "Gruvbox Dark 🍂",
+		Border:     lipgloss.Color("#fe8019"),
+		Title:      lipgloss.Color("#fabd2f"),
+		Accent:     lipgloss.Color("#fb4934"),
+		Highlight:  lipgloss.Color("#b8bb26"),
+		Subdued:    lipgloss.Color("#928374"),
+		Background: lipgloss.Color("#282828"),
+	}
+
+	ThemeRosePine = Theme{
+		Name:       "Rosé Pine 🍷",
+		Border:     lipgloss.Color("#ebbcba"),
+		Title:      lipgloss.Color("#f6c177"),
+		Accent:     lipgloss.Color("#eb6f92"),
+		Highlight:  lipgloss.Color("#31748f"),
+		Subdued:    lipgloss.Color("#6e6a86"),
+		Background: lipgloss.Color("#191724"),
+	}
+
 	AllThemes = []Theme{
 		ThemeCozyAutumn,
 		ThemeRainyIndigo,
@@ -83,6 +123,10 @@ var (
 		ThemeCyberpunk,
 		ThemeNordicFrost,
 		ThemeEmeraldForest,
+		ThemeCatppuccinMocha,
+		ThemeTokyoNight,
+		ThemeGruvboxDark,
+		ThemeRosePine,
 	}
 )
 
