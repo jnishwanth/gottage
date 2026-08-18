@@ -135,6 +135,11 @@ func (m Model) View() string {
 		return m.renderCommandPaletteModal(mainView)
 	}
 
+	// 2D Audio Visualizer & Spectrum Studio Modal
+	if m.ShowSpectrumModal {
+		return m.renderSpectrumModal(mainView)
+	}
+
 	// 5-Channel Ambient Soundscape Mixer Modal
 	if m.ShowSoundMixerModal {
 		return m.renderSoundMixerModal(mainView)
@@ -1004,4 +1009,86 @@ func (m Model) renderSoundMixerModal(bg string) string {
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, dialogBox)
 }
+
+func (m Model) renderSpectrumModal(bg string) string {
+	dialogWidth := 76
+	title := m.Styles.Title.Render(" 🎶 2D AUDIO SPECTRUM & EQUALIZER STUDIO ")
+
+	st := m.CLIAMP.GetStatus()
+	spec2D := RenderAudioSpectrum2D(64, 10, st.Playing, m.Scene.FrameCount, m.SpectrumMode, m.Styles)
+
+	modeHeader := fmt.Sprintf("Visualizer Mode: %s  |  Style: %s",
+		m.Styles.BoldAccent.Render(m.SpectrumMode.String()),
+		m.Styles.Header.Render(fmt.Sprintf("%d/5", int(m.SpectrumMode)+1)),
+	)
+
+	trackInfo := "Track: " + m.Styles.Header.Render("24/7 Lofi Focus Radio Stream")
+	if st.TrackTitle != "" {
+		trackInfo = "Track: " + m.Styles.Header.Render(st.TrackTitle)
+	}
+
+	stateBadge := m.Styles.SwitchOff.Render(" PAUSED ⏸️ ")
+	if st.Playing {
+		stateBadge = m.Styles.SwitchOn.Render(" PLAYING ▶️ ")
+	}
+
+	activeAmbients := []string{}
+	if m.Ambient.RainActive {
+		activeAmbients = append(activeAmbients, "🌧️ Rain")
+	}
+	if m.Ambient.FireActive {
+		activeAmbients = append(activeAmbients, "🔥 Fire")
+	}
+	if m.Ambient.WindActive {
+		activeAmbients = append(activeAmbients, "🌬️ Wind")
+	}
+	if m.Ambient.CafeActive {
+		activeAmbients = append(activeAmbients, "☕ Cafe")
+	}
+	if m.Ambient.CricketsActive {
+		activeAmbients = append(activeAmbients, "🦗 Crickets")
+	}
+
+	ambientStr := "None"
+	if len(activeAmbients) > 0 {
+		ambientStr = strings.Join(activeAmbients, " • ")
+	}
+
+	audioCard := fmt.Sprintf("%s  |  %s\nAmbient Layers: %s",
+		trackInfo,
+		stateBadge,
+		m.Styles.BoldAccent.Render(ambientStr),
+	)
+
+	controls := fmt.Sprintf("%s Cycle Style  %s Play/Pause  %s Radio 1-5  %s Close",
+		m.Styles.KeyCap.Render(" Tab/Space "),
+		m.Styles.KeyCap.Render(" p "),
+		m.Styles.KeyCap.Render(" 1-5 "),
+		m.Styles.KeyCap.Render(" Esc/M "),
+	)
+
+	divider := strings.Repeat("─", dialogWidth-8)
+
+	content := lipgloss.JoinVertical(lipgloss.Left,
+		modeHeader,
+		"",
+		spec2D,
+		"",
+		divider,
+		audioCard,
+		divider,
+		controls,
+	)
+
+	dialogBox := m.Styles.Box.Width(dialogWidth).Render(
+		lipgloss.JoinVertical(lipgloss.Left,
+			title,
+			"",
+			content,
+		),
+	)
+
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, dialogBox)
+}
+
 

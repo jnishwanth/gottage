@@ -67,6 +67,7 @@ type Model struct {
 	PresetInputText    textinput.Model
 	ShowSoundMixerModal bool
 	MixerChannelIdx    int
+	ShowSpectrumModal  bool
 	SpectrumMode       SpectrumStyle
 	ZenMode            bool
 	AutoSyncAudio      bool
@@ -293,6 +294,38 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 
 	case tea.KeyMsg:
+		// Modal: 2D Audio Visualizer & Spectrum Studio
+		if m.ShowSpectrumModal {
+			switch msg.String() {
+			case "esc", "q", "M":
+				m.ShowSpectrumModal = false
+			case "tab", "space", "l", "right":
+				m.SpectrumMode = (m.SpectrumMode + 1) % 5
+				m.SetStatusMsg("Visualizer Mode: " + m.SpectrumMode.String() + " 🎶")
+			case "h", "left":
+				m.SpectrumMode = (m.SpectrumMode + 4) % 5
+				m.SetStatusMsg("Visualizer Mode: " + m.SpectrumMode.String() + " 🎶")
+			case "p":
+				if m.CLIAMP != nil {
+					_ = m.CLIAMP.TogglePlayPause()
+					st := m.CLIAMP.GetStatus()
+					if st.Playing {
+						m.SetStatusMsg("CLIAMP Playback Resumed ▶️")
+					} else {
+						m.SetStatusMsg("CLIAMP Playback Paused ⏸️")
+					}
+				}
+			case "1", "2", "3", "4", "5":
+				idx := int(msg.String()[0] - '1')
+				presets := audio.CuratedLofiPresets
+				if idx >= 0 && idx < len(presets) && m.CLIAMP != nil {
+					_ = m.CLIAMP.PlayPreset(idx)
+					m.SetStatusMsg("Radio Stream: " + presets[idx].Name + " 📻")
+				}
+			}
+			return m, nil
+		}
+
 		// Modal: Scene Info & Palette Inspector
 		if m.ShowSceneInfoModal {
 			switch msg.String() {
@@ -627,8 +660,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case "M":
-			m.SpectrumMode = (m.SpectrumMode + 1) % 5
-			m.SetStatusMsg("Visualizer Mode: " + m.SpectrumMode.String() + " 🎶")
+			m.ShowSpectrumModal = !m.ShowSpectrumModal
 
 		case "R":
 			newScene := m.Scene.RandomScene()

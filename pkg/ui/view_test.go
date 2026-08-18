@@ -19,6 +19,11 @@ func TestVisualizers(t *testing.T) {
 		if specPaused == "" {
 			t.Errorf("Expected non-empty spectrum output when paused for mode %s", mode.String())
 		}
+
+		spec2D := RenderAudioSpectrum2D(32, 8, true, 15, mode, styles)
+		if spec2D == "" {
+			t.Errorf("Expected non-empty 2D spectrum output when playing for mode %s", mode.String())
+		}
 	}
 
 	breath := GetZenBreathState(20)
@@ -262,6 +267,14 @@ func TestModelViewModals(t *testing.T) {
 	if !strings.Contains(vBadge, "ASCII Density Ramp") {
 		t.Error("Expected status footer to contain live ASCII Density Ramp badge")
 	}
+
+	// Test 2D Spectrum & Equalizer Studio Modal
+	m.ShowSpectrumModal = true
+	vSpec := m.View()
+	if !strings.Contains(vSpec, "2D AUDIO SPECTRUM & EQUALIZER STUDIO") {
+		t.Error("Expected ShowSpectrumModal view to render 2D AUDIO SPECTRUM & EQUALIZER STUDIO header")
+	}
+	m.ShowSpectrumModal = false
 }
 
 

@@ -216,13 +216,12 @@ func GetCommandList(m *Model) []CommandItem {
 			},
 		},
 		CommandItem{
-			Title:       "🎶 Visualizer: Cycle Audio Spectrum Style",
+			Title:       "🎶 Visualizer: Open 2D Spectrum Studio Modal",
 			Category:    "Aesthetics",
 			Shortcut:    "[ Shift+M ]",
-			Description: "Cycle spectrum styles (Bars, Dots, Braille, Equalizer, Waveform)",
+			Description: "Open 2D Graphic Equalizer & Audio Visualizer Studio",
 			Action: func(m *Model) {
-				m.SpectrumMode = (m.SpectrumMode + 1) % 5
-				m.SetStatusMsg("Visualizer Mode: " + m.SpectrumMode.String() + " 🎶")
+				m.ShowSpectrumModal = true
 			},
 		},
 		CommandItem{
