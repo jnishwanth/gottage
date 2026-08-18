@@ -327,3 +327,50 @@ func (c *Canvas) ExtractDominantPalette(n int) []colorful.Color {
 	return result
 }
 
+// ApplyVignette applies a subtle radial edge darkening to the canvas.
+func (c *Canvas) ApplyVignette(intensity float64) {
+	if intensity <= 0 || c.Width == 0 || c.Height == 0 {
+		return
+	}
+	halfW := float64(c.Width) / 2.0
+	halfH := float64(c.Height) / 2.0
+	black := colorful.Color{R: 0, G: 0, B: 0}
+
+	for y := 0; y < c.Height; y++ {
+		dy := (float64(y) - halfH) / halfH
+		for x := 0; x < c.Width; x++ {
+			dx := (float64(x) - halfW) / halfW
+			dist := math.Sqrt(dx*dx + dy*dy)
+			if dist > 0.4 {
+				vignetteFactor := math.Pow((dist-0.4)/0.6, 1.6) * intensity
+				if vignetteFactor > 0.75 {
+					vignetteFactor = 0.75
+				}
+				c.Pixels[y][x] = c.Pixels[y][x].BlendRgb(black, vignetteFactor)
+			}
+		}
+	}
+}
+
+// ApplyCRTScanlines applies alternating horizontal scanline dimming for retro CRT monitor aesthetics.
+func (c *Canvas) ApplyCRTScanlines(depth float64) {
+	if depth <= 0 {
+		return
+	}
+	mult := 1.0 - (0.22 * depth)
+	if mult < 0.5 {
+		mult = 0.5
+	}
+	for y := 1; y < c.Height; y += 2 {
+		for x := 0; x < c.Width; x++ {
+			col := c.Pixels[y][x]
+			c.Pixels[y][x] = colorful.Color{
+				R: col.R * mult,
+				G: col.G * mult,
+				B: col.B * mult,
+			}
+		}
+	}
+}
+
+

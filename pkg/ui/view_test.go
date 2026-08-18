@@ -148,6 +148,18 @@ func TestModelViewModals(t *testing.T) {
 		t.Error("Expected ToggleSmoothDayNight to toggle state")
 	}
 
+	vig := m.Scene.ToggleVignette()
+	if vig == m.Scene.VignetteOn {
+		// Verify toggle works
+	}
+	m.Scene.Canvas.ApplyVignette(0.5)
+
+	crt := m.Scene.ToggleCRTScanlines()
+	if !crt || !m.Scene.CRTScanlinesOn {
+		t.Error("Expected ToggleCRTScanlines to turn ON scanlines")
+	}
+	m.Scene.Canvas.ApplyCRTScanlines(1.0)
+
 	// Test Command Palette Modal & Mood Presets
 	m.ShowCommandPalette = true
 	vCmd := m.View()

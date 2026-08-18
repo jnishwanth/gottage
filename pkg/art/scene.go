@@ -223,6 +223,8 @@ type CottageScene struct {
 	Lightning             bool
 	BeatReactiveParticles bool
 	SmoothDayNightBlend   bool
+	VignetteOn            bool
+	CRTScanlinesOn        bool
 
 	RainParticles    []Particle
 	SnowParticles    []Particle
@@ -255,6 +257,8 @@ func NewCottageScene(width, height int) *CottageScene {
 		FairyLightsOn:         false,
 		BeatReactiveParticles: true,
 		SmoothDayNightBlend:   true,
+		VignetteOn:            true,
+		CRTScanlinesOn:        false,
 		rng:                   rng,
 	}
 
@@ -300,6 +304,18 @@ func (cs *CottageScene) ToggleBeatReactive() bool {
 func (cs *CottageScene) ToggleSmoothDayNight() bool {
 	cs.SmoothDayNightBlend = !cs.SmoothDayNightBlend
 	return cs.SmoothDayNightBlend
+}
+
+// ToggleVignette toggles soft radial vignette canvas edge shading.
+func (cs *CottageScene) ToggleVignette() bool {
+	cs.VignetteOn = !cs.VignetteOn
+	return cs.VignetteOn
+}
+
+// ToggleCRTScanlines toggles retro CRT monitor scanline dimming overlay.
+func (cs *CottageScene) ToggleCRTScanlines() bool {
+	cs.CRTScanlinesOn = !cs.CRTScanlinesOn
+	return cs.CRTScanlinesOn
 }
 
 // CycleScene cycles to the next 8-bit retro scene preset.
@@ -595,6 +611,16 @@ func (cs *CottageScene) RenderFrame() {
 	// Step 6: Visual Color Filter Post-Processing
 	if cs.ColorFilter != FilterNormal {
 		cs.applyColorFilter(c)
+	}
+
+	// Step 7: Cinematic Radial Vignette Edge Shading
+	if cs.VignetteOn {
+		c.ApplyVignette(0.55)
+	}
+
+	// Step 8: Retro CRT Monitor Scanline Overlay
+	if cs.CRTScanlinesOn {
+		c.ApplyCRTScanlines(1.0)
 	}
 }
 

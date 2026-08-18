@@ -573,6 +573,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SetStatusMsg("Smooth Day/Night Sky Blending: OFF")
 			}
 
+		case "G":
+			vig := m.Scene.ToggleVignette()
+			if vig {
+				m.SetStatusMsg("Cinematic Vignette Shading: ON 🖼️")
+			} else {
+				m.SetStatusMsg("Cinematic Vignette Shading: OFF")
+			}
+
+		case "O":
+			crt := m.Scene.ToggleCRTScanlines()
+			if crt {
+				m.SetStatusMsg("Retro CRT Scanlines Overlay: ON 📺")
+			} else {
+				m.SetStatusMsg("Retro CRT Scanlines Overlay: OFF")
+			}
+
 		case "P":
 			overlay := m.Scene.CycleParticleOverlay()
 			m.SetStatusMsg("Particle Overlay: " + overlay.String() + " ✨")

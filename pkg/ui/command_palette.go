@@ -191,6 +191,34 @@ func GetCommandList(m *Model) []CommandItem {
 			},
 		},
 		CommandItem{
+			Title:       "🖼️ Vignette: Toggle Radial Edge Shading",
+			Category:    "Aesthetics",
+			Shortcut:    "[ Shift+G ]",
+			Description: "Toggle soft radial vignette canvas edge shading for focus depth",
+			Action: func(m *Model) {
+				v := m.Scene.ToggleVignette()
+				if v {
+					m.SetStatusMsg("Cinematic Vignette Shading: ON 🖼️")
+				} else {
+					m.SetStatusMsg("Cinematic Vignette Shading: OFF")
+				}
+			},
+		},
+		CommandItem{
+			Title:       "📺 CRT: Toggle CRT Monitor Scanlines Overlay",
+			Category:    "Aesthetics",
+			Shortcut:    "[ Shift+O ]",
+			Description: "Toggle retro CRT monitor scanline dimming overlay",
+			Action: func(m *Model) {
+				c := m.Scene.ToggleCRTScanlines()
+				if c {
+					m.SetStatusMsg("Retro CRT Scanlines Overlay: ON 📺")
+				} else {
+					m.SetStatusMsg("Retro CRT Scanlines Overlay: OFF")
+				}
+			},
+		},
+		CommandItem{
 			Title:       "🌅 Sky Blend: Toggle Day/Night Smooth Blending",
 			Category:    "Aesthetics",
 			Shortcut:    "[ Shift+D ]",

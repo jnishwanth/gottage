@@ -100,6 +100,12 @@ func (m Model) View() string {
 		if m.Scene.ParticleOverlay != art.OverlayNone {
 			liveBadges = append(liveBadges, "✨ "+m.Scene.ParticleOverlay.String())
 		}
+		if m.Scene.VignetteOn {
+			liveBadges = append(liveBadges, "🖼️ Vignette")
+		}
+		if m.Scene.CRTScanlinesOn {
+			liveBadges = append(liveBadges, "📺 CRT")
+		}
 
 		prefix := ""
 		if len(liveBadges) > 0 {
@@ -355,8 +361,12 @@ func (m Model) renderAmbianceView() string {
 	sb.WriteString(fmt.Sprintf("  %s Color Filter:   %s    %s Animation Speed: %s\n",
 		m.Styles.KeyCap.Render("[C]"), m.Scene.ColorFilter.String(),
 		m.Styles.KeyCap.Render("[S]"), m.Scene.AnimSpeed.String()))
-	sb.WriteString(fmt.Sprintf("  %s Screen Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), m.Scene.ParticleOverlay.String()))
-	sb.WriteString(fmt.Sprintf("  %s Time of Day:    %s\n", m.Styles.KeyCap.Render("[t]"), m.Scene.EffectiveTimeOfDay().String()))
+	sb.WriteString(fmt.Sprintf("  %s Screen Overlay: %s    %s Vignette Edge: %s\n",
+		m.Styles.KeyCap.Render("[P]"), m.Scene.ParticleOverlay.String(),
+		m.Styles.KeyCap.Render("[G]"), onOffStr(m.Scene.VignetteOn)))
+	sb.WriteString(fmt.Sprintf("  %s CRT Scanlines:  %s    %s Time of Day:   %s\n",
+		m.Styles.KeyCap.Render("[O]"), onOffStr(m.Scene.CRTScanlinesOn),
+		m.Styles.KeyCap.Render("[t]"), m.Scene.EffectiveTimeOfDay().String()))
 	sb.WriteString(fmt.Sprintf("  %s Weather Mode:   %s\n", m.Styles.KeyCap.Render("[w]"), m.Scene.Weather.String()))
 	sb.WriteString(fmt.Sprintf("  %s Cat Companion:  %s\n", m.Styles.KeyCap.Render("[c]"), m.Scene.CatBreed.String()))
 	sb.WriteString(fmt.Sprintf("  %s Desk Lamp:      %s   %s Fireplace: %s   %s Fairy Lights: %s\n\n",
@@ -442,6 +452,8 @@ func (m Model) renderSidebar() string {
 	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[T]"), truncate(m.Styles.Theme.Name, 10)))
 	sb.WriteString(fmt.Sprintf("%s Filter: %s\n", m.Styles.KeyCap.Render("[C]"), truncate(m.Scene.ColorFilter.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), truncate(m.Scene.ParticleOverlay.String(), 10)))
+	sb.WriteString(fmt.Sprintf("%s Vignette: %s\n", m.Styles.KeyCap.Render("[G]"), onOffStr(m.Scene.VignetteOn)))
+	sb.WriteString(fmt.Sprintf("%s Scanlines: %s\n", m.Styles.KeyCap.Render("[O]"), onOffStr(m.Scene.CRTScanlinesOn)))
 	sb.WriteString(fmt.Sprintf("%s Speed: %s\n", m.Styles.KeyCap.Render("[S]"), truncate(m.Scene.AnimSpeed.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s AutoSync: %s\n", m.Styles.KeyCap.Render("[A]"), onOffStr(m.AutoSyncAudio)))
 	sb.WriteString(fmt.Sprintf("%s BeatPulse: %s\n", m.Styles.KeyCap.Render("[B]"), onOffStr(m.Scene.BeatReactiveParticles)))
@@ -809,7 +821,7 @@ func (m Model) renderSceneInfoModal(bg string) string {
 		m.Styles.MutedText.Render(truncate(meta.Atmosphere, 40)),
 	)
 
-	col2 := fmt.Sprintf("%s\n  Resolution:   %dx%d px\n  Frames:       %d\n  Anim Speed:   %s\n  GPU Mode:     %s\n  Color Filter: %s\n  Particle:     %s\n  Beat Pulse:   %s\n  Sky Blend:    %s",
+	col2 := fmt.Sprintf("%s\n  Resolution:   %dx%d px\n  Frames:       %d\n  Anim Speed:   %s\n  GPU Mode:     %s\n  Color Filter: %s\n  Particle:     %s\n  Vignette:     %s\n  CRT Scanlines: %s\n  Beat Pulse:   %s\n  Sky Blend:    %s",
 		m.Styles.Header.Render("⚡ ENGINE METRICS"),
 		m.Scene.Canvas.Width, m.Scene.Canvas.Height,
 		m.Scene.FrameCount,
@@ -817,6 +829,8 @@ func (m Model) renderSceneInfoModal(bg string) string {
 		onOffStr(m.UseGPURender),
 		m.Scene.ColorFilter.String(),
 		m.Scene.ParticleOverlay.String(),
+		onOffStr(m.Scene.VignetteOn),
+		onOffStr(m.Scene.CRTScanlinesOn),
 		onOffStr(m.Scene.BeatReactiveParticles),
 		onOffStr(m.Scene.SmoothDayNightBlend),
 	)
