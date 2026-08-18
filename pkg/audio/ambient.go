@@ -34,6 +34,11 @@ type AmbientManager struct {
 	ClockActive    bool
 	CafeActive     bool
 	CricketsActive bool
+	RainVol        float64 // 0.0 to 1.0
+	FireVol        float64 // 0.0 to 1.0
+	WindVol        float64 // 0.0 to 1.0
+	CafeVol        float64 // 0.0 to 1.0
+	CricketsVol    float64 // 0.0 to 1.0
 	Volume         float64 // 0.0 to 1.0
 	tempDir        string
 	rainCmd        *exec.Cmd
@@ -49,13 +54,20 @@ type AmbientManager struct {
 func NewAmbientManager() *AmbientManager {
 	tmpDir, _ := os.MkdirTemp("", "gottage_audio")
 	am := &AmbientManager{
-		RainActive:  false,
-		FireActive:  false,
-		WindActive:  false,
-		ClockActive: false,
-		Volume:      0.5,
-		tempDir:     tmpDir,
-		rng:         rand.New(rand.NewSource(time.Now().UnixNano())),
+		RainActive:     false,
+		FireActive:     false,
+		WindActive:     false,
+		ClockActive:    false,
+		CafeActive:     false,
+		CricketsActive: false,
+		RainVol:        0.7,
+		FireVol:        0.7,
+		WindVol:        0.7,
+		CafeVol:        0.7,
+		CricketsVol:    0.7,
+		Volume:         0.5,
+		tempDir:        tmpDir,
+		rng:            rand.New(rand.NewSource(time.Now().UnixNano())),
 	}
 
 	// Detect audio player binary
@@ -178,25 +190,29 @@ func (am *AmbientManager) StartAmbientLoop() {
 		return
 	}
 
-	go am.runLoop("rain.wav", &am.RainActive, &am.rainCmd)
-	go am.runLoop("fire.wav", &am.FireActive, &am.fireCmd)
-	go am.runLoop("wind.wav", &am.WindActive, &am.windCmd)
-	go am.runLoop("cafe.wav", &am.CafeActive, &am.cafeCmd)
-	go am.runLoop("crickets.wav", &am.CricketsActive, &am.cricketsCmd)
+	go am.runLoop("rain.wav", &am.RainActive, &am.RainVol, &am.rainCmd)
+	go am.runLoop("fire.wav", &am.FireActive, &am.FireVol, &am.fireCmd)
+	go am.runLoop("wind.wav", &am.WindActive, &am.WindVol, &am.windCmd)
+	go am.runLoop("cafe.wav", &am.CafeActive, &am.CafeVol, &am.cafeCmd)
+	go am.runLoop("crickets.wav", &am.CricketsActive, &am.CricketsVol, &am.cricketsCmd)
 }
 
-func (am *AmbientManager) runLoop(filename string, activeFlag *bool, cmdVar **exec.Cmd) {
+func (am *AmbientManager) runLoop(filename string, activeFlag *bool, volVal *float64, cmdVar **exec.Cmd) {
 	filePath := filepath.Join(am.tempDir, filename)
 
 	for {
 		if *activeFlag && am.playerBinary != "" {
 			var cmd *exec.Cmd
+			vol := *volVal
 			if filepath.Base(am.playerBinary) == "afplay" {
-				cmd = exec.Command(am.playerBinary, filePath)
+				volStr := fmt.Sprintf("%.2f", vol)
+				cmd = exec.Command(am.playerBinary, "-v", volStr, filePath)
 			} else if filepath.Base(am.playerBinary) == "mpv" {
-				cmd = exec.Command(am.playerBinary, "--loop", "--no-terminal", filePath)
+				volStr := fmt.Sprintf("%d", int(vol*100))
+				cmd = exec.Command(am.playerBinary, "--volume="+volStr, "--loop", "--no-terminal", filePath)
 			} else if filepath.Base(am.playerBinary) == "ffplay" {
-				cmd = exec.Command(am.playerBinary, "-nodisp", "-loop", "0", filePath)
+				volStr := fmt.Sprintf("%d", int(vol*100))
+				cmd = exec.Command(am.playerBinary, "-nodisp", "-loop", "0", "-volume", volStr, filePath)
 			}
 
 			if cmd != nil {
@@ -206,6 +222,69 @@ func (am *AmbientManager) runLoop(filename string, activeFlag *bool, cmdVar **ex
 		} else {
 			time.Sleep(500 * time.Millisecond)
 		}
+	}
+}
+
+// AdjustChannelVolume adjusts specific ambient channel volume (0.0 to 1.0) and restarts playback process.
+func (am *AmbientManager) AdjustChannelVolume(st SoundType, delta float64) float64 {
+	am.mu.Lock()
+	defer am.mu.Unlock()
+
+	var targetVol *float64
+	var targetCmd **exec.Cmd
+
+	switch st {
+	case SoundRain:
+		targetVol = &am.RainVol
+		targetCmd = &am.rainCmd
+	case SoundFire:
+		targetVol = &am.FireVol
+		targetCmd = &am.fireCmd
+	case SoundWind:
+		targetVol = &am.WindVol
+		targetCmd = &am.windCmd
+	case SoundCafe:
+		targetVol = &am.CafeVol
+		targetCmd = &am.cafeCmd
+	case SoundCrickets:
+		targetVol = &am.CricketsVol
+		targetCmd = &am.cricketsCmd
+	default:
+		return 0.7
+	}
+
+	*targetVol += delta
+	if *targetVol < 0.0 {
+		*targetVol = 0.0
+	} else if *targetVol > 1.0 {
+		*targetVol = 1.0
+	}
+
+	if *targetCmd != nil && (*targetCmd).Process != nil {
+		_ = (*targetCmd).Process.Kill()
+	}
+
+	return *targetVol
+}
+
+// GetChannelVolume returns volume level (0.0 to 1.0) for a sound channel.
+func (am *AmbientManager) GetChannelVolume(st SoundType) float64 {
+	am.mu.Lock()
+	defer am.mu.Unlock()
+
+	switch st {
+	case SoundRain:
+		return am.RainVol
+	case SoundFire:
+		return am.FireVol
+	case SoundWind:
+		return am.WindVol
+	case SoundCafe:
+		return am.CafeVol
+	case SoundCrickets:
+		return am.CricketsVol
+	default:
+		return 0.7
 	}
 }
 

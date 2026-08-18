@@ -65,6 +65,8 @@ type Model struct {
 	PresetIdx          int
 	PresetSaving       bool
 	PresetInputText    textinput.Model
+	ShowSoundMixerModal bool
+	MixerChannelIdx    int
 	SpectrumMode       SpectrumStyle
 	ZenMode            bool
 	AutoSyncAudio      bool
@@ -288,6 +290,51 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.CommandInput, cmd = m.CommandInput.Update(msg)
 				m.CommandIdx = 0
 				return m, cmd
+			}
+			return m, nil
+		}
+
+		// Modal: Interactive Soundscape Mixer Console
+		if m.ShowSoundMixerModal {
+			switch msg.String() {
+			case "esc", "q", "X":
+				m.ShowSoundMixerModal = false
+			case "j", "down":
+				m.MixerChannelIdx = (m.MixerChannelIdx + 1) % 5
+			case "k", "up":
+				m.MixerChannelIdx = (m.MixerChannelIdx + 4) % 5
+			case "l", "right", "+", "=":
+				st := audio.SoundType(m.MixerChannelIdx)
+				if st == audio.SoundClock { // skip invalid if mapped, order is Rain(0), Fire(1), Wind(2), Cafe(4), Crickets(5)
+					st = audio.SoundRain
+				}
+				channelTypes := []audio.SoundType{audio.SoundRain, audio.SoundFire, audio.SoundWind, audio.SoundCafe, audio.SoundCrickets}
+				if m.MixerChannelIdx < len(channelTypes) {
+					st = channelTypes[m.MixerChannelIdx]
+				}
+				vol := m.Ambient.AdjustChannelVolume(st, 0.1)
+				m.SetStatusMsg(fmt.Sprintf("Channel Volume adjusted to %.0f%% 🔊", vol*100))
+			case "h", "left", "-", "_":
+				channelTypes := []audio.SoundType{audio.SoundRain, audio.SoundFire, audio.SoundWind, audio.SoundCafe, audio.SoundCrickets}
+				st := audio.SoundRain
+				if m.MixerChannelIdx < len(channelTypes) {
+					st = channelTypes[m.MixerChannelIdx]
+				}
+				vol := m.Ambient.AdjustChannelVolume(st, -0.1)
+				m.SetStatusMsg(fmt.Sprintf("Channel Volume adjusted to %.0f%% 🔉", vol*100))
+			case "enter", "space":
+				switch m.MixerChannelIdx {
+				case 0:
+					m.Ambient.ToggleRain()
+				case 1:
+					m.Ambient.ToggleFire()
+				case 2:
+					m.Ambient.ToggleWind()
+				case 3:
+					m.Ambient.ToggleCafe()
+				case 4:
+					m.Ambient.ToggleCrickets()
+				}
 			}
 			return m, nil
 		}
@@ -764,6 +811,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.SetStatusMsg("Cafe Ambience OFF")
 			}
+
+		case "X":
+			m.ShowSoundMixerModal = !m.ShowSoundMixerModal
+			m.MixerChannelIdx = 0
 
 		case "e":
 			active := m.Ambient.ToggleCrickets()

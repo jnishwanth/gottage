@@ -111,7 +111,7 @@ func (m Model) View() string {
 		if len(liveBadges) > 0 {
 			prefix = strings.Join(liveBadges, " • ") + "  |  "
 		}
-		footerText = prefix + "Press [?] help • [:/Ctrl+P] Palette • [i] Scene Info • [V] Catalog • [T] Themes • [M] Spectrum • [R] Random • [q] quit"
+		footerText = prefix + "Press [?] help • [:/Ctrl+P] Palette • [i] Scene Info • [V] Catalog • [Shift+X] Mixer • [T] Themes • [M] Spectrum • [q] quit"
 	}
 	footer := m.Styles.Footer.Render(footerText)
 
@@ -126,6 +126,11 @@ func (m Model) View() string {
 	// Command Palette Modal
 	if m.ShowCommandPalette {
 		return m.renderCommandPaletteModal(mainView)
+	}
+
+	// 5-Channel Ambient Soundscape Mixer Modal
+	if m.ShowSoundMixerModal {
+		return m.renderSoundMixerModal(mainView)
 	}
 
 	// Preset Studio & Custom Preset Manager Modal
@@ -374,14 +379,14 @@ func (m Model) renderAmbianceView() string {
 		m.Styles.KeyCap.Render("[f]"), onOffStr(m.Scene.FireOn),
 		m.Styles.KeyCap.Render("[s]"), onOffStr(m.Scene.FairyLightsOn)))
 
-	sb.WriteString(m.Styles.Title.Render("🌧️ 5-Channel Procedural Ambient Sound Console") + "\n")
-	sb.WriteString(fmt.Sprintf("  %s Rain: %s    %s Fireplace: %s    %s Wind Breeze: %s\n",
-		m.Styles.KeyCap.Render("[r]"), onOffStr(m.Ambient.RainActive),
-		m.Styles.KeyCap.Render("[m]"), onOffStr(m.Ambient.FireActive),
-		m.Styles.KeyCap.Render("[W]"), onOffStr(m.Ambient.WindActive)))
-	sb.WriteString(fmt.Sprintf("  %s Cafe Chatter: %s    %s Night Crickets: %s\n",
-		m.Styles.KeyCap.Render("[K]"), onOffStr(m.Ambient.CafeActive),
-		m.Styles.KeyCap.Render("[e]"), onOffStr(m.Ambient.CricketsActive)))
+	sb.WriteString(m.Styles.Title.Render("🌧️ 5-Channel Procedural Ambient Sound Console") + "  " + m.Styles.MutedText.Render("(Press [Shift+X] for Equalizer Mixer)") + "\n")
+	sb.WriteString(fmt.Sprintf("  %s Rain: %s (%.0f%%)    %s Fireplace: %s (%.0f%%)    %s Wind Breeze: %s (%.0f%%)\n",
+		m.Styles.KeyCap.Render("[r]"), onOffStr(m.Ambient.RainActive), m.Ambient.RainVol*100,
+		m.Styles.KeyCap.Render("[m]"), onOffStr(m.Ambient.FireActive), m.Ambient.FireVol*100,
+		m.Styles.KeyCap.Render("[W]"), onOffStr(m.Ambient.WindActive), m.Ambient.WindVol*100))
+	sb.WriteString(fmt.Sprintf("  %s Cafe Chatter: %s (%.0f%%)    %s Night Crickets: %s (%.0f%%)\n",
+		m.Styles.KeyCap.Render("[K]"), onOffStr(m.Ambient.CafeActive), m.Ambient.CafeVol*100,
+		m.Styles.KeyCap.Render("[e]"), onOffStr(m.Ambient.CricketsActive), m.Ambient.CricketsVol*100))
 	sb.WriteString(fmt.Sprintf("  %s Weather Audio Auto-Sync: %s\n\n",
 		m.Styles.KeyCap.Render("[A]"), onOffStr(m.AutoSyncAudio)))
 
@@ -449,6 +454,7 @@ func (m Model) renderSidebar() string {
 	sb.WriteString(m.Styles.Title.Render("✨ QUICK CONTROLS") + "\n")
 	sb.WriteString(fmt.Sprintf("%s Inspector: %s\n", m.Styles.KeyCap.Render("[i]"), m.Styles.MutedText.Render("Palette Info")))
 	sb.WriteString(fmt.Sprintf("%s Catalog: %s\n", m.Styles.KeyCap.Render("[V]"), m.Styles.MutedText.Render("Browse 370+")))
+	sb.WriteString(fmt.Sprintf("%s Mixer: %s\n", m.Styles.KeyCap.Render("[Shift+X]"), m.Styles.MutedText.Render("Sound EQ")))
 	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[T]"), truncate(m.Styles.Theme.Name, 10)))
 	sb.WriteString(fmt.Sprintf("%s Filter: %s\n", m.Styles.KeyCap.Render("[C]"), truncate(m.Scene.ColorFilter.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), truncate(m.Scene.ParticleOverlay.String(), 10)))
@@ -475,6 +481,7 @@ func (m Model) renderHelpModal(bg string) string {
 
   DYNAMIC BIT-ART SCENES & CONTROLS:
   [Shift+S] Open Preset Studio & Custom Manager Modal
+  [Shift+X] Open 5-Channel Soundscape Equalizer & Mixer Modal
   [H]      Cycle Canvas Animation Shader (Rain-on-Glass, Fireflies, Aurora, Waveform)
   [V]      Open Categorized Scene Catalog Modal (370+ Scenes)
   [/]      Search / Filter Scenes by Keyword (in Catalog)
@@ -906,5 +913,74 @@ func (m Model) renderCommandPaletteModal(bg string) string {
 		Render(modalText)
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal)
+}
+
+func (m Model) renderSoundMixerModal(bg string) string {
+	dialogWidth := 74
+	title := m.Styles.Title.Render(" 🎛️ 5-CHANNEL AMBIENT SOUNDSCAPE EQUALIZER & MIXER ")
+
+	channels := []struct {
+		name   string
+		icon   string
+		active bool
+		vol    float64
+		key    string
+	}{
+		{name: "Rain Sound", icon: "🌧️", active: m.Ambient.RainActive, vol: m.Ambient.RainVol, key: "[r]"},
+		{name: "Fireplace Crackle", icon: "🔥", active: m.Ambient.FireActive, vol: m.Ambient.FireVol, key: "[m]"},
+		{name: "Wind Breeze", icon: "🌬️", active: m.Ambient.WindActive, vol: m.Ambient.WindVol, key: "[W]"},
+		{name: "Cafe Chatter", icon: "☕", active: m.Ambient.CafeActive, vol: m.Ambient.CafeVol, key: "[K]"},
+		{name: "Night Crickets", icon: "🦗", active: m.Ambient.CricketsActive, vol: m.Ambient.CricketsVol, key: "[e]"},
+	}
+
+	var rows []string
+	for i, ch := range channels {
+		cursor := "  "
+		style := m.Styles.MutedText
+		if i == m.MixerChannelIdx {
+			cursor = "👉"
+			style = m.Styles.BoldAccent
+		}
+
+		barWidth := 20
+		filled := int(ch.vol * float64(barWidth))
+		if filled > barWidth {
+			filled = barWidth
+		}
+		sliderBar := strings.Repeat("█", filled) + strings.Repeat("░", barWidth-filled)
+
+		statusStr := onOffStr(ch.active)
+		volPct := fmt.Sprintf("%3.0f%%", ch.vol*100)
+
+		row := fmt.Sprintf("%s %s %-18s %s [%s] %s  %s",
+			cursor,
+			ch.icon,
+			style.Render(ch.name),
+			statusStr,
+			m.Styles.ProgressBar.Render(sliderBar),
+			m.Styles.BoldAccent.Render(volPct),
+			m.Styles.KeyCap.Render(ch.key),
+		)
+		rows = append(rows, row)
+	}
+
+	controls := fmt.Sprintf("%s Select  %s Vol Up/Down  %s Toggle  %s Close",
+		m.Styles.KeyCap.Render(" j/k "),
+		m.Styles.KeyCap.Render(" h/l / +/- "),
+		m.Styles.KeyCap.Render(" Enter "),
+		m.Styles.KeyCap.Render(" Esc/Shift+X "),
+	)
+
+	content := strings.Join(rows, "\n\n") + "\n\n" + strings.Repeat("─", dialogWidth-8) + "\n" + controls
+
+	dialogBox := m.Styles.Box.Width(dialogWidth).Render(
+		lipgloss.JoinVertical(lipgloss.Left,
+			title,
+			"",
+			content,
+		),
+	)
+
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, dialogBox)
 }
 

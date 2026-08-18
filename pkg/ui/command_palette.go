@@ -48,6 +48,17 @@ func GetCommandList(m *Model) []CommandItem {
 	})
 
 	items = append(items, CommandItem{
+		Title:       "🎛️ Mixer: 5-Channel Soundscape Equalizer & Mixer",
+		Category:    "Dialogs",
+		Shortcut:    "[ Shift+X ]",
+		Description: "Open 5-channel ambient audio mixer modal to adjust individual sound channel volumes",
+		Action: func(m *Model) {
+			m.ShowSoundMixerModal = true
+			m.MixerChannelIdx = 0
+		},
+	})
+
+	items = append(items, CommandItem{
 		Title:       "✨ Shader: Cycle Procedural Canvas Shaders",
 		Category:    "Aesthetics",
 		Shortcut:    "[ H ]",

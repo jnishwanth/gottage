@@ -208,5 +208,18 @@ func TestModelViewModals(t *testing.T) {
 	if !strings.Contains(vAmb, "5-Channel Procedural Ambient Sound Console") || !strings.Contains(vAmb, "Cafe Chatter") || !strings.Contains(vAmb, "Night Crickets") {
 		t.Error("Expected renderAmbianceView to display 5-channel console and new sound channels")
 	}
+
+	// Test 5-Channel Ambient Soundscape Equalizer & Mixer Modal
+	m.ShowSoundMixerModal = true
+	vMixer := m.View()
+	if !strings.Contains(vMixer, "5-CHANNEL AMBIENT SOUNDSCAPE EQUALIZER & MIXER") {
+		t.Error("Expected Sound Mixer modal to contain 5-CHANNEL AMBIENT SOUNDSCAPE EQUALIZER & MIXER")
+	}
+	m.Ambient.AdjustChannelVolume(0, 0.1)
+	rainVol := m.Ambient.GetChannelVolume(0)
+	if rainVol < 0.75 {
+		t.Errorf("Expected RainVol to be increased to ~0.8, got %.2f", rainVol)
+	}
+	m.ShowSoundMixerModal = false
 }
 
