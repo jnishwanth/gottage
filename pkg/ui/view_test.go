@@ -7,14 +7,16 @@ import (
 
 func TestVisualizers(t *testing.T) {
 	styles := NewStyles(ThemeCozyAutumn)
-	specPlaying := RenderAudioSpectrum(16, true, 10, styles.BoldAccent)
-	if specPlaying == "" {
-		t.Error("Expected non-empty spectrum output when playing")
-	}
+	for _, mode := range []SpectrumStyle{SpectrumBars, SpectrumDots, SpectrumBraille, SpectrumEqualizer} {
+		specPlaying := RenderAudioSpectrum(16, true, 10, mode, styles.BoldAccent)
+		if specPlaying == "" {
+			t.Errorf("Expected non-empty spectrum output when playing for mode %s", mode.String())
+		}
 
-	specPaused := RenderAudioSpectrum(16, false, 10, styles.BoldAccent)
-	if specPaused == "" {
-		t.Error("Expected non-empty spectrum output when paused")
+		specPaused := RenderAudioSpectrum(16, false, 10, mode, styles.BoldAccent)
+		if specPaused == "" {
+			t.Errorf("Expected non-empty spectrum output when paused for mode %s", mode.String())
+		}
 	}
 
 	breath := GetZenBreathState(20)
@@ -43,5 +45,26 @@ func TestModelViewModals(t *testing.T) {
 	vP := m.View()
 	if !strings.Contains(vP, "SCENE CATALOG BROWSER") {
 		t.Error("Expected Scene Picker modal to contain SCENE CATALOG BROWSER")
+	}
+
+	// Test Scene Catalog Search Filter
+	m.PickerSearchMode = true
+	m.PickerSearchInput.SetValue("cyber")
+	vSearch := m.View()
+	if !strings.Contains(vSearch, "Filter:") {
+		t.Error("Expected Scene Picker search view to contain Filter:")
+	}
+	filtered := m.getFilteredScenes()
+	if len(filtered) == 0 {
+		t.Error("Expected search query 'cyber' to match scenes")
+	}
+	m.ShowScenePicker = false
+	m.PickerSearchMode = false
+
+	// Test Theme Picker Modal
+	m.ShowThemePicker = true
+	vT := m.View()
+	if !strings.Contains(vT, "THEME PALETTE CUSTOMIZER") {
+		t.Error("Expected Theme Picker modal to contain THEME PALETTE CUSTOMIZER")
 	}
 }

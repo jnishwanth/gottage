@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"gottage/pkg/art"
@@ -52,6 +53,11 @@ type Model struct {
 	ShowScenePicker   bool
 	PickerCategoryIdx int
 	PickerSceneIdx    int
+	PickerSearchMode  bool
+	PickerSearchInput textinput.Model
+	ShowThemePicker   bool
+	PickerThemeIdx    int
+	SpectrumMode      SpectrumStyle
 	ZenMode           bool
 	StatusMsg         string
 	StatusMsgTime     time.Time
@@ -76,16 +82,25 @@ func NewModel() Model {
 	ti.CharLimit = 60
 	ti.Width = 40
 
+	si := textinput.New()
+	si.Placeholder = "Type keyword to filter 370+ scenes..."
+	si.CharLimit = 30
+	si.Width = 36
+
 	styles := NewStyles(ThemeCozyAutumn)
 	scene := art.NewCottageScene(160, 90)
 
 	return Model{
-		Width:        120,
-		Height:       40,
-		Styles:       styles,
-		ActiveTab:    TabArt,
-		ShowHelp:     false,
-		UseGPURender: art.DetectTerminalProtocol() == art.ProtocolKitty,
+		Width:             120,
+		Height:            40,
+		Styles:            styles,
+		ActiveTab:         TabArt,
+		ShowHelp:          false,
+		ShowScenePicker:   false,
+		PickerSearchInput: si,
+		ShowThemePicker:   false,
+		SpectrumMode:      SpectrumBars,
+		UseGPURender:      art.DetectTerminalProtocol() == art.ProtocolKitty,
 
 		Scene:   scene,
 		CLIAMP:  audio.NewCLIAMPController(),
@@ -159,12 +174,70 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds = append(cmds, m.timerTick())
 
 	case tea.KeyMsg:
+		// Modal: Theme Picker
+		if m.ShowThemePicker {
+			switch msg.String() {
+			case "esc", "q", "T":
+				m.ShowThemePicker = false
+			case "j", "down":
+				m.PickerThemeIdx = (m.PickerThemeIdx + 1) % len(AllThemes)
+			case "k", "up":
+				m.PickerThemeIdx = (m.PickerThemeIdx + len(AllThemes) - 1) % len(AllThemes)
+			case "enter":
+				selectedTheme := AllThemes[m.PickerThemeIdx]
+				m.Styles = NewStyles(selectedTheme)
+				m.SetStatusMsg("Applied Theme: " + selectedTheme.Name + " ✨")
+				m.ShowThemePicker = false
+			}
+			return m, nil
+		}
+
 		// Modal: Interactive Scene Picker
 		if m.ShowScenePicker {
+			if m.PickerSearchMode {
+				switch msg.String() {
+				case "esc":
+					if m.PickerSearchInput.Value() != "" {
+						m.PickerSearchInput.Reset()
+					} else {
+						m.PickerSearchMode = false
+						m.PickerSearchInput.Blur()
+					}
+				case "down", "j":
+					filtered := m.getFilteredScenes()
+					if m.PickerSceneIdx < len(filtered)-1 {
+						m.PickerSceneIdx++
+					}
+				case "up", "k":
+					if m.PickerSceneIdx > 0 {
+						m.PickerSceneIdx--
+					}
+				case "enter":
+					filtered := m.getFilteredScenes()
+					if len(filtered) > 0 && m.PickerSceneIdx < len(filtered) {
+						m.Scene.CurrentScene = filtered[m.PickerSceneIdx]
+						m.SetStatusMsg("Switched Scene: " + m.Scene.CurrentScene.String() + " ✨")
+					}
+					m.ShowScenePicker = false
+					m.PickerSearchMode = false
+					m.PickerSearchInput.Blur()
+				default:
+					var cmd tea.Cmd
+					m.PickerSearchInput, cmd = m.PickerSearchInput.Update(msg)
+					m.PickerSceneIdx = 0
+					return m, cmd
+				}
+				return m, nil
+			}
+
 			catScenes := art.GetScenesByCategory(m.PickerCategoryIdx)
 			switch msg.String() {
 			case "esc", "q", "V":
 				m.ShowScenePicker = false
+			case "/":
+				m.PickerSearchMode = true
+				m.PickerSearchInput.Focus()
+				return m, textinput.Blink
 			case "h", "left":
 				m.PickerCategoryIdx = (m.PickerCategoryIdx + len(art.SceneCategories) - 1) % len(art.SceneCategories)
 				m.PickerSceneIdx = 0
@@ -246,6 +319,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "V":
 			m.ShowScenePicker = !m.ShowScenePicker
 			m.PickerSceneIdx = 0
+			m.PickerSearchMode = false
 
 		case "F":
 			m.ZenMode = !m.ZenMode
@@ -254,6 +328,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.SetStatusMsg("Exited Zen Focus Mode 🌿")
 			}
+
+		case "M":
+			m.SpectrumMode = (m.SpectrumMode + 1) % 4
+			m.SetStatusMsg("Visualizer Mode: " + m.SpectrumMode.String() + " 🎶")
 
 		case "tab":
 			m.ActiveTab = (m.ActiveTab + 1) % 4
@@ -277,9 +355,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case "T":
-			newTheme := CycleTheme(m.Styles.Theme)
-			m.Styles = NewStyles(newTheme)
-			m.SetStatusMsg("Theme Switched: " + newTheme.Name)
+			m.ShowThemePicker = !m.ShowThemePicker
+			m.PickerThemeIdx = 0
+			for i, t := range AllThemes {
+				if t.Name == m.Styles.Theme.Name {
+					m.PickerThemeIdx = i
+					break
+				}
+			}
 
 		case "v":
 			newScene := m.Scene.CycleScene()
@@ -404,4 +487,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	return m, tea.Batch(cmds...)
+}
+
+func (m Model) getFilteredScenes() []art.SceneType {
+	query := strings.TrimSpace(strings.ToLower(m.PickerSearchInput.Value()))
+	if query == "" {
+		return art.GetScenesByCategory(m.PickerCategoryIdx)
+	}
+
+	var matched []art.SceneType
+	for _, scene := range art.SceneOrder {
+		if strings.Contains(strings.ToLower(scene.String()), query) {
+			matched = append(matched, scene)
+		}
+	}
+	return matched
 }

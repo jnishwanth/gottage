@@ -8,12 +8,47 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-// RenderAudioSpectrum renders a 16-bar ASCII spectrum visualizer ( ▂▃▄▅▆▇█).
-func RenderAudioSpectrum(width int, isPlaying bool, frame uint64, style lipgloss.Style) string {
-	bars := []rune{' ', ' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'}
+type SpectrumStyle int
+
+const (
+	SpectrumBars SpectrumStyle = iota
+	SpectrumDots
+	SpectrumBraille
+	SpectrumEqualizer
+)
+
+func (s SpectrumStyle) String() string {
+	switch s {
+	case SpectrumBars:
+		return "Bars ▂▃▅█"
+	case SpectrumDots:
+		return "Dots .:*o"
+	case SpectrumBraille:
+		return "Braille ⡀⣀⣤⣿"
+	case SpectrumEqualizer:
+		return "Equalizer █▅▂"
+	default:
+		return "Bars"
+	}
+}
+
+// RenderAudioSpectrum renders multi-mode spectrum visualizers.
+func RenderAudioSpectrum(width int, isPlaying bool, frame uint64, mode SpectrumStyle, style lipgloss.Style) string {
 	numBars := 16
 	if width < 16 {
 		numBars = 8
+	}
+
+	var charRungs []rune
+	switch mode {
+	case SpectrumDots:
+		charRungs = []rune{' ', '.', ':', '*', 'o', 'O', '0', '@', '#'}
+	case SpectrumBraille:
+		charRungs = []rune{' ', '⡀', '⣀', '⡤', '⣤', '⡶', '⣶', '⣞', '⣿'}
+	case SpectrumEqualizer:
+		charRungs = []rune{' ', '▂', '▃', '▅', '▆', '▇', '█', '█', '█'}
+	default: // SpectrumBars
+		charRungs = []rune{' ', ' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'}
 	}
 
 	var sb strings.Builder
@@ -23,7 +58,7 @@ func RenderAudioSpectrum(width int, isPlaying bool, frame uint64, style lipgloss
 			// Oscillate heights with harmonic sine waves
 			phase := float64(frame)*0.2 + float64(i)*0.6
 			val := (math.Sin(phase)*0.5 + 0.5) * (math.Cos(phase*0.7)*0.4 + 0.6)
-			level = int(val * float64(len(bars)-1))
+			level = int(val * float64(len(charRungs)-1))
 			if level < 1 {
 				level = 1
 			}
@@ -31,10 +66,10 @@ func RenderAudioSpectrum(width int, isPlaying bool, frame uint64, style lipgloss
 			level = 1 // Resting quiet state
 		}
 
-		if level >= len(bars) {
-			level = len(bars) - 1
+		if level >= len(charRungs) {
+			level = len(charRungs) - 1
 		}
-		sb.WriteRune(bars[level])
+		sb.WriteRune(charRungs[level])
 	}
 
 	return style.Render(sb.String())

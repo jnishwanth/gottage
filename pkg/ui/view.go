@@ -67,7 +67,7 @@ func (m Model) View() string {
 	content := lipgloss.JoinHorizontal(lipgloss.Top, body, "  ", sidebar)
 
 	// Toast / Status Footer
-	footerText := "Press [?] help • [V] Scene Catalog • [Shift+F] Zen Mode • [1-4] Tabs • [space] Audio • [q] quit"
+	footerText := "Press [?] help • [V] Catalog • [T] Themes • [M] Spectrum • [Shift+F] Zen Mode • [1-4] Tabs • [space] Audio • [q] quit"
 	if m.StatusMsg != "" && time.Since(m.StatusMsgTime) < 4*time.Second {
 		footerText = m.Styles.StatusBadge.Render(" " + m.StatusMsg + " ")
 	}
@@ -80,6 +80,11 @@ func (m Model) View() string {
 		"",
 		footer,
 	)
+
+	// Theme Selector Modal
+	if m.ShowThemePicker {
+		return m.renderThemePickerModal(mainView)
+	}
 
 	// Scene Picker Catalog Modal
 	if m.ShowScenePicker {
@@ -296,7 +301,7 @@ func (m Model) renderSidebar() string {
 
 	sb.WriteString(m.Styles.Title.Render("🎵 LOFI RADIO") + "\n")
 	sb.WriteString(m.Styles.BoldAccent.Render(truncate(trackName, 22)) + "\n")
-	spec := RenderAudioSpectrum(18, st.Playing, m.Scene.FrameCount, m.Styles.BoldAccent)
+	spec := RenderAudioSpectrum(18, st.Playing, m.Scene.FrameCount, m.SpectrumMode, m.Styles.BoldAccent)
 	sb.WriteString("Spectrum: " + spec + "\n")
 	sb.WriteString("State: " + stateIcon + "\n")
 	sb.WriteString(m.Styles.MutedText.Render("[Space] Play/Pause • [n/p]") + "\n\n")
@@ -314,9 +319,10 @@ func (m Model) renderSidebar() string {
 	// 3. Quick Toggles Card
 	sb.WriteString(m.Styles.Title.Render("✨ QUICK CONTROLS") + "\n")
 	sb.WriteString(fmt.Sprintf("%s Catalog: %s\n", m.Styles.KeyCap.Render("[V]"), m.Styles.MutedText.Render("Browse 370+")))
+	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[T]"), truncate(m.Styles.Theme.Name, 10)))
+	sb.WriteString(fmt.Sprintf("%s Spectrum: %s\n", m.Styles.KeyCap.Render("[M]"), truncate(m.SpectrumMode.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Zen Mode: %s\n", m.Styles.KeyCap.Render("[Shift+F]"), m.Styles.MutedText.Render("Minimal")))
 	sb.WriteString(fmt.Sprintf("%s Scene: %s\n", m.Styles.KeyCap.Render("[v]"), truncate(m.Scene.CurrentScene.String(), 12)))
-	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[Shift+T]"), truncate(m.Styles.Theme.Name, 10)))
 	sb.WriteString(fmt.Sprintf("%s Weather: %s\n", m.Styles.KeyCap.Render("[w]"), m.Scene.Weather.String()))
 	sb.WriteString(fmt.Sprintf("%s GPU: %s\n", m.Styles.KeyCap.Render("[g]"), onOffStr(m.UseGPURender)))
 
@@ -335,6 +341,9 @@ func (m Model) renderHelpModal(bg string) string {
 
   DYNAMIC BIT-ART SCENES & CONTROLS:
   [V]      Open Categorized Scene Catalog Modal (370+ Scenes)
+  [/]      Search / Filter Scenes by Keyword (in Catalog)
+  [T]      Open Interactive Theme Palette Selector Modal
+  [M]      Cycle Audio Spectrum Visualizer Style (Bars, Dots, Braille, EQ)
   [Shift+F] Toggle Zen Minimal Focus Mode (Zero Clutter)
   [v]      Cycle Scene Preset (Rainy City, Forest Cabin, Classic, Observatory)
   [l]      Toggle Desk Lamp (ON/OFF)
@@ -374,7 +383,7 @@ func (m Model) renderZenView() string {
 	artCanvas := strings.TrimRight(m.Scene.Canvas.Render(), "\r\n")
 
 	st := m.CLIAMP.GetStatus()
-	spec := RenderAudioSpectrum(16, st.Playing, m.Scene.FrameCount, m.Styles.BoldAccent)
+	spec := RenderAudioSpectrum(16, st.Playing, m.Scene.FrameCount, m.SpectrumMode, m.Styles.BoldAccent)
 	breath := GetZenBreathState(m.Scene.FrameCount)
 
 	cardContent := fmt.Sprintf("%s\n\n⏱️ %s   |   %s\n\n%s  %s\n%s\n\n%s %s",
@@ -399,19 +408,68 @@ func (m Model) renderZenView() string {
 	return artCanvas + "\n" + overlay + "\n" + footer
 }
 
+func (m Model) renderThemePickerModal(bg string) string {
+	var listLines []string
+	for i, theme := range AllThemes {
+		cursor := "  "
+		style := m.Styles.MutedText
+		if i == m.PickerThemeIdx {
+			cursor = "👉"
+			style = m.Styles.BoldAccent
+		}
+
+		activeBadge := ""
+		if theme.Name == m.Styles.Theme.Name {
+			activeBadge = " " + m.Styles.StatusBadge.Render("ACTIVE")
+		}
+
+		// Color preview block
+		bBlock := lipgloss.NewStyle().Background(theme.Border).Render("  ")
+		tBlock := lipgloss.NewStyle().Background(theme.Title).Render("  ")
+		aBlock := lipgloss.NewStyle().Background(theme.Accent).Render("  ")
+		hBlock := lipgloss.NewStyle().Background(theme.Highlight).Render("  ")
+
+		swatch := fmt.Sprintf("[%s%s%s%s]", bBlock, tBlock, aBlock, hBlock)
+		listLines = append(listLines, fmt.Sprintf("%s %s %s%s", cursor, swatch, style.Render(theme.Name), activeBadge))
+	}
+
+	modalText := fmt.Sprintf("🎨 THEME PALETTE CUSTOMIZER\n\nSelect color palette theme for Gottage TUI:\n\n%s\n\n%s",
+		strings.Join(listLines, "\n\n"),
+		m.Styles.MutedText.Render("Nav: [j/k] Select Theme • [Enter] Apply • [Esc/T] Close"),
+	)
+
+	modal := m.Styles.Box.
+		BorderForeground(m.Styles.Theme.Accent).
+		Width(65).
+		Render(modalText)
+
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, modal)
+}
+
 func (m Model) renderScenePickerModal(bg string) string {
-	catName := art.SceneCategories[m.PickerCategoryIdx]
-	scenes := art.GetScenesByCategory(m.PickerCategoryIdx)
+	var scenes []art.SceneType
+	if m.PickerSearchMode || strings.TrimSpace(m.PickerSearchInput.Value()) != "" {
+		scenes = m.getFilteredScenes()
+	} else {
+		scenes = art.GetScenesByCategory(m.PickerCategoryIdx)
+	}
 
 	var categoryTabs []string
 	for i, cName := range art.SceneCategories {
-		if i == m.PickerCategoryIdx {
+		if i == m.PickerCategoryIdx && !m.PickerSearchMode && strings.TrimSpace(m.PickerSearchInput.Value()) == "" {
 			categoryTabs = append(categoryTabs, m.Styles.ActiveTab.Render(cName))
 		} else {
 			categoryTabs = append(categoryTabs, m.Styles.InactiveTab.Render(cName))
 		}
 	}
 	tabsRow := strings.Join(categoryTabs, " ")
+
+	searchHeader := ""
+	if m.PickerSearchMode || strings.TrimSpace(m.PickerSearchInput.Value()) != "" {
+		searchHeader = fmt.Sprintf("🔍 Filter: %s (%d matches)", m.PickerSearchInput.View(), len(scenes))
+	} else {
+		searchHeader = fmt.Sprintf("Category: %s (%d scenes)   (Press [/] to Search)", m.Styles.Title.Render(art.SceneCategories[m.PickerCategoryIdx]), len(scenes))
+	}
 
 	var listLines []string
 	startIdx := 0
@@ -423,28 +481,31 @@ func (m Model) renderScenePickerModal(bg string) string {
 		endIdx = len(scenes)
 	}
 
-	for i := startIdx; i < endIdx; i++ {
-		st := scenes[i]
-		cursor := "  "
-		style := m.Styles.MutedText
-		if i == m.PickerSceneIdx {
-			cursor = "👉"
-			style = m.Styles.BoldAccent
+	if len(scenes) == 0 {
+		listLines = append(listLines, m.Styles.MutedText.Render("  No matching scenes found!"))
+	} else {
+		for i := startIdx; i < endIdx; i++ {
+			st := scenes[i]
+			cursor := "  "
+			style := m.Styles.MutedText
+			if i == m.PickerSceneIdx {
+				cursor = "👉"
+				style = m.Styles.BoldAccent
+			}
+			activeBadge := ""
+			if st == m.Scene.CurrentScene {
+				activeBadge = " " + m.Styles.StatusBadge.Render("ACTIVE")
+			}
+			listLines = append(listLines, fmt.Sprintf("%s %s%s", cursor, style.Render(st.String()), activeBadge))
 		}
-		activeBadge := ""
-		if st == m.Scene.CurrentScene {
-			activeBadge = " " + m.Styles.StatusBadge.Render("ACTIVE")
-		}
-		listLines = append(listLines, fmt.Sprintf("%s %s%s", cursor, style.Render(st.String()), activeBadge))
 	}
 
-	modalText := fmt.Sprintf("🎨 SCENE CATALOG BROWSER (%d Total Scenes)\n\n%s\n\nCategory: %s (%d scenes)\n\n%s\n\n%s",
+	modalText := fmt.Sprintf("🎨 SCENE CATALOG BROWSER (%d Total Scenes)\n\n%s\n\n%s\n\n%s\n\n%s",
 		len(art.SceneOrder),
 		tabsRow,
-		m.Styles.Title.Render(catName),
-		len(scenes),
+		searchHeader,
 		strings.Join(listLines, "\n"),
-		m.Styles.MutedText.Render("Nav: [h/l] Category • [j/k] Select • [Enter] Apply • [Esc/V] Close"),
+		m.Styles.MutedText.Render("Nav: [h/l] Category • [/] Search • [j/k] Select • [Enter] Apply • [Esc/V] Close"),
 	)
 
 	modal := m.Styles.Box.
