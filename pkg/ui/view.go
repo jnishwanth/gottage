@@ -67,9 +67,30 @@ func (m Model) View() string {
 	content := lipgloss.JoinHorizontal(lipgloss.Top, body, "  ", sidebar)
 
 	// Toast / Status Footer
-	footerText := "Press [?] help • [V] Catalog • [T] Themes • [M] Spectrum • [Shift+F] Zen Mode • [1-4] Tabs • [space] Audio • [q] quit"
+	footerText := ""
 	if m.StatusMsg != "" && time.Since(m.StatusMsgTime) < 4*time.Second {
 		footerText = m.Styles.StatusBadge.Render(" " + m.StatusMsg + " ")
+	} else {
+		var liveBadges []string
+		st := m.CLIAMP.GetStatus()
+		if st.Playing {
+			liveBadges = append(liveBadges, "🎵 Playing")
+		}
+		if m.Timer.Running {
+			liveBadges = append(liveBadges, "⏱️ "+m.Timer.FormattedTime())
+		}
+		if m.Scene.ColorFilter != art.FilterNormal {
+			liveBadges = append(liveBadges, "🎨 "+m.Scene.ColorFilter.String())
+		}
+		if m.Scene.ParticleOverlay != art.OverlayNone {
+			liveBadges = append(liveBadges, "✨ "+m.Scene.ParticleOverlay.String())
+		}
+
+		prefix := ""
+		if len(liveBadges) > 0 {
+			prefix = strings.Join(liveBadges, " • ") + "  |  "
+		}
+		footerText = prefix + "Press [?] help • [V] Catalog • [T] Themes • [M] Spectrum • [R] Random Scene • [q] quit"
 	}
 	footer := m.Styles.Footer.Render(footerText)
 
@@ -262,7 +283,9 @@ func (m Model) renderAmbianceView() string {
 	sb.WriteString(m.Styles.Header.Render("🌿 AMBIANCE, ENVIRONMENT & MUSIC CONTROL") + "\n\n")
 
 	sb.WriteString(m.Styles.Title.Render("🎨 Visual Environment Settings") + "\n")
-	sb.WriteString(fmt.Sprintf("  %s Scene Preset:   %s\n", m.Styles.KeyCap.Render("[v]"), m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String())))
+	sb.WriteString(fmt.Sprintf("  %s Scene Preset:   %s    %s Random Scene: %s\n",
+		m.Styles.KeyCap.Render("[v/b]"), m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String()),
+		m.Styles.KeyCap.Render("[R]"), m.Styles.MutedText.Render("Surprise Me")))
 	sb.WriteString(fmt.Sprintf("  %s Color Filter:   %s\n", m.Styles.KeyCap.Render("[C]"), m.Scene.ColorFilter.String()))
 	sb.WriteString(fmt.Sprintf("  %s Screen Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), m.Scene.ParticleOverlay.String()))
 	sb.WriteString(fmt.Sprintf("  %s Time of Day:    %s\n", m.Styles.KeyCap.Render("[t]"), m.Scene.EffectiveTimeOfDay().String()))
@@ -277,7 +300,7 @@ func (m Model) renderAmbianceView() string {
 	sb.WriteString(fmt.Sprintf("  %s Rain Sound: %s    %s Fire Sound: %s    %s Wind Sound: %s\n\n",
 		m.Styles.KeyCap.Render("[r]"), onOffStr(m.Ambient.RainActive),
 		m.Styles.KeyCap.Render("[m]"), onOffStr(m.Ambient.FireActive),
-		m.Styles.KeyCap.Render("[w]"), onOffStr(m.Ambient.WindActive)))
+		m.Styles.KeyCap.Render("[W]"), onOffStr(m.Ambient.WindActive)))
 
 	sb.WriteString(m.Styles.Title.Render("🎵 Curated Lofi Streams (Press n/p to cycle)") + "\n")
 	for i, preset := range audio.CuratedLofiPresets {
@@ -352,12 +375,13 @@ func (m Model) renderHelpModal(bg string) string {
   [V]      Open Categorized Scene Catalog Modal (370+ Scenes)
   [/]      Search / Filter Scenes by Keyword (in Catalog)
   [*]      Bookmark / Toggle Favorite Scene Preset
-  [C]      Cycle Color Filter (Natural, Warm Amber, Cool Synth, Phosphor, Sepia)
-  [P]      Cycle Screen Particle Overlay (Sakura, Embers, Snow, Matrix)
+  [R]      Jump to Random Scene Preset (Surprise Me)
+  [v/b]    Cycle Next / Previous Scene Preset
+  [C]      Cycle Color Filter (Natural, Warm Amber, Cool Synth, Phosphor, Sepia, Midnight)
+  [P]      Cycle Screen Particle Overlay (Sakura, Embers, Snow, Matrix, Stars)
   [T]      Open Interactive Theme Palette Selector Modal (10 Themes)
-  [M]      Cycle Audio Spectrum Visualizer Style (Bars, Dots, Braille, EQ)
+  [M]      Cycle Audio Spectrum Visualizer Style (Bars, Dots, Braille, EQ, Wave)
   [Shift+F] Toggle Zen Minimal Focus Mode (Zero Clutter)
-  [v]      Cycle Scene Preset (Rainy City, Forest Cabin, Classic, Observatory)
   [l]      Toggle Desk Lamp (ON/OFF)
   [f]      Toggle Fireplace (ON/OFF)
   [s]      Toggle Fairy Lights (ON/OFF)
@@ -372,6 +396,7 @@ func (m Model) renderHelpModal(bg string) string {
   [p]      Previous Lofi Track Preset
   [r]      Toggle Rain Ambient Sound
   [m]      Toggle Fireplace Ambient Sound
+  [W]      Toggle Wind Ambient Sound
 
   TIMER & TASKS:
   [x]      Start / Pause Pomodoro Timer

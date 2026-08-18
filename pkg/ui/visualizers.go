@@ -15,6 +15,7 @@ const (
 	SpectrumDots
 	SpectrumBraille
 	SpectrumEqualizer
+	SpectrumWave
 )
 
 func (s SpectrumStyle) String() string {
@@ -27,6 +28,8 @@ func (s SpectrumStyle) String() string {
 		return "Braille ⡀⣀⣤⣿"
 	case SpectrumEqualizer:
 		return "Equalizer █▅▂"
+	case SpectrumWave:
+		return "Waveform ∿⌇∿"
 	default:
 		return "Bars"
 	}
@@ -47,6 +50,8 @@ func RenderAudioSpectrum(width int, isPlaying bool, frame uint64, mode SpectrumS
 		charRungs = []rune{' ', '⡀', '⣀', '⡤', '⣤', '⡶', '⣶', '⣞', '⣿'}
 	case SpectrumEqualizer:
 		charRungs = []rune{' ', '▂', '▃', '▅', '▆', '▇', '█', '█', '█'}
+	case SpectrumWave:
+		charRungs = []rune{' ', '.', '~', '∿', '⌇', '〰', '≋', '≈', '🌊'}
 	default: // SpectrumBars
 		charRungs = []rune{' ', ' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'}
 	}

@@ -354,8 +354,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case "M":
-			m.SpectrumMode = (m.SpectrumMode + 1) % 4
+			m.SpectrumMode = (m.SpectrumMode + 1) % 5
 			m.SetStatusMsg("Visualizer Mode: " + m.SpectrumMode.String() + " 🎶")
+
+		case "R":
+			newScene := m.Scene.RandomScene()
+			m.SetStatusMsg("🎲 Random Scene: " + newScene.String() + " ✨")
+
+		case "b":
+			newScene := m.Scene.PrevScene()
+			m.SetStatusMsg("Switched Scene: " + newScene.String())
 
 		case "C":
 			filter := m.Scene.CycleColorFilter()
@@ -484,6 +492,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.SetStatusMsg("Fire Audio ON 🔥")
 			} else {
 				m.SetStatusMsg("Fire Audio OFF")
+			}
+
+		case "W":
+			active := m.Ambient.ToggleWind()
+			if active {
+				m.SetStatusMsg("Wind Audio ON 🌬️")
+			} else {
+				m.SetStatusMsg("Wind Audio OFF")
 			}
 
 		// Timer Controls

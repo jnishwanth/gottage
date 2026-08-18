@@ -235,6 +235,33 @@ func (cs *CottageScene) CycleScene() SceneType {
 	return cs.CurrentScene
 }
 
+// PrevScene cycles to the previous 8-bit retro scene preset.
+func (cs *CottageScene) PrevScene() SceneType {
+	if len(SceneOrder) == 0 {
+		return cs.CurrentScene
+	}
+	idx := 0
+	for i, id := range SceneOrder {
+		if id == cs.CurrentScene {
+			idx = i
+			break
+		}
+	}
+	prevIdx := (idx + len(SceneOrder) - 1) % len(SceneOrder)
+	cs.CurrentScene = SceneOrder[prevIdx]
+	return cs.CurrentScene
+}
+
+// RandomScene selects a random 8-bit retro scene preset.
+func (cs *CottageScene) RandomScene() SceneType {
+	if len(SceneOrder) == 0 {
+		return cs.CurrentScene
+	}
+	nextIdx := cs.rng.Intn(len(SceneOrder))
+	cs.CurrentScene = SceneOrder[nextIdx]
+	return cs.CurrentScene
+}
+
 func (cs *CottageScene) initStars() {
 	cs.Stars = nil
 	for i := 0; i < 20; i++ {

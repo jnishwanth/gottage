@@ -9,7 +9,7 @@ import (
 
 func TestVisualizers(t *testing.T) {
 	styles := NewStyles(ThemeCozyAutumn)
-	for _, mode := range []SpectrumStyle{SpectrumBars, SpectrumDots, SpectrumBraille, SpectrumEqualizer} {
+	for _, mode := range []SpectrumStyle{SpectrumBars, SpectrumDots, SpectrumBraille, SpectrumEqualizer, SpectrumWave} {
 		specPlaying := RenderAudioSpectrum(16, true, 10, mode, styles.BoldAccent)
 		if specPlaying == "" {
 			t.Errorf("Expected non-empty spectrum output when playing for mode %s", mode.String())
@@ -41,6 +41,18 @@ func TestModelViewModals(t *testing.T) {
 		t.Error("Expected Zen view to contain ZEN FOCUS MODE")
 	}
 	m.ZenMode = false
+
+	// Test Scene Navigation (PrevScene & RandomScene)
+	origScene := m.Scene.CurrentScene
+	prev := m.Scene.PrevScene()
+	if prev.String() == "" {
+		t.Error("Expected PrevScene to return a valid scene type")
+	}
+	randScene := m.Scene.RandomScene()
+	if randScene.String() == "" {
+		t.Error("Expected RandomScene to return a valid scene type")
+	}
+	_ = origScene
 
 	// Test Scene Picker Catalog Modal
 	m.ShowScenePicker = true
