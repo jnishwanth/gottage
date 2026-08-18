@@ -106,6 +106,10 @@ func (m Model) View() string {
 		if m.Scene.CRTScanlinesOn {
 			liveBadges = append(liveBadges, "📺 CRT")
 		}
+		if m.Scene.AutoCycleMode != art.AutoCycleOff {
+			liveBadges = append(liveBadges, "🎬 "+m.Scene.AutoCycleMode.String())
+		}
+
 
 		prefix := ""
 		if len(liveBadges) > 0 {
@@ -360,9 +364,16 @@ func (m Model) renderAmbianceView() string {
 	sb.WriteString(m.Styles.Header.Render("🌿 AMBIANCE, ENVIRONMENT & MUSIC CONTROL") + "\n\n")
 
 	sb.WriteString(m.Styles.Title.Render("🎨 Visual Environment Settings") + "\n")
+	favScopeStr := "All 370+ Scenes 🎨"
+	if m.Scene.AutoCycleFavsOnly {
+		favScopeStr = "Favorites Only ⭐"
+	}
 	sb.WriteString(fmt.Sprintf("  %s Scene Preset:   %s    %s Random Scene: %s\n",
 		m.Styles.KeyCap.Render("[v/b]"), m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String()),
 		m.Styles.KeyCap.Render("[R]"), m.Styles.MutedText.Render("Surprise Me")))
+	sb.WriteString(fmt.Sprintf("  %s Auto-Cycle Mode:%s    %s Auto-Cycle Scope: %s\n",
+		m.Styles.KeyCap.Render("[Y]"), m.Scene.AutoCycleMode.String(),
+		m.Styles.KeyCap.Render("[U]"), favScopeStr))
 	sb.WriteString(fmt.Sprintf("  %s Color Filter:   %s    %s Animation Speed: %s\n",
 		m.Styles.KeyCap.Render("[C]"), m.Scene.ColorFilter.String(),
 		m.Styles.KeyCap.Render("[S]"), m.Scene.AnimSpeed.String()))
@@ -378,6 +389,7 @@ func (m Model) renderAmbianceView() string {
 		m.Styles.KeyCap.Render("[l]"), onOffStr(m.Scene.LampOn),
 		m.Styles.KeyCap.Render("[f]"), onOffStr(m.Scene.FireOn),
 		m.Styles.KeyCap.Render("[s]"), onOffStr(m.Scene.FairyLightsOn)))
+
 
 	sb.WriteString(m.Styles.Title.Render("🌧️ 5-Channel Procedural Ambient Sound Console") + "  " + m.Styles.MutedText.Render("(Press [Shift+X] for Equalizer Mixer)") + "\n")
 	sb.WriteString(fmt.Sprintf("  %s Rain: %s (%.0f%%)    %s Fireplace: %s (%.0f%%)    %s Wind Breeze: %s (%.0f%%)\n",
@@ -458,6 +470,8 @@ func (m Model) renderSidebar() string {
 	sb.WriteString(fmt.Sprintf("%s Theme: %s\n", m.Styles.KeyCap.Render("[T]"), truncate(m.Styles.Theme.Name, 10)))
 	sb.WriteString(fmt.Sprintf("%s Filter: %s\n", m.Styles.KeyCap.Render("[C]"), truncate(m.Scene.ColorFilter.String(), 10)))
 	sb.WriteString(fmt.Sprintf("%s Overlay: %s\n", m.Styles.KeyCap.Render("[P]"), truncate(m.Scene.ParticleOverlay.String(), 10)))
+	sb.WriteString(fmt.Sprintf("%s AutoCycle: %s\n", m.Styles.KeyCap.Render("[Y]"), truncate(m.Scene.AutoCycleMode.String(), 10)))
+	sb.WriteString(fmt.Sprintf("%s FavScope: %s\n", m.Styles.KeyCap.Render("[U]"), onOffStr(m.Scene.AutoCycleFavsOnly)))
 	sb.WriteString(fmt.Sprintf("%s Vignette: %s\n", m.Styles.KeyCap.Render("[G]"), onOffStr(m.Scene.VignetteOn)))
 	sb.WriteString(fmt.Sprintf("%s Scanlines: %s\n", m.Styles.KeyCap.Render("[O]"), onOffStr(m.Scene.CRTScanlinesOn)))
 	sb.WriteString(fmt.Sprintf("%s Speed: %s\n", m.Styles.KeyCap.Render("[S]"), truncate(m.Scene.AnimSpeed.String(), 10)))
@@ -487,7 +501,10 @@ func (m Model) renderHelpModal(bg string) string {
   [/]      Search / Filter Scenes by Keyword (in Catalog)
   [*]      Bookmark / Toggle Favorite Scene Preset
   [R]      Jump to Random Scene Preset (Surprise Me)
+  [Y]      Cycle Auto-Cycle Scene Rotation Mode (1m, 3m, 5m, 10m, Timer-Linked)
+  [U]      Toggle Auto-Cycle Scope (Favorites Only / All 370+ Scenes)
   [v/b]    Cycle Next / Previous Scene Preset
+
   [C]      Cycle Color Filter (Natural, Warm Amber, Cool Synth, Phosphor, Sepia, Midnight)
   [P]      Cycle Screen Particle Overlay (Sakura, Embers, Snow, Matrix, Stars)
   [S]      Open Preset Studio Modal (Shift+S) / Cycle Speed

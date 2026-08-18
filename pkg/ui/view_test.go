@@ -221,5 +221,36 @@ func TestModelViewModals(t *testing.T) {
 		t.Errorf("Expected RainVol to be increased to ~0.8, got %.2f", rainVol)
 	}
 	m.ShowSoundMixerModal = false
+
+	// Test Canvas Clone & BlendCanvas
+	c1 := art.NewCanvas(20, 20)
+	c1.SetPixelHex(5, 5, "#FF0000")
+	c2 := c1.Clone()
+	if c2 == nil || c2.Pixels[5][5].R < 0.9 {
+		t.Error("Expected Canvas.Clone to duplicate pixel matrix")
+	}
+	c1.BlendCanvas(c2, 0.5)
+
+	// Test Smooth Scene Transition & SetSceneWithTransition
+	m.Scene.SetSceneWithTransition(art.SceneCozyCampfire)
+	if m.Scene.PrevCanvas == nil || m.Scene.CurrentScene != art.SceneCozyCampfire {
+		t.Error("Expected SetSceneWithTransition to create PrevCanvas snapshot and set CurrentScene")
+	}
+
+	// Test Auto-Cycle Modes & Scope Toggle
+	autoMode := m.Scene.CycleAutoCycleMode()
+	if autoMode.String() == "" {
+		t.Error("Expected non-empty AutoCycleMode string")
+	}
+	favScope := m.Scene.ToggleAutoCycleFavs()
+	if !favScope || !m.Scene.AutoCycleFavsOnly {
+		t.Error("Expected ToggleAutoCycleFavs to activate favorites scope")
+	}
+
+	vAmbAuto := m.renderAmbianceView()
+	if !strings.Contains(vAmbAuto, "Auto-Cycle Mode") {
+		t.Error("Expected renderAmbianceView to display Auto-Cycle Mode settings")
+	}
 }
+
 

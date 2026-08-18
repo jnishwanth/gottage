@@ -69,6 +69,33 @@ func GetCommandList(m *Model) []CommandItem {
 		},
 	})
 
+	items = append(items, CommandItem{
+		Title:       "🎬 Auto-Cycle: Cycle Auto-Rotation Mode",
+		Category:    "Aesthetics",
+		Shortcut:    "[ Y ]",
+		Description: "Cycle background scene auto-rotation (Off -> 1m -> 3m -> 5m -> 10m -> Timer-Linked)",
+		Action: func(m *Model) {
+			mode := m.Scene.CycleAutoCycleMode()
+			m.SetStatusMsg("🎬 Auto-Cycle Mode: " + mode.String())
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "⭐ Auto-Cycle: Toggle Favorites Scope",
+		Category:    "Aesthetics",
+		Shortcut:    "[ U ]",
+		Description: "Toggle whether auto-cycling selects only bookmarked favorite scenes or all 370+ scenes",
+		Action: func(m *Model) {
+			favOnly := m.Scene.ToggleAutoCycleFavs()
+			if favOnly {
+				m.SetStatusMsg("🎬 Auto-Cycle Scope: Favorites Only ⭐")
+			} else {
+				m.SetStatusMsg("🎬 Auto-Cycle Scope: All 370+ Scenes 🎨")
+			}
+		},
+	})
+
+
 	// Views & Navigation
 	items = append(items,
 		CommandItem{

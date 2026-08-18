@@ -240,6 +240,32 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tickMsg:
 		// Advance bit-art scene animation frame
 		m.Scene.Update()
+
+		// Auto-Cycle Scene Timer Evaluation
+		if m.Scene.AutoCycleMode >= art.AutoCycle1Min && m.Scene.AutoCycleMode <= art.AutoCycle10Min {
+			dur := m.Scene.AutoCycleMode.Duration()
+			if dur > 0 && time.Since(m.Scene.LastAutoCycleTime) >= dur {
+				m.Scene.LastAutoCycleTime = time.Now()
+				if m.Scene.AutoCycleFavsOnly && len(m.FavoriteScenes) > 0 {
+					var favs []art.SceneType
+					for st, ok := range m.FavoriteScenes {
+						if ok {
+							favs = append(favs, st)
+						}
+					}
+					if len(favs) > 0 {
+						nextFav := favs[int(time.Now().Unix())%len(favs)]
+						m.Scene.SetSceneWithTransition(nextFav)
+					} else {
+						m.Scene.RandomScene()
+					}
+				} else {
+					m.Scene.RandomScene()
+				}
+				m.SetStatusMsg("🎬 Auto-Cycle: " + m.Scene.CurrentScene.String() + " ✨")
+			}
+		}
+
 		cmds = append(cmds, m.animateTick())
 
 	case cliampPollMsg:
@@ -247,9 +273,24 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case timerTickMsg:
 		if m.Timer.Tick() {
-			m.SetStatusMsg("🎉 Timer completed! Time for a cozy break!")
+			if m.Scene.AutoCycleMode == art.AutoCycleTimerLinked {
+				if m.Timer.Mode == features.ModeShortBreak || m.Timer.Mode == features.ModeLongBreak {
+					m.Scene.SetSceneWithTransition(art.SceneCozyCampfire)
+					if m.AutoSyncAudio {
+						m.Ambient.RainActive = true
+						m.Ambient.FireActive = true
+					}
+					m.SetStatusMsg("☕ Break Time! Switched to Cozy Hearth Campfire ☕")
+				} else {
+					m.Scene.SetSceneWithTransition(art.SceneCozyLibrary)
+					m.SetStatusMsg("📖 Focus Session Started! Switched to Cozy Library 📖")
+				}
+			} else {
+				m.SetStatusMsg("🎉 Timer completed! Time for a cozy break!")
+			}
 		}
 		cmds = append(cmds, m.timerTick())
+
 
 	case tea.KeyMsg:
 		// Modal: Scene Info & Palette Inspector
@@ -593,9 +634,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			newScene := m.Scene.RandomScene()
 			m.SetStatusMsg("🎲 Random Scene: " + newScene.String() + " ✨")
 
+		case "Y":
+			mode := m.Scene.CycleAutoCycleMode()
+			m.SetStatusMsg("🎬 Auto-Cycle Mode: " + mode.String())
+
+		case "U":
+			favOnly := m.Scene.ToggleAutoCycleFavs()
+			if favOnly {
+				m.SetStatusMsg("🎬 Auto-Cycle Scope: Favorites Only ⭐")
+			} else {
+				m.SetStatusMsg("🎬 Auto-Cycle Scope: All 370+ Scenes 🎨")
+			}
+
 		case "b":
 			newScene := m.Scene.PrevScene()
 			m.SetStatusMsg("Switched Scene: " + newScene.String())
+
 
 		case "C":
 			filter := m.Scene.CycleColorFilter()

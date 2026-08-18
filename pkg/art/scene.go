@@ -170,6 +170,50 @@ func (s ShaderEffect) String() string {
 	}
 }
 
+// AutoCycleMode specifies background scene auto-rotation interval.
+type AutoCycleMode int
+
+const (
+	AutoCycleOff AutoCycleMode = iota
+	AutoCycle1Min
+	AutoCycle3Min
+	AutoCycle5Min
+	AutoCycle10Min
+	AutoCycleTimerLinked
+)
+
+func (a AutoCycleMode) String() string {
+	switch a {
+	case AutoCycle1Min:
+		return "1 Minute ⏱️"
+	case AutoCycle3Min:
+		return "3 Minutes ⏱️"
+	case AutoCycle5Min:
+		return "5 Minutes ⏱️"
+	case AutoCycle10Min:
+		return "10 Minutes ⏱️"
+	case AutoCycleTimerLinked:
+		return "Timer Linked ⏳"
+	default:
+		return "Off ❌"
+	}
+}
+
+func (a AutoCycleMode) Duration() time.Duration {
+	switch a {
+	case AutoCycle1Min:
+		return 1 * time.Minute
+	case AutoCycle3Min:
+		return 3 * time.Minute
+	case AutoCycle5Min:
+		return 5 * time.Minute
+	case AutoCycle10Min:
+		return 10 * time.Minute
+	default:
+		return 0
+	}
+}
+
 // CatBreed specifies cat color theme.
 type CatBreed int
 
@@ -206,19 +250,25 @@ type Particle struct {
 
 // CottageScene encapsulates dynamic state for the 8-bit retro scene engine.
 type CottageScene struct {
-	Canvas          *Canvas
-	CurrentScene    SceneType
-	Buddy           *FocusBuddy
-	FrameCount      uint64
-	TimeOfDay       TimeOfDay
-	Weather         WeatherMode
-	CatBreed        CatBreed
-	ColorFilter     ColorFilter
-	ParticleOverlay ParticleOverlay
-	ShaderEffect    ShaderEffect
-	AnimSpeed       AnimSpeed
-	LampOn          bool
-	FireOn          bool
+	Canvas                *Canvas
+	PrevCanvas            *Canvas
+	TransitionStep        int
+	TransitionMax         int
+	CurrentScene          SceneType
+	Buddy                 *FocusBuddy
+	FrameCount            uint64
+	TimeOfDay             TimeOfDay
+	Weather               WeatherMode
+	CatBreed              CatBreed
+	ColorFilter           ColorFilter
+	ParticleOverlay       ParticleOverlay
+	ShaderEffect          ShaderEffect
+	AnimSpeed             AnimSpeed
+	AutoCycleMode         AutoCycleMode
+	AutoCycleFavsOnly     bool
+	LastAutoCycleTime     time.Time
+	LampOn                bool
+	FireOn                bool
 	FairyLightsOn         bool
 	Lightning             bool
 	BeatReactiveParticles bool
@@ -252,6 +302,9 @@ func NewCottageScene(width, height int) *CottageScene {
 		ParticleOverlay:       OverlayNone,
 		ShaderEffect:          ShaderNone,
 		AnimSpeed:             SpeedNormal,
+		AutoCycleMode:         AutoCycleOff,
+		AutoCycleFavsOnly:     false,
+		LastAutoCycleTime:     time.Now(),
 		LampOn:                true,
 		FireOn:                true,
 		FairyLightsOn:         false,
@@ -266,6 +319,32 @@ func NewCottageScene(width, height int) *CottageScene {
 	cs.initParticles()
 	cs.initShaderParticles()
 	return cs
+}
+
+// SetSceneWithTransition switches scene with a smooth multi-frame dissolve crossfade.
+func (cs *CottageScene) SetSceneWithTransition(newScene SceneType) {
+	if cs.CurrentScene == newScene {
+		return
+	}
+	if cs.Canvas != nil {
+		cs.PrevCanvas = cs.Canvas.Clone()
+		cs.TransitionStep = 0
+		cs.TransitionMax = 6
+	}
+	cs.CurrentScene = newScene
+}
+
+// CycleAutoCycleMode cycles auto-rotation mode (Off -> 1m -> 3m -> 5m -> 10m -> TimerLinked -> Off).
+func (cs *CottageScene) CycleAutoCycleMode() AutoCycleMode {
+	cs.AutoCycleMode = (cs.AutoCycleMode + 1) % 6
+	cs.LastAutoCycleTime = time.Now()
+	return cs.AutoCycleMode
+}
+
+// ToggleAutoCycleFavs toggles whether auto-cycle selects only from favorites.
+func (cs *CottageScene) ToggleAutoCycleFavs() bool {
+	cs.AutoCycleFavsOnly = !cs.AutoCycleFavsOnly
+	return cs.AutoCycleFavsOnly
 }
 
 // CycleShaderEffect cycles to the next procedural canvas shader animation.
@@ -331,7 +410,7 @@ func (cs *CottageScene) CycleScene() SceneType {
 		}
 	}
 	nextIdx := (idx + 1) % len(SceneOrder)
-	cs.CurrentScene = SceneOrder[nextIdx]
+	cs.SetSceneWithTransition(SceneOrder[nextIdx])
 	return cs.CurrentScene
 }
 
@@ -348,7 +427,7 @@ func (cs *CottageScene) PrevScene() SceneType {
 		}
 	}
 	prevIdx := (idx + len(SceneOrder) - 1) % len(SceneOrder)
-	cs.CurrentScene = SceneOrder[prevIdx]
+	cs.SetSceneWithTransition(SceneOrder[prevIdx])
 	return cs.CurrentScene
 }
 
@@ -358,9 +437,10 @@ func (cs *CottageScene) RandomScene() SceneType {
 		return cs.CurrentScene
 	}
 	nextIdx := cs.rng.Intn(len(SceneOrder))
-	cs.CurrentScene = SceneOrder[nextIdx]
+	cs.SetSceneWithTransition(SceneOrder[nextIdx])
 	return cs.CurrentScene
 }
+
 
 func (cs *CottageScene) initStars() {
 	cs.Stars = nil
@@ -608,6 +688,16 @@ func (cs *CottageScene) RenderFrame() {
 		cs.renderShaderEffect(c)
 	}
 
+	// Step 5.6: Apply Smooth Multi-Frame Scene Dissolve Crossfade
+	if cs.PrevCanvas != nil && cs.TransitionStep < cs.TransitionMax {
+		alpha := 1.0 - (float64(cs.TransitionStep) / float64(cs.TransitionMax))
+		c.BlendCanvas(cs.PrevCanvas, alpha)
+		cs.TransitionStep++
+		if cs.TransitionStep >= cs.TransitionMax {
+			cs.PrevCanvas = nil
+		}
+	}
+
 	// Step 6: Visual Color Filter Post-Processing
 	if cs.ColorFilter != FilterNormal {
 		cs.applyColorFilter(c)
@@ -623,6 +713,7 @@ func (cs *CottageScene) RenderFrame() {
 		c.ApplyCRTScanlines(1.0)
 	}
 }
+
 
 func (cs *CottageScene) renderShaderEffect(c *Canvas) {
 	if cs.ShaderEffect == ShaderNone {

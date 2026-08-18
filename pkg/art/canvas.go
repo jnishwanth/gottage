@@ -352,6 +352,41 @@ func (c *Canvas) ApplyVignette(intensity float64) {
 	}
 }
 
+// Clone returns a deep copy of the Canvas.
+func (c *Canvas) Clone() *Canvas {
+	if c == nil {
+		return nil
+	}
+	clone := NewCanvas(c.Width, c.Height)
+	for y := 0; y < c.Height; y++ {
+		copy(clone.Pixels[y], c.Pixels[y])
+	}
+	charHeight := c.Height / 2
+	for y := 0; y < charHeight; y++ {
+		copy(clone.Glyphs[y], c.Glyphs[y])
+		copy(clone.GlyphColors[y], c.GlyphColors[y])
+	}
+	return clone
+}
+
+// BlendCanvas blends pixels from another canvas into this canvas with a given alpha weight.
+func (c *Canvas) BlendCanvas(other *Canvas, alpha float64) {
+	if other == nil || alpha <= 0 || c.Width != other.Width || c.Height != other.Height {
+		return
+	}
+	if alpha >= 1.0 {
+		for y := 0; y < c.Height; y++ {
+			copy(c.Pixels[y], other.Pixels[y])
+		}
+		return
+	}
+	for y := 0; y < c.Height; y++ {
+		for x := 0; x < c.Width; x++ {
+			c.Pixels[y][x] = c.Pixels[y][x].BlendRgb(other.Pixels[y][x], alpha)
+		}
+	}
+}
+
 // ApplyCRTScanlines applies alternating horizontal scanline dimming for retro CRT monitor aesthetics.
 func (c *Canvas) ApplyCRTScanlines(depth float64) {
 	if depth <= 0 {
