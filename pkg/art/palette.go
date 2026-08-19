@@ -91,6 +91,38 @@ var (
 	ColorMugSteam       = hex("#e2eafc") // Soft Drifting Steam
 	ColorNotebookPaper  = hex("#fdf0d5") // Cream Journal Pages
 	ColorCatCushion     = hex("#3d348b") // Velvet Indigo Cushion
+
+	// Zen Japanese Porch & Tea Garden
+	ColorTatamiBase     = hex("#c2b280") // Warm Golden Straw Tatami
+	ColorTatamiBorder   = hex("#1c1917") // Dark Brocade Tatami Border
+	ColorShojiPaper     = hex("#f7f4ea") // Translucent Rice Paper
+	ColorShojiLattice   = hex("#44281d") // Dark Cedar Shoji Grid
+	ColorPondDeep       = hex("#14213d") // Deep Tranquil Koi Pond
+	ColorPondShallow    = hex("#2a4365") // Pond Water Horizon
+	ColorKoiGold        = hex("#ff9f1c") // Golden Koi Fish
+	ColorKoiWhite       = hex("#fdf0ed") // Pearl White Koi
+	ColorSakuraPink     = hex("#ffb7b2") // Falling Cherry Blossom Petal
+	ColorSakuraSoft     = hex("#ffe5ec") // Soft Petal Highlight
+	ColorStoneLantern   = hex("#5c677d") // Garden Stone Lantern
+	ColorMatchaGreen    = hex("#588157") // Rich Whisked Matcha Tea
+
+	// Alpine Campfire & Lake
+	ColorLakeDeep       = hex("#0b132b") // Alpine Night Lake
+	ColorLakeReflect    = hex("#1c2541") // Mountain Moonlit Water
+	ColorPineSilhouette = hex("#0f172a") // Starlit Pine Forest
+	ColorCampTent       = hex("#b08968") // Canvas A-Frame Tent
+	ColorPlaidRed       = hex("#9e2a2b") // Cozy Plaid Wool Blanket
+	ColorPlaidNavy      = hex("#1b263b") // Plaid Weave Contrast
+	ColorCampSmoke      = hex("#94a3b8") // Drifting Campfire Smoke
+
+	// Artist Atelier & Winter Hearth
+	ColorCanvasEasel    = hex("#7f5539") // Studio Pine Easel
+	ColorCanvasCloth    = hex("#ede0d4") // Stretched Canvas Fabric
+	ColorLavenderDried  = hex("#7b6d8d") // Hanging Dried Lavender
+	ColorEucalyptus     = hex("#84a98c") // Dried Eucalyptus Leaves
+	ColorCocoaHot       = hex("#3b1f14") // Rich Hot Chocolate
+	ColorMarshmallow    = hex("#fffdfa") // Fluffy Marshmallow
+	ColorFrostIce       = hex("#e0f2fe") // Window Frost Crystals
 )
 
 func hex(s string) colorful.Color {

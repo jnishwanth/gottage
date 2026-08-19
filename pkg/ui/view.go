@@ -13,8 +13,8 @@ import (
 
 func (m Model) mainWidth() int {
 	w := m.Width - 36
-	if w < 54 {
-		return 54
+	if w < 78 {
+		return 78
 	}
 	if w > 120 {
 		return 120
@@ -24,11 +24,11 @@ func (m Model) mainWidth() int {
 
 func (m Model) mainHeight() int {
 	h := m.Height - 6
-	if h < 22 {
-		return 22
+	if h < 32 {
+		return 32
 	}
-	if h > 50 {
-		return 50
+	if h > 52 {
+		return 52
 	}
 	return h
 }
@@ -204,7 +204,21 @@ func (m Model) renderHeader() string {
 	clockBadge := m.Styles.PillBadge.Render("🕒 " + time.Now().Format("15:04:05"))
 	themeBadge := m.Styles.StatusBadge.Render(" " + m.Styles.Theme.Name + " ")
 
-	return lipgloss.JoinHorizontal(lipgloss.Center, title, "   ", clockBadge, "  ", themeBadge, "     ", tabBar)
+	var headerBadges []string
+	headerBadges = append(headerBadges, clockBadge)
+	if m.Timer.Running {
+		headerBadges = append(headerBadges, m.Styles.BoldAccent.Render(" ⏱️ "+m.Timer.FormattedTime()+" "))
+	}
+	st := m.CLIAMP.GetStatus()
+	if st.Playing {
+		headerBadges = append(headerBadges, m.Styles.StatusBadge.Render(" 🎵 Playing "))
+	}
+	headerBadges = append(headerBadges, m.Styles.MutedText.Render(fmt.Sprintf("🐾 %d%% Bliss", m.Scene.CatBliss)))
+	headerBadges = append(headerBadges, themeBadge)
+
+	badgeBar := strings.Join(headerBadges, "  ")
+
+	return lipgloss.JoinHorizontal(lipgloss.Center, title, "   ", badgeBar, "     ", tabBar)
 }
 
 func (m Model) renderArtView() string {
@@ -631,29 +645,49 @@ func (m Model) renderZenView() string {
 	breath := GetZenBreathState(m.Scene.FrameCount)
 	quote := m.Inspiration.CurrentQuote()
 
-	cardContent := fmt.Sprintf("%s\n\n⏱️ %s   |   %s   |   🐾 Bliss: %d%%\n\n%s  %s\n%s\n\n✨ %s\n   %s\n\n%s %s",
-		m.Styles.Title.Render("🌿 ZEN FOCUS MODE"),
+	headerBar := lipgloss.JoinHorizontal(lipgloss.Center,
+		m.Styles.Title.Render("🌿 ZEN FOCUS SANCTUARY"),
+		"  •  ",
+		m.Styles.BoldAccent.Render(m.Scene.CurrentScene.String()),
+		"  •  ",
+		m.Styles.PillBadge.Render("🕒 "+time.Now().Format("15:04:05")),
+	)
+
+	statusLine := fmt.Sprintf("⏱️ %s (%s)  │  🐾 %d%% Bliss  │  🧘 %s %s  │  🎵 %s",
 		m.Styles.BoldAccent.Render(m.Timer.FormattedTime()),
 		m.timerStateStr(),
 		m.Scene.CatBliss,
 		m.Styles.Title.Render(breath.PhaseName),
 		m.Styles.Header.Render(breath.RingVisual),
-		m.Styles.MutedText.Render("  "+breath.Instruction),
-		m.Styles.BoldAccent.Render("\""+quote.Quote+"\""),
-		m.Styles.MutedText.Render("— "+quote.Author+"  "+m.Styles.KeyCap.Render("[Q]")),
-		m.Styles.MutedText.Render("Spectrum: "),
 		spec,
 	)
 
-	floatingCard := m.Styles.Box.
-		BorderForeground(m.Styles.Theme.Title).
-		Padding(1, 3).
-		Render(cardContent)
+	quoteLine := fmt.Sprintf("✨ %s %s",
+		m.Styles.BoldAccent.Render("\""+quote.Quote+"\""),
+		m.Styles.MutedText.Render("— "+quote.Author),
+	)
 
-	overlay := lipgloss.Place(m.Width, m.Height-2, lipgloss.Center, lipgloss.Center, floatingCard)
+	zenBox := m.Styles.Box.
+		BorderForeground(m.Styles.Theme.Title).
+		Padding(0, 2).
+		Render(lipgloss.JoinVertical(lipgloss.Center,
+			statusLine,
+			quoteLine,
+		))
+
 	footer := m.Styles.Footer.Render("Press [Esc] or [F] to exit Zen Mode • [K] Pet Cat 🐾 • [Q] Quote ✨ • [Space] Audio • [x] Timer • [v] Cycle Scene")
 
-	return artCanvas + "\n" + overlay + "\n" + footer
+	content := lipgloss.JoinVertical(lipgloss.Center,
+		headerBar,
+		"",
+		artCanvas,
+		"",
+		zenBox,
+		"",
+		footer,
+	)
+
+	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, content)
 }
 
 func (m Model) renderPresetModal(bg string) string {

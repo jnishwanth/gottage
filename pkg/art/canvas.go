@@ -196,6 +196,37 @@ func (c *Canvas) DrawHorizontalGradient(x, y, w, h int, leftCol, rightCol colorf
 	}
 }
 
+// DrawLine draws a 1-pixel line from (x0, y0) to (x1, y1) using Bresenham's algorithm.
+func (c *Canvas) DrawLine(x0, y0, x1, y1 int, color colorful.Color) {
+	dx := int(math.Abs(float64(x1 - x0)))
+	dy := -int(math.Abs(float64(y1 - y0)))
+	sx := 1
+	if x0 >= x1 {
+		sx = -1
+	}
+	sy := 1
+	if y0 >= y1 {
+		sy = -1
+	}
+	err := dx + dy
+
+	for {
+		c.SetPixel(x0, y0, color)
+		if x0 == x1 && y0 == y1 {
+			break
+		}
+		e2 := 2 * err
+		if e2 >= dy {
+			err += dy
+			x0 += sx
+		}
+		if e2 <= dx {
+			err += dx
+			y0 += sy
+		}
+	}
+}
+
 // ApplyRadialLight applies a warm radial light source centered at (cx, cy) in pixel coords.
 func (c *Canvas) ApplyRadialLight(cx, cy int, radius float64, lightColor colorful.Color, maxIntensity float64) {
 	minY := int(math.Max(0, float64(cy)-radius))

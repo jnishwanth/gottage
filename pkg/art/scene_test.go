@@ -108,3 +108,51 @@ func TestPetCatCompanion(t *testing.T) {
 		t.Errorf("Expected rose ripple created on canvas after PetCat")
 	}
 }
+
+func TestHandcraftedProceduralScenes(t *testing.T) {
+	scenes := []SceneType{
+		SceneRainyCity,
+		SceneForestCabin,
+		SceneCottageClassic,
+		SceneObservatory,
+		SceneZenTeahouse,
+		SceneCozyCampfire,
+		SceneCozyAttic,
+		ScenePixelWinterCabin,
+	}
+
+	cs := NewCottageScene(74, 52)
+
+	for _, st := range scenes {
+		cs.CurrentScene = st
+		sc := GetScene(st)
+		if sc == nil {
+			t.Fatalf("Expected non-nil scene for type %v", st)
+		}
+		if sc.Name() == "" {
+			t.Errorf("Expected non-empty scene name for type %v", st)
+		}
+		r := sc.WindowBounds()
+		if r.W <= 0 || r.H <= 0 {
+			t.Errorf("Expected positive window dimensions for scene %v, got %+v", st, r)
+		}
+
+		// Test across Dawn, Day, Sunset, Night, with Lamp ON/OFF and Fire ON/OFF
+		times := []TimeOfDay{TimeDawn, TimeDay, TimeSunset, TimeNight}
+		for _, tod := range times {
+			cs.TimeOfDay = tod
+			cs.LampOn = true
+			cs.FireOn = true
+			cs.RenderFrame()
+			rendered := cs.Canvas.Render()
+			if len(rendered) == 0 {
+				t.Errorf("Expected non-empty render output for scene %v at time %v", st, tod)
+			}
+
+			// Test with Lamp and Fire off
+			cs.LampOn = false
+			cs.FireOn = false
+			cs.RenderFrame()
+		}
+	}
+}

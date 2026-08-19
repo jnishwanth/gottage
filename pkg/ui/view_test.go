@@ -42,8 +42,8 @@ func TestModelViewModals(t *testing.T) {
 	// Test Zen Mode
 	m.ZenMode = true
 	vZ := m.View()
-	if !strings.Contains(vZ, "ZEN FOCUS MODE") {
-		t.Error("Expected Zen view to contain ZEN FOCUS MODE")
+	if !strings.Contains(vZ, "ZEN FOCUS SANCTUARY") {
+		t.Error("Expected Zen view to contain ZEN FOCUS SANCTUARY")
 	}
 	m.ZenMode = false
 
