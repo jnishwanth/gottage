@@ -139,6 +139,10 @@ func TestHandcraftedProceduralScenes(t *testing.T) {
 		SceneBambooGrove,
 		SceneWinterCafe,
 		SceneAutumnPark,
+		SceneFairytaleWindmill,
+		SceneCyberBar,
+		SceneCloudTemple,
+		SceneWizardTower,
 	}
 
 	cs := NewCottageScene(74, 52)

@@ -282,6 +282,37 @@ var (
 	ColorLakeReflectGold = hex("#c2410c") // Golden Hour Lake Shimmer
 	ColorDockPilingWood  = hex("#573d2a") // Weathered Cedar Dock Piling
 	ColorTinLantern      = hex("#64748b") // Galvanized Tin Campsite Lantern
+
+	// Shire Hill Hobbit Burrow & Round Hearth
+	ColorHobbitDoorGreen = hex("#2d5a27") // Sage-Olive Painted Round Door
+	ColorHobbitBrassKnob = hex("#e0a96d") // Central Polished Brass Doorknob
+	ColorRollingHills    = hex("#4f772d") // Undulating Lush Shire Green Hill
+	ColorHillsShadow     = hex("#31572c") // Hill Creep Shadow
+	ColorJamBerry        = hex("#9e2a2b") // Preserved Blackberry Jam
+	ColorJamHoney        = hex("#e09f3e") // Golden Clover Honey Jar
+	ColorSeedCake        = hex("#d4a373") // Spiced Seed Cake with Golden Crust
+
+	// Rainy Japanese Jazz Kissa & Siphon Coffee Bar
+	ColorSiphonGlass     = hex("#94d2bd") // Heat-Resistant Siphon Glass Bulb
+	ColorSiphonBoil      = hex("#78350f") // Bubbling Rich Dark Roast Coffee
+	ColorHalogenGlow     = hex("#f59e0b") // Halogen Beam Heater Amber Glow
+	ColorVUMeterBlue     = hex("#0284c7") // McIntosh Backlit Cyan-Blue VU Meter
+	ColorVUNeedleRed     = hex("#ef4444") // Twitching Mechanical Meter Needle
+	ColorJazzVinylBlue   = hex("#1e3a8a") // Classic Blue Note Record Jacket Art
+
+	// Starlit A-Frame Loft Bed & Skylight Constellations
+	ColorLoftRafterBeam  = hex("#451a03") // Dark Cedar Loft Rafter Timber
+	ColorDuvetPlushWhite = hex("#f8fafc") // Voluminous Fluffy White Down Comforter
+	ColorDuvetPillowTeal = hex("#0e7490") // Deep Teal Velvet Bed Pillows
+	ColorCosmicNebula    = hex("#a21caf") // Drifting Magenta Stellar Dust
+	ColorShootingStar    = hex("#fef08a") // Brilliant Silver-Gold Meteor Trail
+
+	// Alchemist's Starlit Tower & Celestial Astrolabe
+	ColorGothicArchStone = hex("#475569") // Carved Gothic Cathedral Granite
+	ColorAstrolabeBrass  = hex("#fbbf24") // Rotating Brass Armillary Ring
+	ColorCrystalPrismCyan= hex("#38bdf8") // Suspended Cyan Crystal Prism
+	ColorCrystalPrismPink= hex("#f472b6") // Refracted Magenta Light Flare
+	ColorCrucibleFire    = hex("#06b6d4") // Mystical Azure Alchemical Flame
 )
 
 func hex(s string) colorful.Color {

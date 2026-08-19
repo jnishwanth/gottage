@@ -35,6 +35,10 @@ func init() {
 	RegisterScene(&ZenRainGardenScene{})
 	RegisterScene(&CozyCatCafeScene{})
 	RegisterScene(&AutumnLakeDockScene{})
+	RegisterScene(&HobbitBurrowScene{})
+	RegisterScene(&JapaneseJazzKissaScene{})
+	RegisterScene(&StarlitLoftBedScene{})
+	RegisterScene(&AlchemistTowerScene{})
 
 	RegisterScene(&AnimatedGifScene{
 		id:        SceneKirokazeRoom,
@@ -247,18 +251,6 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneCloudTemple,
-		name:      "Floating Cloud Temple ⛩️",
-		gifPath:   "assets/animations/cloud_temple.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberBar,
-		name:      "Neon Synthwave Cyber Bar 🍸",
-		gifPath:   "assets/animations/cyber_bar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneCoralReef,
 		name:      "Submerged Coral Reef 🐠",
 		gifPath:   "assets/animations/coral_reef.gif",
@@ -328,12 +320,6 @@ func init() {
 		id:        SceneSunsetBeach,
 		name:      "Sunset Beach Boardwalk 🏖️",
 		gifPath:   "assets/animations/sunset_beach.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneFairytaleWindmill,
-		name:      "Fairytale River Windmill 🌾",
-		gifPath:   "assets/animations/fairytale_windmill.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
@@ -568,12 +554,6 @@ func init() {
 		id:        SceneZenBonsai,
 		name:      "Zen Bonsai & Koi Pond 🪨",
 		gifPath:   "assets/animations/zen_bonsai.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneWizardTower,
-		name:      "Starlight Wizard Arcane Tower 🔮",
-		gifPath:   "assets/animations/wizard_tower.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
@@ -6605,6 +6585,613 @@ func (s *AutumnLakeDockScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 	}
 	c.ApplyRadialLight(36, 12, 22.0, ColorSunriseMist, 0.30)
 	c.ApplyRadialLight(20, 27, 14.0, ColorPlaidRed, 0.20)
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
+	}
+}
+
+// ---------------------------------------------------------
+// 29. HobbitBurrowScene (Shire Hill Hobbit Burrow & Hearth)
+// ---------------------------------------------------------
+type HobbitBurrowScene struct{}
+
+func (s *HobbitBurrowScene) ID() SceneType       { return SceneFairytaleWindmill }
+func (s *HobbitBurrowScene) Name() string     { return "Shire Hill Hobbit Burrow & Hearth 🌿🚪" }
+func (s *HobbitBurrowScene) WindowBounds() Rect { return Rect{X: 18, Y: 2, W: 38, H: 26} }
+
+func (s *HobbitBurrowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	var skyTop, skyBot colorful.Color
+	switch tod {
+	case TimeDawn:
+		skyTop, skyBot = ColorSkyDawnTop, ColorSkyDawnBot
+	case TimeDay:
+		skyTop, skyBot = hex("#38bdf8"), hex("#bae6fd")
+	case TimeSunset:
+		skyTop, skyBot = ColorSkySunsetTop, ColorSkySunsetBot
+	case TimeNight:
+		skyTop, skyBot = ColorSkyNightTop, ColorSkyNightBot
+	}
+	if lightning {
+		skyTop, skyBot = PicoWhite, PicoWhite
+	}
+	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
+
+	// Outside view: Gentle rolling green Shire hills with wildflower blossoms
+	for x := 0; x < ww; x++ {
+		h1 := int(math.Sin(float64(x)*0.10+1.2)*3.0) + 12
+		c.FillRect(wx+x, wy+wh-h1, 1, h1, ColorRollingHills)
+		h2 := int(math.Sin(float64(x)*0.15)*2.0) + 6
+		c.FillRect(wx+x, wy+wh-h2, 1, h2, ColorHillsShadow)
+	}
+
+	// Puffy clouds drifting in the summer sky
+	cloudOffset := int(frameCount/3) % (ww + 20)
+	c.FillCircle(wx+cloudOffset-10, wy+6, 5, hex("#f8fafc"))
+	c.FillCircle(wx+cloudOffset-6, wy+5, 6, hex("#ffffff"))
+	c.FillCircle(wx+cloudOffset-2, wy+6, 4, hex("#f8fafc"))
+
+	// Dotted colorful wildflowers on hills
+	for i := 0; i < 10; i++ {
+		fx := wx + 4 + (i*13)%ww
+		fy := wy + wh - 4 - (i*7)%8
+		col := ColorPlaidRed
+		if i%3 == 0 {
+			col = ColorStickyNoteYellow
+		} else if i%3 == 1 {
+			col = ColorCoastalLavender
+		}
+		c.SetPixel(fx, fy, col)
+	}
+
+	// Winding cobblestone garden path
+	for y := 0; y < 8; y++ {
+		px := wx + ww/2 - 2 + int(math.Sin(float64(y)*0.6)*4.0)
+		c.FillRect(px, wy+wh-8+y, 4, 1, ColorStoneLantern)
+	}
+}
+
+func (s *HobbitBurrowScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	// Round burrow opening frame (circular timber door arch)
+	r := s.WindowBounds()
+	doorCx, doorCy := r.X+r.W/2, r.Y+r.H/2
+
+	// Wall around the circular portal (earthen burrow with timber beams)
+	c.FillRect(0, 0, r.X, c.Height, ColorWallPlank)
+	c.FillRect(r.X+r.W, 0, c.Width-(r.X+r.W), c.Height, ColorWallPlank)
+	c.FillRect(r.X, 0, r.W, r.Y, ColorWallPlank)
+	c.FillRect(r.X, r.Y+r.H, r.W, c.Height-(r.Y+r.H), ColorWoodMedium)
+
+	// Circular stone brick archway surrounding the round door opening
+	c.DrawCircle(doorCx, doorCy, 19, ColorHearthBrick)
+	c.DrawCircle(doorCx, doorCy, 20, ColorHearthMortar)
+	c.DrawCircle(doorCx, doorCy, 21, ColorWoodDark)
+
+	// Trailing ivy climbing down the curved stone arch
+	for a := 0.0; a < math.Pi; a += 0.2 {
+		ix := doorCx + int(math.Cos(a)*22.0)
+		iy := doorCy - int(math.Sin(a)*22.0)
+		if iy >= 0 && iy < c.Height && ix >= 0 && ix < c.Width {
+			c.FillCircle(ix, iy, 2, ColorLeafDark)
+			c.SetPixel(ix, iy, ColorLeafLight)
+		}
+	}
+
+	// Left: Rustic Riverstone Fireplace (Columns 2 to 16, Rows 16 to 34)
+	renderFireplaceHelper(c, 2, 16, 14, 18, fireOn, frameCount)
+
+	// Suspended Whistling Copper Kettle over hearth
+	c.FillRect(8, 24, 4, 3, ColorCopperKettle)
+	c.DrawLine(8, 23, 11, 23, ColorStoveCastIron) // handle
+	c.SetPixel(12, 24, ColorMugSteam)             // steam spout
+	if fireOn {
+		steamY := 23 - int((frameCount/2)%4)
+		c.SetPixel(13, steamY, ColorMugSteam)
+	}
+
+	// Right: Rustic Wooden Pantry Shelving with Preserve Jam Jars (Columns 58 to 72, Rows 6 to 34)
+	c.FillRect(58, 6, 14, 28, ColorWoodDark)
+	for sy := 12; sy <= 30; sy += 8 {
+		c.FillRect(58, sy, 14, 2, ColorWoodMedium)
+	}
+	// Glowing Jam Jars & Honey Crocks on shelves
+	c.FillRect(60, 8, 3, 4, ColorJamBerry)
+	c.FillRect(64, 8, 3, 4, ColorJamHoney)
+	c.FillRect(68, 8, 3, 4, ColorMatchaGreen)
+	c.FillRect(60, 16, 4, 4, ColorPotClay)    // stoneware crock
+	c.FillRect(66, 16, 3, 4, ColorJamBerry)
+	c.FillRect(60, 24, 4, 4, ColorJamHoney)
+	c.FillRect(66, 24, 4, 4, ColorCopperWaterCan)
+
+	// Center: Round Wooden Tea Table (Columns 26 to 48, Rows 26 to 36)
+	tableX, tableY := 26, 26
+	c.FillRect(tableX, tableY, 22, 10, ColorWoodMedium)
+	c.FillRect(tableX, tableY, 22, 1, ColorWoodHighlight)
+	c.FillRect(tableX+2, tableY+10, 3, 4, ColorWoodDark) // leg
+	c.FillRect(tableX+17, tableY+10, 3, 4, ColorWoodDark) // leg
+
+	// On Table: Spiced Seed Cake with sliced crumbs
+	c.FillCircle(tableX+5, tableY+3, 3, ColorSeedCake)
+	c.SetPixel(tableX+6, tableY+2, ColorBreadFlourDust)
+	c.SetPixel(tableX+9, tableY+4, ColorSeedCake) // crumbs
+
+	// On Table: Steaming Ceramic Teapot & Cup
+	c.FillRect(tableX+12, tableY+1, 4, 3, ColorPotClay)
+	c.FillRect(tableX+17, tableY+2, 2, 2, PicoWhite)
+	c.SetPixel(tableX+17, tableY-1, ColorMugSteam)
+
+	// Round Brass Beeswax Candle with flickering flame
+	c.FillRect(tableX+10, tableY-2, 2, 3, ColorCandleWax)
+	if lampOn {
+		c.SetPixel(tableX+10, tableY-3, ColorFireYellow)
+		c.SetPixel(tableX+10, tableY-4, ColorFireOrange)
+	}
+
+	// Hanging Wrought Iron Ceiling Lantern
+	c.DrawLine(37, 0, 37, 5, ColorStoveCastIron)
+	c.FillRect(35, 5, 5, 4, ColorStoveCastIron)
+	if lampOn {
+		c.FillRect(36, 6, 3, 2, ColorWarmGlow)
+	}
+
+	// Circular braided Persian floor rug
+	c.FillEllipse(doorCx, 42, 24, 8, ColorFloorRugBase)
+	c.DrawEllipse(doorCx, 42, 22, 7, ColorFloorRugBorder)
+	c.DrawEllipse(doorCx, 42, 18, 5, ColorFloorRugGold)
+
+	// FocusBuddy writing in leather journal by table
+	if buddy != nil {
+		buddy.Draw(c, 20, 24, frameCount)
+	}
+
+	// Fluffy Cat curled on the patchwork rug near warm hearth
+	renderCatHelper(c, 24, 40, catBreed, frameCount)
+}
+
+func (s *HobbitBurrowScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	if fireOn {
+		c.ApplyRadialLight(10, 24, 18.0, ColorFireOrange, 0.50)
+	}
+	if lampOn {
+		c.ApplyRadialLight(37, 6, 20.0, ColorWarmGlow, 0.45)
+		c.ApplyRadialLight(37, 24, 14.0, ColorWarmGlow, 0.35)
+	}
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
+	}
+}
+
+// ---------------------------------------------------------
+// 30. JapaneseJazzKissaScene (Rainy Japanese Jazz Kissa & Siphon Bar)
+// ---------------------------------------------------------
+type JapaneseJazzKissaScene struct{}
+
+func (s *JapaneseJazzKissaScene) ID() SceneType       { return SceneCyberBar }
+func (s *JapaneseJazzKissaScene) Name() string     { return "Rainy Japanese Jazz Kissa & Siphon Bar 🎷☕" }
+func (s *JapaneseJazzKissaScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 32, H: 20} }
+
+func (s *JapaneseJazzKissaScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	// Midnight Tokyo alley with soft neon signs through rainy window glass
+	c.DrawVerticalGradient(wx, wy, ww, wh, hex("#050814"), hex("#111827"))
+
+	// Distant neon sign reflections (Rose, Blue, Amber)
+	c.FillRect(wx+4, wy+3, 6, 8, hex("#831843"))
+	c.FillRect(wx+5, wy+4, 4, 6, hex("#f43f5e"))
+	c.FillRect(wx+16, wy+6, 8, 6, hex("#1e3a8a"))
+	c.FillRect(wx+17, wy+7, 6, 4, hex("#38bdf8"))
+	c.FillRect(wx+26, wy+2, 4, 12, hex("#78350f"))
+	c.FillRect(wx+27, wy+3, 2, 10, hex("#f59e0b"))
+
+	// Rain streaks running down the window pane
+	for i := 0; i < 14; i++ {
+		rx := wx + ((i * 7 + int(frameCount)) % ww)
+		ry := wy + ((i * 11 + int(frameCount*2)) % wh)
+		c.SetPixel(rx, ry, ColorRainDrop)
+		if ry+1 < wy+wh {
+			c.SetPixel(rx, ry+1, ColorRainSplash)
+		}
+	}
+}
+
+func (s *JapaneseJazzKissaScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	// Window frame
+	r := s.WindowBounds()
+	c.DrawRectOutline(r.X, r.Y, r.W, r.H, ColorWindowFrame)
+
+	// Wall: Dark acoustic slatted walnut paneling
+	c.FillRect(r.X+r.W, 0, c.Width-(r.X+r.W), 24, ColorWoodDark)
+	for x := r.X + r.W + 2; x < c.Width; x += 3 {
+		c.FillRect(x, 0, 1, 24, ColorWoodPlankSep)
+	}
+
+	// Wall Shelves with Classic Jazz Vinyl Sleeves
+	shelfY := 4
+	c.FillRect(38, shelfY+7, 34, 2, ColorWoodMedium)
+	c.FillRect(40, shelfY, 8, 7, ColorJazzVinylBlue)     // Blue album cover
+	c.FillRect(41, shelfY+1, 6, 5, PicoWhite)
+	c.FillRect(50, shelfY, 8, 7, ColorTrainVelvet)      // Red album cover
+	c.FillRect(51, shelfY+1, 6, 5, ColorParchmentPage)
+	c.FillRect(60, shelfY, 8, 7, ColorStoveCastIron)    // Black/Gold album cover
+	c.FillRect(61, shelfY+1, 6, 5, ColorVinylLabelGold)
+
+	// Polished Dark Walnut Bar Counter (Rows 24 to Height)
+	barY := 24
+	c.FillRect(0, barY, c.Width, c.Height-barY, ColorWoodDark)
+	c.FillRect(0, barY, c.Width, 1, ColorWoodHighlight)
+
+	// 1. Glass Siphon Coffee Maker with Halogen Beam Heater (Columns 6 to 18, Rows 14 to 24)
+	siphonX := 6
+	// Lower glass bulb with boiling coffee
+	c.FillCircle(siphonX+4, 18, 3, ColorSiphonGlass)
+	c.FillCircle(siphonX+4, 19, 2, ColorSiphonBoil)
+	// Halogen heater base
+	c.FillRect(siphonX+1, 21, 7, 3, ColorStoveCastIron)
+	c.FillRect(siphonX+2, 21, 5, 1, ColorHalogenGlow)
+	// Glass siphon center stem and upper bowl
+	c.DrawLine(siphonX+4, 15, siphonX+4, 10, ColorSiphonGlass)
+	c.FillRect(siphonX+2, 9, 5, 5, ColorSiphonGlass)
+	c.FillRect(siphonX+3, 10, 3, 3, ColorSiphonBoil)
+	// Rising coffee steam
+	steamPhase := int((frameCount / 2) % 4)
+	c.SetPixel(siphonX+4, 7-steamPhase, ColorMugSteam)
+	c.SetPixel(siphonX+5, 6-steamPhase, ColorMugSteam)
+
+	// 2. Vintage McIntosh Tube Amplifier with Glowing Twin VU Meters (Columns 24 to 44, Rows 16 to 24)
+	ampX := 24
+	c.FillRect(ampX, 16, 20, 8, ColorStoveCastIron)
+	c.FillRect(ampX+1, 17, 18, 1, ColorEspressoChrome) // faceplate trim
+	// Twin Blue VU Meters
+	c.FillRect(ampX+2, 19, 7, 4, ColorVUMeterBlue)
+	c.FillRect(ampX+11, 19, 7, 4, ColorVUMeterBlue)
+	// Twitching red VU meter needles
+	needle1 := int(math.Abs(math.Sin(float64(frameCount)*0.25+0.5)) * 5.0)
+	needle2 := int(math.Abs(math.Sin(float64(frameCount)*0.28+1.2)) * 5.0)
+	c.DrawLine(ampX+5, 22, ampX+3+needle1, 19, ColorVUNeedleRed)
+	c.DrawLine(ampX+14, 22, ampX+12+needle2, 19, ColorVUNeedleRed)
+	// 4 Glowing vacuum tube filament glass bulbs on top of amp
+	for t := 0; t < 4; t++ {
+		tx := ampX + 3 + t*4
+		c.FillRect(tx, 13, 2, 3, ColorGlassTint)
+		c.SetPixel(tx, 14, ColorVacuumTubeGlow)
+	}
+
+	// 3. Spinning Vinyl Turntable (Columns 48 to 68, Rows 16 to 24)
+	ttX := 48
+	c.FillRect(ttX, 17, 20, 7, ColorTurntableWood)
+	c.FillEllipse(ttX+9, 19, 7, 3, ColorVinylBlack)
+	c.SetPixel(ttX+9, 19, ColorVinylLabelGold)
+	// Tonearm
+	c.DrawLine(ttX+17, 18, ttX+13, 19, ColorEspressoChrome)
+
+	// Brass Gooseneck Lamp illuminating the counter
+	c.DrawLine(20, barY, 20, 10, ColorLampBrass)
+	c.DrawLine(20, 10, 16, 8, ColorLampBrass)
+	c.FillCircle(15, 8, 2, ColorBankerGreen)
+	if lampOn {
+		c.SetPixel(15, 9, ColorFireYellow)
+	}
+
+	// Steaming pour-over ceramic cup
+	c.FillRect(20, 23, 3, 2, ColorMugCeramic)
+	c.SetPixel(21, 22, ColorMugSteam)
+
+	// FocusBuddy listening intently at the bar
+	if buddy != nil {
+		buddy.Draw(c, 52, 22, frameCount)
+	}
+
+	// Sleeping Cat snoozing beside the warm amplifier
+	renderCatHelper(c, 36, 23, catBreed, frameCount)
+}
+
+func (s *JapaneseJazzKissaScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	c.ApplyRadialLight(15, 9, 16.0, ColorWarmGlow, 0.45)
+	c.ApplyRadialLight(34, 18, 14.0, ColorVUMeterBlue, 0.35)
+	c.ApplyRadialLight(10, 20, 12.0, ColorHalogenGlow, 0.40)
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
+	}
+}
+
+// ---------------------------------------------------------
+// 31. StarlitLoftBedScene (Starlit A-Frame Loft Bed & Skylight)
+// ---------------------------------------------------------
+type StarlitLoftBedScene struct{}
+
+func (s *StarlitLoftBedScene) ID() SceneType       { return SceneCloudTemple }
+func (s *StarlitLoftBedScene) Name() string     { return "Starlit A-Frame Loft Bed & Skylight 🌌🛏️" }
+func (s *StarlitLoftBedScene) WindowBounds() Rect { return Rect{X: 12, Y: 0, W: 50, H: 22} }
+
+func (s *StarlitLoftBedScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	var skyTop, skyBot colorful.Color
+	switch tod {
+	case TimeDawn:
+		skyTop, skyBot = ColorSkyDawnTop, ColorSkyDawnBot
+	case TimeDay:
+		skyTop, skyBot = hex("#0284c7"), hex("#bae6fd")
+	case TimeSunset:
+		skyTop, skyBot = ColorSkySunsetTop, ColorSkySunsetBot
+	case TimeNight:
+		skyTop, skyBot = hex("#030712"), hex("#0f172a")
+	}
+	if lightning {
+		skyTop, skyBot = PicoWhite, PicoWhite
+	}
+	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
+
+	// Interstellar Nebula Dust Clouds in Deep Space
+	for x := 0; x < ww; x += 3 {
+		for y := 0; y < wh; y += 2 {
+			nPhase := math.Sin(float64(x)*0.15 + float64(y)*0.2 + float64(frameCount)*0.03)
+			if nPhase > 0.55 {
+				c.SetPixel(wx+x, wy+y, ColorCosmicNebula)
+			} else if nPhase < -0.65 {
+				c.SetPixel(wx+x, wy+y, ColorNordicReflect)
+			}
+		}
+	}
+
+	// Twinkling Constellations
+	for _, star := range stars {
+		if star.X >= wx && star.X < wx+ww && star.Y >= wy && star.Y < wy+wh {
+			twinkle := math.Sin(float64(frameCount)*0.1 + star.Phase)
+			if twinkle > 0.3 {
+				c.SetPixel(star.X, star.Y, ColorStars)
+			}
+		}
+	}
+
+	// Occasional Shooting Star Meteor Streak
+	meteorCycle := int((frameCount / 2) % 40)
+	if meteorCycle < 8 {
+		mx := wx + 10 + meteorCycle*4
+		my := wy + 2 + meteorCycle*2
+		c.SetPixel(mx, my, ColorShootingStar)
+		if mx-1 >= wx && my-1 >= wy {
+			c.SetPixel(mx-1, my-1, hex("#fef9c3"))
+		}
+	}
+}
+
+func (s *StarlitLoftBedScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	// Diagonal A-Frame Cedar Rafter Beams meeting at top center
+	for y := 0; y < 24; y++ {
+		leftX := 37.0 - float64(y)*1.5
+		rightX := 37.0 + float64(y)*1.5
+		if leftX >= 0 {
+			c.FillRect(int(leftX)-2, y, 4, 1, ColorLoftRafterBeam)
+			c.FillRect(0, y, int(leftX)-2, 1, ColorWallPlank)
+		}
+		if rightX < float64(c.Width) {
+			c.FillRect(int(rightX)-2, y, 4, 1, ColorLoftRafterBeam)
+			c.FillRect(int(rightX)+2, y, c.Width-(int(rightX)+2), 1, ColorWallPlank)
+		}
+	}
+
+	// Pulsing Fairy Lights strung along rafters
+	for i := 0; i < 12; i++ {
+		ly := 2 + i*2
+		lx := int(37.0 - float64(ly)*1.5)
+		rx := int(37.0 + float64(ly)*1.5)
+		pulse := math.Sin(float64(frameCount)*0.1 + float64(i)*0.8)
+		if pulse > -0.2 {
+			c.SetPixel(lx, ly, ColorFairyLightAmber)
+			c.SetPixel(rx, ly, ColorFairyLightAmber)
+		}
+	}
+
+	// Floor of Loft Bedroom (Rows 24 to Height)
+	c.FillRect(0, 24, c.Width, c.Height-24, ColorWoodMedium)
+	for y := 24; y < c.Height; y += 3 {
+		c.FillRect(0, y, c.Width, 1, ColorWoodDark)
+	}
+
+	// Massive Cozy Plush Loft Bed with Fluffy White Duvet (Columns 14 to 60, Rows 20 to 34)
+	bedX, bedY := 14, 20
+	// Headboard
+	c.FillRect(bedX, bedY, 46, 4, ColorWoodDark)
+	// Velvet Teal Pillows propped up
+	c.FillRect(bedX+4, bedY+2, 16, 4, ColorDuvetPillowTeal)
+	c.FillRect(bedX+24, bedY+2, 16, 4, ColorDuvetPillowTeal)
+	// Voluminous White Down Duvet comforter with folded edge
+	c.FillRect(bedX, bedY+6, 46, 12, ColorDuvetPlushWhite)
+	c.FillRect(bedX, bedY+6, 46, 2, hex("#e2e8f0")) // duvet fold shadow
+	// Knitted Mustard Wool Throw draped across foot of bed
+	c.FillRect(bedX, bedY+14, 46, 4, ColorBlanketGold)
+	for x := bedX; x < bedX+46; x += 3 {
+		c.SetPixel(x, bedY+15, ColorWoodHighlight)
+	}
+
+	// Bedside Cedar Nightstand (Columns 2 to 12, Rows 22 to 34)
+	nsX := 2
+	c.FillRect(nsX, 22, 10, 12, ColorWoodDark)
+	c.FillRect(nsX, 22, 10, 1, ColorWoodHighlight)
+	// Gooseneck reading lamp
+	c.DrawLine(nsX+2, 22, nsX+2, 16, ColorLampBrass)
+	c.FillCircle(nsX+4, 15, 2, ColorBankerGreen)
+	if lampOn {
+		c.SetPixel(nsX+4, 16, ColorFireYellow)
+	}
+	// Open paperback book & steaming chamomile tea mug
+	c.FillRect(nsX+6, 21, 3, 2, ColorParchmentPage)
+	c.FillRect(nsX+2, 21, 2, 2, ColorMugCeramic)
+	c.SetPixel(nsX+2, 20, ColorMugSteam)
+
+	// Hanging macrame spider plant from rafter
+	c.DrawLine(64, 12, 64, 18, ColorMacrameHanger)
+	c.FillCircle(64, 19, 2, ColorPotClay)
+	c.FillCircle(64, 18, 3, ColorLeafLight)
+
+	// FocusBuddy tucked in bed reading peacefully
+	if buddy != nil {
+		buddy.Draw(c, 24, 16, frameCount)
+	}
+
+	// Sleeping Cat Companion curled up at the foot of the duvet
+	renderCatHelper(c, 44, 28, catBreed, frameCount)
+}
+
+func (s *StarlitLoftBedScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	if lampOn {
+		c.ApplyRadialLight(6, 16, 16.0, ColorWarmGlow, 0.50)
+	}
+	c.ApplyRadialLight(37, 8, 22.0, ColorFairyLightAmber, 0.35)
+	c.ApplyRadialLight(44, 28, 14.0, ColorBlanketGold, 0.25)
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
+	}
+}
+
+// ---------------------------------------------------------
+// 32. AlchemistTowerScene (Alchemist's Starlit Tower & Astrolabe)
+// ---------------------------------------------------------
+type AlchemistTowerScene struct{}
+
+func (s *AlchemistTowerScene) ID() SceneType       { return SceneWizardTower }
+func (s *AlchemistTowerScene) Name() string     { return "Alchemist's Starlit Tower & Astrolabe 🔮✨" }
+func (s *AlchemistTowerScene) WindowBounds() Rect { return Rect{X: 18, Y: 2, W: 38, H: 20} }
+
+func (s *AlchemistTowerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	var skyTop, skyBot colorful.Color
+	switch tod {
+	case TimeDawn:
+		skyTop, skyBot = ColorSkyDawnTop, ColorSkyDawnBot
+	case TimeDay:
+		skyTop, skyBot = hex("#1e1b4b"), hex("#3b0764")
+	case TimeSunset:
+		skyTop, skyBot = ColorSkySunsetTop, ColorSkySunsetBot
+	case TimeNight:
+		skyTop, skyBot = hex("#050510"), hex("#0f0c29")
+	}
+	if lightning {
+		skyTop, skyBot = PicoWhite, PicoWhite
+	}
+	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
+
+	// Golden Crescent Moon
+	c.FillCircle(wx+ww-8, wy+6, 5, ColorVinylLabelGold)
+	c.FillCircle(wx+ww-6, wy+5, 4, skyTop)
+
+	// Twinkling stars & galaxy swirl
+	for _, star := range stars {
+		if star.X >= wx && star.X < wx+ww && star.Y >= wy && star.Y < wy+wh {
+			twinkle := math.Sin(float64(frameCount)*0.12 + star.Phase)
+			if twinkle > 0.25 {
+				c.SetPixel(star.X, star.Y, ColorStars)
+			}
+		}
+	}
+
+	// Sea of clouds illuminated by moonlight beneath the tower
+	for x := 0; x < ww; x += 2 {
+		cHeight := int(math.Sin(float64(x)*0.15+float64(frameCount)*0.02)*2.0) + 4
+		c.FillRect(wx+x, wy+wh-cHeight, 2, cHeight, hex("#334155"))
+		c.SetPixel(wx+x, wy+wh-cHeight, hex("#64748b"))
+	}
+}
+
+func (s *AlchemistTowerScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	// Gothic Arched Granite Window & Stone Walls
+	r := s.WindowBounds()
+	c.FillRect(0, 0, r.X, c.Height, ColorGothicArchStone)
+	c.FillRect(r.X+r.W, 0, c.Width-(r.X+r.W), c.Height, ColorGothicArchStone)
+	c.FillRect(r.X, 0, r.W, r.Y, ColorGothicArchStone)
+	c.DrawRectOutline(r.X, r.Y, r.W, r.H, hex("#1e293b"))
+
+	// Gothic Arch framing
+	archCx := r.X + r.W/2
+	c.DrawArc(archCx, r.Y+4, 18, 0, math.Pi, hex("#1e293b"))
+
+	// Hanging Iridescent Crystal Prisms refract rainbow flare
+	for i, cx := range []int{8, 12, 62, 66} {
+		c.DrawLine(cx, 0, cx, 8+i*2, ColorBrassPendulum)
+		c.FillCircle(cx, 9+i*2, 2, ColorCrystalPrismCyan)
+		if (int(frameCount)+i*3)%6 < 3 {
+			c.SetPixel(cx+1, 10+i*2, ColorCrystalPrismPink)
+		}
+	}
+
+	// Rotating Brass Astrolabe / Celestial Armillary Sphere in Window
+	astroCx, astroCy := archCx, 10
+	rotPhase := float64(frameCount) * 0.05
+	astroR := 7.0
+	c.DrawCircle(astroCx, astroCy, int(astroR), ColorAstrolabeBrass)
+	c.DrawEllipse(astroCx, astroCy, int(astroR*math.Abs(math.Cos(rotPhase))), int(astroR), ColorAstrolabeBrass)
+	c.DrawEllipse(astroCx, astroCy, int(astroR), int(astroR*math.Abs(math.Sin(rotPhase))), ColorAstrolabeBrass)
+	c.FillCircle(astroCx, astroCy, 2, ColorVinylLabelGold) // Central Sun orb
+
+	// Heavy Carved Oak Workbench (Rows 22 to Height)
+	benchY := 22
+	c.FillRect(0, benchY, c.Width, c.Height-benchY, ColorWoodDark)
+	c.FillRect(0, benchY, c.Width, 1, ColorWoodHighlight)
+
+	// 1. Alchemical Glass Alembic & Glowing Flasks (Columns 4 to 22, Rows 14 to 22)
+	// Glass retort with bubbling amethyst elixir
+	c.FillCircle(8, 17, 3, ColorPotionAmethyst)
+	c.DrawLine(8, 14, 14, 17, ColorGlassTint) // condenser tube
+	c.FillCircle(15, 18, 2, ColorPotionEmerald)
+	// Micro-bubbles rising
+	bY := 17 - int((frameCount/2)%3)
+	c.SetPixel(8, bY, ColorMugSteam)
+
+	// 2. Brass Crucible Stand with Azure Flame (Columns 20 to 28, Rows 16 to 22)
+	crucX := 22
+	c.FillRect(crucX, 18, 6, 4, ColorStoveCastIron)
+	c.FillRect(crucX+1, 17, 4, 2, ColorLampBrass)
+	if fireOn {
+		c.SetPixel(crucX+2, 19, ColorCrucibleFire)
+		c.SetPixel(crucX+3, 19, PicoCyan)
+		c.SetPixel(crucX+2, 18, ColorMugSteam)
+	}
+
+	// 3. Ancient Leatherbound Grimoire & Open Astrological Star Scroll (Columns 30 to 48, Rows 18 to 22)
+	c.FillRect(32, 19, 8, 3, ColorGrimoireLeather)
+	c.FillRect(33, 18, 6, 1, ColorBookGoldGilt)
+	c.FillRect(42, 19, 10, 3, ColorParchmentPage)
+	c.SetPixel(44, 20, ColorStoveCastIron) // glyph
+	c.SetPixel(47, 20, ColorStoveCastIron) // glyph
+
+	// 4. Candle Sconces on Stone Wall (Left & Right)
+	c.FillRect(4, 8, 2, 4, ColorCandleWax)
+	c.FillRect(68, 8, 2, 4, ColorCandleWax)
+	if lampOn {
+		c.SetPixel(4, 7, ColorFireYellow)
+		c.SetPixel(4, 6, ColorFireOrange)
+		c.SetPixel(68, 7, ColorFireYellow)
+		c.SetPixel(68, 6, ColorFireOrange)
+	}
+
+	// FocusBuddy Alchemist studying the star scroll
+	if buddy != nil {
+		buddy.Draw(c, 36, 16, frameCount)
+	}
+
+	// Midnight Black Cat sitting majestically atop a stack of grimoires with glowing eyes
+	c.FillRect(56, 18, 10, 4, ColorLeatherBurgundy)
+	renderCatHelper(c, 58, 16, CatBlack, frameCount)
+}
+
+func (s *AlchemistTowerScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	if lampOn {
+		c.ApplyRadialLight(4, 7, 14.0, ColorWarmGlow, 0.45)
+		c.ApplyRadialLight(68, 7, 14.0, ColorWarmGlow, 0.45)
+	}
+	c.ApplyRadialLight(37, 10, 18.0, ColorAstrolabeBrass, 0.40)
+	c.ApplyRadialLight(8, 17, 12.0, ColorPotionAmethyst, 0.35)
+	if fireOn {
+		c.ApplyRadialLight(24, 18, 14.0, ColorCrucibleFire, 0.45)
+	}
 	if lightning {
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
 	}
