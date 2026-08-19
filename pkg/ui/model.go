@@ -330,7 +330,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.SetStatusMsg(petMsg)
 				}
 			} else if m.ActiveTab == TabArt {
-				// Canvas click -> Pet cat companion
+				// Canvas click -> Drop soothing energy ripple & pet cat companion
+				canvasClickX := msg.X - 2
+				canvasClickY := (msg.Y - 4) * 2
+				m.Scene.TriggerCanvasRippleHex(canvasClickX, canvasClickY, string(m.Styles.Theme.Highlight))
 				petMsg := m.Scene.PetCat()
 				m.SetStatusMsg(petMsg)
 			}

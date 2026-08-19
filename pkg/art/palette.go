@@ -188,10 +188,47 @@ var (
 	ColorFairyLightAmber = hex("#ffe66d") // String Fairy Light Glow
 	ColorCushionPlush    = hex("#9b5de5") // Deep Purple Floor Cushion
 	ColorSunkenPitStone  = hex("#495057") // Sunken Hearth Pit Flagstones
+
+	// Midnight Tokyo Ramen Bar & Izakaya
+	ColorRamenBowl       = hex("#f8f9fa") // Ceramic White Ramen Bowl
+	ColorRamenBroth      = hex("#d4a373") // Golden Tonkotsu Miso Broth
+	ColorRamenNori       = hex("#141e1b") // Crisp Roasted Nori Seaweed
+	ColorRamenEgg        = hex("#ffd166") // Soft-Boiled Ajitsuke Egg Yolk
+	ColorRamenNaruto     = hex("#ff758f") // Pink Swirl Narutomaki Fishcake
+	ColorLanternRed      = hex("#e63946") // Glowing Crimson Chochin Paper Lantern
+	ColorLanternGlow     = hex("#ff4d6d") // Chochin Radial Ambient Glow
+	ColorNorenIndigo     = hex("#1d3557") // Indigo Noren Fabric Drape
+	ColorMenuWoodPlank   = hex("#c29a6a") // Hanging Wooden Menu Slats
+
+	// Witch's Botanical Herbal Apothecary
+	ColorPotionAmethyst  = hex("#9d4edd") // Bioluminescent Amethyst Elixir
+	ColorPotionEmerald   = hex("#06d6a0") // Shimmering Emerald Herbal Tincture
+	ColorPotionAmber     = hex("#ffb703") // Golden Solar Essence Potion
+	ColorHerbSage        = hex("#709775") // Dried Hanging Sage Bundle
+	ColorHerbRosemary    = hex("#415d43") // Dried Hanging Rosemary Twigs
+	ColorCauldronBrass   = hex("#ca6702") // Polished Brass Brewing Kettle
+	ColorGrimoireLeather = hex("#3d2618") // Ancient Botanical Grimoire Cover
+
+	// Nordic Fjord Pier & Aurora Sauna
+	ColorAuroraGreen     = hex("#52b788") // Undulating Emerald Aurora Streamer
+	ColorAuroraViolet    = hex("#b5179e") // Waving Purple-Pink Aurora Ribbon
+	ColorNordicWaterDeep = hex("#050c1a") // Mirror Fjord Abyssal Water
+	ColorNordicReflect   = hex("#1b4332") // Aurora Green Water Shimmer
+	ColorSaunaWood       = hex("#cb997e") // Cedar Log Sauna Timbers
+	ColorDockPlanks      = hex("#4a4e69") // Snow-Dusted Pier Planks
+
+	// Starlit Urban Rooftop Study
+	ColorPergolaWood     = hex("#3e2723") // Dark Timber Pergola Beams
+	ColorTelescopeBrass  = hex("#e0a96d") // Polished Brass Refractor Telescope
+	ColorCityBokehGold   = hex("#ffd166") // Distant Skyline Window Light
+	ColorCityBokehCyan   = hex("#4cc9f0") // Distant Skyline Neon Glow
+	ColorThermosSteel    = hex("#457b9d") // Insulated Midnight Thermos
+	ColorBohoRug         = hex("#e76f51") // Patterned Bohemian Floor Rug
 )
 
 func hex(s string) colorful.Color {
 	c, _ := colorful.Hex(s)
 	return c
 }
+
 
