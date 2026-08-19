@@ -21,7 +21,7 @@ func CategorizeScene(st SceneType) int {
 	switch {
 	case strings.Contains(name, "cyber") || strings.Contains(name, "matrix") || strings.Contains(name, "neon") || strings.Contains(name, "kirokaze"):
 		return 2
-	case strings.Contains(name, "zen") || strings.Contains(name, "bamboo") || strings.Contains(name, "shrine") || strings.Contains(name, "torii") || strings.Contains(name, "waterfall") || strings.Contains(name, "cherry") || strings.Contains(name, "bonsai") || strings.Contains(name, "grove") || strings.Contains(name, "lotus") || strings.Contains(name, "garden"):
+	case strings.Contains(name, "zen") || strings.Contains(name, "bamboo") || strings.Contains(name, "shrine") || strings.Contains(name, "torii") || strings.Contains(name, "waterfall") || strings.Contains(name, "cherry") || strings.Contains(name, "bonsai") || strings.Contains(name, "grove") || strings.Contains(name, "lotus") || strings.Contains(name, "garden") || strings.Contains(name, "onsen"):
 		return 3
 	case strings.Contains(name, "observatory") || strings.Contains(name, "space") || strings.Contains(name, "nebula") || strings.Contains(name, "astral") || strings.Contains(name, "zodiac") || strings.Contains(name, "alien") || strings.Contains(name, "stargate") || strings.Contains(name, "cosmos") || strings.Contains(name, "stargazing") || strings.Contains(name, "abyssal") || strings.Contains(name, "deep sea"):
 		return 4

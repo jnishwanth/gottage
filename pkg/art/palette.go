@@ -157,6 +157,37 @@ var (
 	ColorBrickOvenStone = hex("#584b42") // Rustic Oven Masonry
 	ColorGarlicBraid    = hex("#e9ecef") // Braided Garlic Bulbs
 	ColorCopperKettle   = hex("#ca6702") // Whistling Copper Kettle
+
+	// Vintage Lofi Train Carriage
+	ColorTrainVelvet     = hex("#5c1d24") // Deep Burgundy Velvet Seat
+	ColorTrainVelvetDark = hex("#3a0f14") // Velvet Button Shadow
+	ColorTrainBrass      = hex("#d4af37") // Polished Brass Luggage Rack & Sconce
+	ColorTrainLuggage    = hex("#7f4f24") // Leather Traveling Valise
+	ColorTrainTelegraph  = hex("#334155") // Passing Utility Pole Timber
+	ColorCassetteTape    = hex("#2b2d42") // Portable Cassette Player Body
+	ColorCassetteReel    = hex("#edf2f4") // Spinning Tape Reels
+
+	// Moonlit Mountain Hot Spring Onsen
+	ColorHinokiWood      = hex("#d4a373") // Fragrant Hinoki Cedar Tub
+	ColorHinokiDark      = hex("#8c5835") // Hinoki Plank Seam
+	ColorOnsenSteam      = hex("#f0f3f4") // Rising Geothermal Vapor
+	ColorOnsenWaterMid   = hex("#2a9d8f") // Mineral Hot Spring Water
+	ColorOnsenWaterDeep  = hex("#1d3557") // Deep Pool Shading
+	ColorMossGreen       = hex("#40916c") // River Stone Moss
+
+	// Rainy Midnight Vinyl Lounge
+	ColorTurntableWood   = hex("#4a2810") // Walnut Hi-Fi Credenza
+	ColorVinylBlack      = hex("#111111") // Grooved Vinyl LP Record
+	ColorVinylLabelGold  = hex("#ffb703") // Spinning Record Center Label
+	ColorVacuumTubeGlow  = hex("#ff9e00") // Glowing Tube Amp Cathode
+	ColorGuitarWood      = hex("#b07d4b") // Acoustic Guitar Spruce Body
+
+	// Sunken Hearth Blanket Fort
+	ColorBlanketGold     = hex("#e09f3e") // Knitted Mustard Throw Blanket
+	ColorBlanketTeal     = hex("#3d5a80") // Patchwork Velvet Cushion
+	ColorFairyLightAmber = hex("#ffe66d") // String Fairy Light Glow
+	ColorCushionPlush    = hex("#9b5de5") // Deep Purple Floor Cushion
+	ColorSunkenPitStone  = hex("#495057") // Sunken Hearth Pit Flagstones
 )
 
 func hex(s string) colorful.Color {

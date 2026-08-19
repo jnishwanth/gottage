@@ -211,14 +211,29 @@ func (m Model) renderHeader() string {
 	}
 	st := m.CLIAMP.GetStatus()
 	if st.Playing {
-		headerBadges = append(headerBadges, m.Styles.StatusBadge.Render(" 🎵 Playing "))
+		miniSpec := RenderAudioSpectrum(6, true, m.Scene.FrameCount, SpectrumBars, m.Styles.BoldAccent)
+		headerBadges = append(headerBadges, m.Styles.StatusBadge.Render(" 🎵 "+miniSpec+" "))
 	}
-	headerBadges = append(headerBadges, m.Styles.MutedText.Render(fmt.Sprintf("🐾 %d%% Bliss", m.Scene.CatBliss)))
+	headerBadges = append(headerBadges, m.Styles.MutedText.Render(m.catBlissBadge()))
 	headerBadges = append(headerBadges, themeBadge)
 
 	badgeBar := strings.Join(headerBadges, "  ")
 
 	return lipgloss.JoinHorizontal(lipgloss.Center, title, "   ", badgeBar, "     ", tabBar)
+}
+
+func (m Model) catBlissBadge() string {
+	b := m.Scene.CatBliss
+	switch {
+	case b >= 90:
+		return fmt.Sprintf("😻 %d%% Euphoric", b)
+	case b >= 70:
+		return fmt.Sprintf("😸 %d%% Blissful", b)
+	case b >= 40:
+		return fmt.Sprintf("😺 %d%% Content", b)
+	default:
+		return fmt.Sprintf("🐱 %d%% Sleepy", b)
+	}
 }
 
 func (m Model) renderArtView() string {
@@ -653,10 +668,10 @@ func (m Model) renderZenView() string {
 		m.Styles.PillBadge.Render("🕒 "+time.Now().Format("15:04:05")),
 	)
 
-	statusLine := fmt.Sprintf("⏱️ %s (%s)  │  🐾 %d%% Bliss  │  🧘 %s %s  │  🎵 %s",
+	statusLine := fmt.Sprintf("⏱️ %s (%s)  │  %s  │  🧘 %s %s  │  🎵 %s",
 		m.Styles.BoldAccent.Render(m.Timer.FormattedTime()),
 		m.timerStateStr(),
-		m.Scene.CatBliss,
+		m.Styles.BoldAccent.Render(m.catBlissBadge()),
 		m.Styles.Title.Render(breath.PhaseName),
 		m.Styles.Header.Render(breath.RingVisual),
 		spec,
