@@ -113,7 +113,7 @@ func NewModel() Model {
 	pi.Width = 36
 
 	styles := NewStyles(ThemeCozyAutumn)
-	scene := art.NewCottageScene(160, 90)
+	scene := art.NewCottageScene(74, 52)
 
 	favs := make(map[art.SceneType]bool)
 	favs[art.SceneRainyCity] = true

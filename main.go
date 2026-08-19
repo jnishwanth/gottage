@@ -19,7 +19,7 @@ func main() {
 	flag.Parse()
 
 	if *demoFlag {
-		scene := art.NewCottageScene(74, 68)
+		scene := art.NewCottageScene(74, 52)
 		if *weatherFlag != "" {
 			switch *weatherFlag {
 			case "clear":

@@ -33,7 +33,7 @@ func NewFocusBuddy() *FocusBuddy {
 	}
 }
 
-// Draw renders the animated 16-bit focus companion at (cx, cy) on the 160x90 canvas.
+// Draw renders the animated 16-bit focus companion at (cx, cy) on the canvas.
 func (fb *FocusBuddy) Draw(c *Canvas, cx, cy int, frameCount uint64) {
 	cycle := frameCount % 240
 	var state CharacterState
@@ -53,43 +53,43 @@ func (fb *FocusBuddy) Draw(c *Canvas, cx, cy int, frameCount uint64) {
 	}
 
 	// 1. Chair & Backrest
-	c.FillRect(cx+6, cy+18, 16, 18, PicoBlack)
-	c.FillRect(cx+4, cy+26, 4, 18, PicoDarkGrey)
-	c.FillRect(cx+20, cy+26, 4, 18, PicoDarkGrey)
+	c.FillRect(cx+2, cy+8, 8, 8, PicoBlack)
+	c.FillRect(cx+1, cy+12, 2, 8, PicoDarkGrey)
+	c.FillRect(cx+9, cy+12, 2, 8, PicoDarkGrey)
 
 	// 2. Body / Cozy Hoodie (Sitting at desk)
-	c.FillRect(cx+4, cy+8+breathY, 20, 20, fb.HoodieCol)
-	c.DrawRectOutline(cx+4, cy+8+breathY, 20, 20, PicoBlack)
-	c.FillRect(cx+8, cy+8+breathY, 12, 4, PicoNavy) // Hood collar
+	c.FillRect(cx+2, cy+4+breathY, 10, 10, fb.HoodieCol)
+	c.DrawRectOutline(cx+2, cy+4+breathY, 10, 10, PicoBlack)
+	c.FillRect(cx+4, cy+4+breathY, 6, 2, PicoNavy) // Hood collar
 
-	// 3. Head & Hair (HD Pixel details)
-	c.FillRect(cx+8, cy-4+breathY, 14, 12, fb.SkinCol)  // Face
-	c.FillRect(cx+6, cy-8+breathY, 18, 6, fb.HairCol)   // Hair top
-	c.FillRect(cx+6, cy-4+breathY, 6, 8, fb.HairCol)    // Hair side
-	c.FillRect(cx+16, cy+breathY, 2, 2, PicoBlack)      // Eye focused on work
+	// 3. Head & Hair (Pixel details)
+	c.FillRect(cx+4, cy-2+breathY, 7, 6, fb.SkinCol)  // Face
+	c.FillRect(cx+3, cy-5+breathY, 9, 4, fb.HairCol)  // Hair top
+	c.FillRect(cx+3, cy-2+breathY, 2, 4, fb.HairCol)  // Hair side
+	c.FillRect(cx+8, cy+breathY, 1, 1, PicoBlack)     // Eye focused on work
 
 	// 4. State-dependent Arms & Actions
 	switch state {
 	case StateTyping:
 		armTick := (frameCount / 4) % 2
 		if armTick == 0 {
-			c.FillRect(cx+16, cy+14+breathY, 10, 4, fb.HoodieCol)
-			c.FillRect(cx+24, cy+16+breathY, 6, 4, fb.SkinCol) // Hands on keyboard
+			c.FillRect(cx+8, cy+7+breathY, 5, 2, fb.HoodieCol)
+			c.FillRect(cx+12, cy+8+breathY, 2, 2, fb.SkinCol) // Hands on keyboard
 		} else {
-			c.FillRect(cx+16, cy+12+breathY, 10, 4, fb.HoodieCol)
-			c.FillRect(cx+24, cy+14+breathY, 6, 4, fb.SkinCol)
+			c.FillRect(cx+8, cy+6+breathY, 5, 2, fb.HoodieCol)
+			c.FillRect(cx+12, cy+7+breathY, 2, 2, fb.SkinCol)
 		}
 
 	case StateWriting:
 		writeTick := (frameCount / 6) % 2
-		c.FillRect(cx+16, cy+14+breathY, 8, 4, fb.HoodieCol)
-		c.FillRect(cx+22+int(writeTick)*2, cy+16+breathY, 6, 4, fb.SkinCol)
-		c.FillRect(cx+26+int(writeTick)*2, cy+16+breathY, 2, 2, PicoYellow) // Pen
+		c.FillRect(cx+8, cy+7+breathY, 4, 2, fb.HoodieCol)
+		c.FillRect(cx+11+int(writeTick), cy+8+breathY, 2, 2, fb.SkinCol)
+		c.FillRect(cx+13+int(writeTick), cy+8+breathY, 1, 1, PicoYellow) // Pen
 
 	case StateSipping:
-		c.FillRect(cx+14, cy+4+breathY, 6, 8, fb.HoodieCol)
-		c.FillRect(cx+16, cy+2+breathY, 4, 4, fb.SkinCol)
-		c.FillRect(cx+18, cy+breathY, 6, 6, PicoRed) // Red lofi mug to lips
-		c.SetPixel(cx+18, cy+breathY, PicoWhite)
+		c.FillRect(cx+7, cy+2+breathY, 3, 4, fb.HoodieCol)
+		c.FillRect(cx+9, cy+1+breathY, 2, 2, fb.SkinCol)
+		c.FillRect(cx+10, cy+breathY, 3, 3, PicoRed) // Red lofi mug to lips
+		c.SetPixel(cx+10, cy+breathY, PicoWhite)
 	}
 }

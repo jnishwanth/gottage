@@ -413,14 +413,14 @@ func (cs *CottageScene) PetCat() string {
 	}
 	cs.LastPetTime = time.Now()
 
-	cx := 74
-	cy := 70
+	cx := 48
+	cy := 44
 	if cs.Canvas != nil {
 		if cx >= cs.Canvas.Width {
-			cx = cs.Canvas.Width - 10
+			cx = cs.Canvas.Width - 8
 		}
 		if cy >= cs.Canvas.Height {
-			cy = cs.Canvas.Height - 10
+			cy = cs.Canvas.Height - 8
 		}
 	}
 
@@ -664,9 +664,15 @@ func (cs *CottageScene) Update() {
 
 	// Mug Steam Physics
 	if cs.rng.Float64() < 0.25 {
+		mugX := 22.0
+		if cs.CurrentScene == SceneRainyCity {
+			mugX = 30.0
+		} else if cs.CurrentScene == SceneForestCabin {
+			mugX = 28.0
+		}
 		cs.SteamParticles = append(cs.SteamParticles, Particle{
-			X:       19.0 + (cs.rng.Float64()-0.5)*0.8,
-			Y:       42.0,
+			X:       mugX + (cs.rng.Float64()-0.5)*0.8,
+			Y:       30.0,
 			Vx:      (cs.rng.Float64() - 0.4) * 0.15,
 			Vy:      -0.2 - cs.rng.Float64()*0.15,
 			Life:    0,
@@ -679,7 +685,7 @@ func (cs *CottageScene) Update() {
 		st.Life++
 		st.X += st.Vx
 		st.Y += st.Vy
-		if st.Life >= st.MaxLife || st.Y < 34 {
+		if st.Life >= st.MaxLife || st.Y < 22 {
 			cs.SteamParticles = append(cs.SteamParticles[:i], cs.SteamParticles[i+1:]...)
 		}
 	}

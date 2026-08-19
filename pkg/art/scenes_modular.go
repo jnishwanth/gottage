@@ -2193,9 +2193,9 @@ func (s *AnimatedGifScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type CityCafeScene struct{}
 
-func (s *CityCafeScene) ID() SceneType { return SceneRainyCity }
-func (s *CityCafeScene) Name() string { return "Rainy City Lofi Cafe 🏙️" }
-func (s *CityCafeScene) WindowBounds() Rect { return Rect{X: 20, Y: 8, W: 120, H: 54} }
+func (s *CityCafeScene) ID() SceneType       { return SceneRainyCity }
+func (s *CityCafeScene) Name() string     { return "Rainy City Lofi Cafe 🏙️" }
+func (s *CityCafeScene) WindowBounds() Rect { return Rect{X: 8, Y: 4, W: 58, H: 30} }
 
 func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
 	r := s.WindowBounds()
@@ -2222,17 +2222,17 @@ func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, fram
 	bldgColors := []colorful.Color{hex("#141824"), hex("#1a2238"), hex("#0d111a")}
 	windowColors := []colorful.Color{ColorWarmGlow, ColorLampBrass, hex("#74c0fc"), hex("#ffd166")}
 
-	for b := 0; b < 12; b++ {
-		bx := wx + b*10 + 2
-		bw := 9
-		bh := 18 + ((b*17+7)%26)
+	for b := 0; b < 8; b++ {
+		bx := wx + b*7 + 1
+		bw := 6
+		bh := 12 + ((b*13+5)%15)
 		c.FillRect(bx, wy+wh-bh, bw, bh, bldgColors[b%3])
 
 		// Warm illuminated apartment windows
 		if tod == TimeNight || tod == TimeSunset || tod == TimeDawn {
-			for wyPos := wy + wh - bh + 3; wyPos < wy+wh-3; wyPos += 4 {
-				for wxPos := bx + 2; wxPos < bx+bw-2; wxPos += 2 {
-					if (wxPos*3+wyPos*7+b)%5 != 0 {
+			for wyPos := wy + wh - bh + 2; wyPos < wy+wh-2; wyPos += 3 {
+				for wxPos := bx + 1; wxPos < bx+bw-1; wxPos += 2 {
+					if (wxPos*3+wyPos*7+b)%4 != 0 {
 						wCol := windowColors[(wxPos+wyPos+int(frameCount/30))%len(windowColors)]
 						c.SetPixel(wxPos, wyPos, wCol)
 					}
@@ -2247,11 +2247,11 @@ func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, fram
 		if (frameCount/20)%2 == 0 {
 			neonCol = hex("#ffd166")
 		}
-		c.FillRect(wx+8, wy+8, 22, 5, hex("#101424"))
-		c.DrawGlyph(wx+10, (wy+9)/2, 'C', neonCol)
-		c.DrawGlyph(wx+12, (wy+9)/2, 'A', neonCol)
-		c.DrawGlyph(wx+14, (wy+9)/2, 'F', neonCol)
-		c.DrawGlyph(wx+16, (wy+9)/2, 'E', neonCol)
+		c.FillRect(wx+4, wy+4, 14, 4, hex("#101424"))
+		c.DrawGlyph(wx+5, (wy+5)/2, 'C', neonCol)
+		c.DrawGlyph(wx+7, (wy+5)/2, 'A', neonCol)
+		c.DrawGlyph(wx+9, (wy+5)/2, 'F', neonCol)
+		c.DrawGlyph(wx+11, (wy+5)/2, 'E', neonCol)
 	}
 }
 
@@ -2260,8 +2260,8 @@ func (s *CityCafeScene) RenderForeground(c *Canvas, frameCount uint64, buddy *Fo
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
 	// Cafe Interior walls
-	c.DrawVerticalGradient(0, 0, wx-1, 62, ColorWoodDark, ColorWallWarm)
-	c.DrawVerticalGradient(wx+ww+1, 0, c.Width-(wx+ww+1), 62, ColorWoodDark, ColorWallWarm)
+	c.DrawVerticalGradient(0, 0, wx-1, 38, ColorWoodDark, ColorWallWarm)
+	c.DrawVerticalGradient(wx+ww+1, 0, c.Width-(wx+ww+1), 38, ColorWoodDark, ColorWallWarm)
 	c.FillRect(0, 0, c.Width, wy-1, ColorWoodDark)
 
 	// Sleek steel window frame with condensation mullions
@@ -2270,45 +2270,45 @@ func (s *CityCafeScene) RenderForeground(c *Canvas, frameCount uint64, buddy *Fo
 	c.FillRect(wx, wy+wh/2-1, ww, 2, ColorWoodDark)
 
 	// Window sill with potted succulent
-	c.FillRect(wx, wy+wh-2, ww, 3, ColorWoodMedium)
-	renderPottedSucculent(c, wx+8, wy+wh-6)
+	c.FillRect(wx, wy+wh-1, ww, 2, ColorWoodMedium)
+	renderPottedSucculent(c, wx+4, wy+wh-4)
 
-	// Polished Mahogany Cafe Bar Counter (Rows 60 to c.Height-1)
-	c.FillRect(0, 60, c.Width, c.Height-60, ColorWoodDark)
-	c.FillRect(0, 60, c.Width, 2, ColorWoodHighlight)
-	c.FillRect(0, 62, c.Width, 1, ColorWoodPlankSep)
+	// Polished Mahogany Cafe Bar Counter (Rows 36 to c.Height-1)
+	c.FillRect(0, 36, c.Width, c.Height-36, ColorWoodDark)
+	c.FillRect(0, 36, c.Width, 1, ColorWoodHighlight)
+	c.FillRect(0, 38, c.Width, 1, ColorWoodPlankSep)
 
 	// Espresso machine on left counter
-	c.FillRect(4, 46, 14, 14, ColorWoodDark)
-	c.FillRect(6, 48, 10, 10, hex("#343a40"))
-	c.FillRect(8, 44, 4, 3, ColorLampBrass) // brass boiler dome
-	c.SetPixel(7, 54, ColorWarmGlow)       // power lamp
+	c.FillRect(2, 26, 8, 10, ColorWoodDark)
+	c.FillRect(3, 28, 6, 8, hex("#343a40"))
+	c.FillRect(4, 24, 4, 2, ColorLampBrass) // brass boiler dome
+	c.SetPixel(3, 33, ColorWarmGlow)        // power lamp
 
 	// Focus buddy studying at cafe bar
 	if buddy != nil {
-		buddy.Draw(c, 52, 34, frameCount)
+		buddy.Draw(c, 18, 20, frameCount)
 	}
 
 	// Glowing modern laptop on bar counter
-	c.FillRect(82, 48, 24, 12, hex("#212529"))
-	c.FillRect(84, 50, 20, 8, hex("#74c0fc"))
+	c.FillRect(34, 28, 14, 8, hex("#212529"))
+	c.FillRect(35, 29, 12, 5, hex("#74c0fc"))
 	// Animated code editor syntax lines
 	for l := 0; l < 3; l++ {
-		c.FillRect(86, 52+l*2, 6+l*4, 1, hex("#a6e3a1"))
+		c.FillRect(36, 30+l, 3+l*2, 1, hex("#a6e3a1"))
 	}
-	c.FillRect(78, 59, 32, 2, hex("#ced4da")) // keyboard base
+	c.FillRect(32, 35, 18, 2, hex("#ced4da")) // keyboard base
 
 	// Steaming Latte / Matcha Mug
-	c.FillRect(74, 53, 5, 6, ColorMugCeramic)
-	c.SetPixel(75, 53, ColorMugSteam) // latte foam dot
+	c.FillRect(30, 31, 3, 4, ColorMugCeramic)
+	c.SetPixel(30, 31, ColorMugSteam) // latte foam dot
 
 	// Sleeping cafe cat curled on right bar stool
-	renderCatHelper(c, 126, 64, catBreed, frameCount)
+	renderCatHelper(c, 56, 39, catBreed, frameCount)
 }
 
 func (s *CityCafeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
 	if lampOn {
-		c.ApplyLightCone(86, 46, 28, 24, ColorWarmGlow, 0.35)
+		c.ApplyLightCone(38, 26, 18, 16, ColorWarmGlow, 0.35)
 	}
 	if lightning {
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
@@ -2320,9 +2320,9 @@ func (s *CityCafeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool)
 // ---------------------------------------------------------
 type ForestCabinScene struct{}
 
-func (s *ForestCabinScene) ID() SceneType { return SceneForestCabin }
-func (s *ForestCabinScene) Name() string { return "Forest Sanctuary Cabin 🌲" }
-func (s *ForestCabinScene) WindowBounds() Rect { return Rect{X: 24, Y: 8, W: 112, H: 52} }
+func (s *ForestCabinScene) ID() SceneType       { return SceneForestCabin }
+func (s *ForestCabinScene) Name() string     { return "Forest Sanctuary Cabin 🌲" }
+func (s *ForestCabinScene) WindowBounds() Rect { return Rect{X: 12, Y: 4, W: 50, H: 28} }
 
 func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
 	r := s.WindowBounds()
@@ -2351,16 +2351,16 @@ func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 		if layer == 0 {
 			treeCol = hex("#10281b") // distant dark green
 		}
-		for i := 0; i < 9; i++ {
-			tx := wx + i*13 + (layer*6)
-			th := 22 + ((i*11+layer*7)%18)
+		for i := 0; i < 7; i++ {
+			tx := wx + i*8 + (layer*4)
+			th := 14 + ((i*7+layer*5)%11)
 			// Trunk
-			c.FillRect(tx+3, wy+wh-th, 3, th, ColorWoodDark)
+			c.FillRect(tx+2, wy+wh-th, 2, th, ColorWoodDark)
 			// Layered needle tiers
-			for t := 0; t < 4; t++ {
-				tierY := wy + wh - th + (t * 4)
-				tierW := 4 + (t * 2)
-				c.FillRect(tx+4-tierW/2, tierY, tierW, 3, treeCol)
+			for t := 0; t < 3; t++ {
+				tierY := wy + wh - th + (t * 3)
+				tierW := 3 + (t * 2)
+				c.FillRect(tx+3-tierW/2, tierY, tierW, 2, treeCol)
 			}
 		}
 	}
@@ -2371,10 +2371,10 @@ func (s *ForestCabinScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
 	// Log cabin walls with timber log texture
-	c.DrawVerticalGradient(0, 0, wx-1, 60, ColorWoodDark, ColorWallPlank)
-	c.DrawVerticalGradient(wx+ww+1, 0, c.Width-(wx+ww+1), 60, ColorWoodDark, ColorWallPlank)
+	c.DrawVerticalGradient(0, 0, wx-1, 36, ColorWoodDark, ColorWallPlank)
+	c.DrawVerticalGradient(wx+ww+1, 0, c.Width-(wx+ww+1), 36, ColorWoodDark, ColorWallPlank)
 	c.FillRect(0, 0, c.Width, wy-1, ColorWoodDark)
-	for y := 4; y < 60; y += 8 {
+	for y := 4; y < 36; y += 6 {
 		c.FillRect(0, y, wx-1, 1, ColorWoodPlankSep)
 		c.FillRect(wx+ww+1, y, c.Width-(wx+ww+1), 1, ColorWoodPlankSep)
 	}
@@ -2385,45 +2385,45 @@ func (s *ForestCabinScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 	c.FillRect(wx+(ww*2)/3, wy, 2, wh, ColorWoodDark)
 
 	// Wood floor planks
-	c.FillRect(0, 60, c.Width, c.Height-60, ColorWoodDark)
-	for y := 60; y < c.Height; y += 7 {
+	c.FillRect(0, 36, c.Width, c.Height-36, ColorWoodDark)
+	for y := 36; y < c.Height; y += 5 {
 		c.FillRect(0, y, c.Width, 1, ColorWoodPlankSep)
 	}
 
 	// Large Monstera plant in terracotta pot on left
-	renderPottedMonstera(c, 6, 38)
+	renderPottedMonstera(c, 2, 22)
 
 	// Focus buddy at rustic wood table
 	if buddy != nil {
-		buddy.Draw(c, 34, 34, frameCount)
+		buddy.Draw(c, 14, 20, frameCount)
 	}
 
 	// Rustic writing table
-	c.FillRect(22, 52, 44, 4, ColorWoodMedium)
-	c.FillRect(22, 52, 44, 1, ColorWoodHighlight)
-	c.FillRect(24, 56, 4, 16, ColorWoodDark)
-	c.FillRect(60, 56, 4, 16, ColorWoodDark)
+	c.FillRect(10, 32, 26, 3, ColorWoodMedium)
+	c.FillRect(10, 32, 26, 1, ColorWoodHighlight)
+	c.FillRect(11, 35, 2, 11, ColorWoodDark)
+	c.FillRect(34, 35, 2, 11, ColorWoodDark)
 
 	// Steaming mug & lantern on table
-	c.FillRect(52, 46, 5, 6, ColorMugCeramic)
+	c.FillRect(28, 29, 3, 3, ColorMugCeramic)
 	if lampOn {
-		c.FillRect(26, 42, 6, 9, ColorLampBrass)
-		c.FillRect(27, 44, 4, 5, ColorWarmGlow)
+		c.FillRect(14, 24, 4, 7, ColorLampBrass)
+		c.FillRect(15, 26, 2, 4, ColorWarmGlow)
 	}
 
 	// Crackling wood stove on right
-	renderWoodStoveHelper(c, 114, 28, 34, 38, fireOn, frameCount)
+	renderWoodStoveHelper(c, 52, 16, 20, 24, fireOn, frameCount)
 
 	// Sleeping cat by the wood stove
-	renderCatHelper(c, 84, 66, catBreed, frameCount)
+	renderCatHelper(c, 38, 40, catBreed, frameCount)
 }
 
 func (s *ForestCabinScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
 	if lampOn {
-		c.ApplyLightCone(29, 44, 26, 22, ColorWarmGlow, 0.35)
+		c.ApplyLightCone(16, 26, 16, 14, ColorWarmGlow, 0.35)
 	}
 	if fireOn {
-		c.ApplyRadialLight(130, 46, 28.0, ColorFireOrange, 0.38)
+		c.ApplyRadialLight(62, 26, 18.0, ColorFireOrange, 0.38)
 	}
 	if lightning {
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
@@ -2435,9 +2435,9 @@ func (s *ForestCabinScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type ClassicCottageScene struct{}
 
-func (s *ClassicCottageScene) ID() SceneType { return SceneCottageClassic }
-func (s *ClassicCottageScene) Name() string { return "Classic Cozy Cottage 🏡" }
-func (s *ClassicCottageScene) WindowBounds() Rect { return Rect{X: 42, Y: 8, W: 76, H: 48} }
+func (s *ClassicCottageScene) ID() SceneType       { return SceneCottageClassic }
+func (s *ClassicCottageScene) Name() string     { return "Classic Cozy Cottage 🏡" }
+func (s *ClassicCottageScene) WindowBounds() Rect { return Rect{X: 18, Y: 4, W: 34, H: 26} }
 
 func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
 	r := s.WindowBounds()
@@ -2467,22 +2467,22 @@ func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool
 	} else if tod == TimeSunset {
 		hillCol = hex("#3a1c28")
 	}
-	c.FillRect(wx, wy+wh-10, ww, 10, hillCol)
-	for i := 0; i < 7; i++ {
-		px := wx + i*11 + 3
-		ph := 6 + (i*5)%8
-		c.FillRect(px, wy+wh-10-ph, 3, ph, hillCol)
+	c.FillRect(wx, wy+wh-6, ww, 6, hillCol)
+	for i := 0; i < 5; i++ {
+		px := wx + i*7 + 2
+		ph := 4 + (i*3)%5
+		c.FillRect(px, wy+wh-6-ph, 2, ph, hillCol)
 	}
 
 	// Celestial objects outside window
 	if tod == TimeNight && !lightning {
 		// Crescent Moon
-		c.FillRect(wx+ww-14, wy+6, 8, 6, ColorStars)
-		c.FillRect(wx+ww-17, wy+6, 5, 6, skyTop)
+		c.FillRect(wx+ww-7, wy+3, 4, 3, ColorStars)
+		c.FillRect(wx+ww-9, wy+3, 3, 3, skyTop)
 		// Stars
 		for _, st := range stars {
 			px := wx + (st.X % ww)
-			py := wy + (st.Y % (wh - 12))
+			py := wy + (st.Y % (wh - 8))
 			twinkle := math.Sin(float64(frameCount)*0.1 + st.Phase)
 			if twinkle > 0.3 {
 				c.SetPixel(px, py, ColorStars)
@@ -2490,10 +2490,10 @@ func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool
 		}
 	} else if tod == TimeDawn {
 		// Glowing morning star
-		c.DrawGlyph(wx+12, (wy+8)/2, '✦', ColorStars)
+		c.DrawGlyph(wx+6, (wy+4)/2, '✦', ColorStars)
 	} else if tod == TimeDay {
 		// Soft golden sun
-		c.FillRect(wx+ww-14, wy+6, 8, 6, ColorFireYellow)
+		c.FillRect(wx+ww-7, wy+3, 5, 4, ColorFireYellow)
 	}
 }
 
@@ -2502,8 +2502,8 @@ func (s *ClassicCottageScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
 	// Cozy wallpaper on left and right walls
-	c.DrawVerticalGradient(0, 0, wx-1, 58, ColorWallPaper, ColorWallWarm)
-	c.DrawVerticalGradient(wx+ww+1, 0, c.Width-(wx+ww+1), 58, ColorWallPaper, ColorWallWarm)
+	c.DrawVerticalGradient(0, 0, wx-1, 36, ColorWallPaper, ColorWallWarm)
+	c.DrawVerticalGradient(wx+ww+1, 0, c.Width-(wx+ww+1), 36, ColorWallPaper, ColorWallWarm)
 	c.FillRect(0, 0, c.Width, wy-1, ColorWoodDark)
 
 	// Ornate Arched Timber Window Frame
@@ -2511,47 +2511,47 @@ func (s *ClassicCottageScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	c.FillRect(wx+ww/2-1, wy, 2, wh, ColorWindowFrame)
 	c.FillRect(wx, wy+wh/2-1, ww, 2, ColorWindowFrame)
 	// Window sill with potted trailing plant
-	c.FillRect(wx-2, wy+wh-2, ww+4, 3, ColorWindowSill)
-	renderPottedSucculent(c, wx+ww-12, wy+wh-6)
+	c.FillRect(wx-1, wy+wh-1, ww+2, 2, ColorWindowSill)
+	renderPottedSucculent(c, wx+ww-6, wy+wh-4)
 
-	// Rich Wooden Floor Planks (Rows 58 to c.Height-1)
-	c.FillRect(0, 58, c.Width, c.Height-58, ColorWoodDark)
-	for y := 58; y < c.Height; y += 7 {
+	// Rich Wooden Floor Planks (Rows 36 to c.Height-1)
+	c.FillRect(0, 36, c.Width, c.Height-36, ColorWoodDark)
+	for y := 36; y < c.Height; y += 5 {
 		c.FillRect(0, y, c.Width, 1, ColorWoodPlankSep)
 		c.FillRect(0, y+1, c.Width, 1, ColorWoodMedium)
 	}
 
 	// Persian Ornate Floor Rug under desk & fireplace
-	rugX, rugY, rugW, rugH := 36, 64, 88, 22
+	rugX, rugY, rugW, rugH := 14, 39, 44, 11
 	c.FillRect(rugX, rugY, rugW, rugH, ColorFloorRugBase)
 	c.DrawRectOutline(rugX, rugY, rugW, rugH, ColorFloorRugBorder)
-	for rx := rugX + 6; rx < rugX+rugW-6; rx += 10 {
-		c.FillRect(rx, rugY+rugH/2-2, 4, 4, ColorFloorRugGold)
+	for rx := rugX + 4; rx < rugX+rugW-4; rx += 6 {
+		c.FillRect(rx, rugY+rugH/2-1, 2, 2, ColorFloorRugGold)
 	}
 
 	// Left Wall: Bookshelf with colorful stacked books & trailing ivy
-	renderBookshelfHelper(c, 2, 8, 20, 50)
+	renderBookshelfHelper(c, 2, 4, 14, 32)
 
 	// Study Area: Oak Desk with Lamp & Focus Companion
-	renderDeskHelper(c, 22, 50, 40, lampOn)
+	renderDeskHelper(c, 16, 32, 24, lampOn)
 
 	if buddy != nil {
-		buddy.Draw(c, 24, 32, frameCount)
+		buddy.Draw(c, 16, 20, frameCount)
 	}
 
 	// Right Wall: Multi-course Brick Fireplace Hearth
-	renderFireplaceHelper(c, 114, 24, 42, 42, fireOn, frameCount)
+	renderFireplaceHelper(c, 52, 12, 20, 26, fireOn, frameCount)
 
 	// Sleeping Cat Companion on Velvet Cushion
-	renderCatHelper(c, 74, 66, catBreed, frameCount)
+	renderCatHelper(c, 38, 40, catBreed, frameCount)
 }
 
 func (s *ClassicCottageScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
 	if lampOn {
-		c.ApplyLightCone(26, 44, 28, 24, ColorWarmGlow, 0.38)
+		c.ApplyLightCone(18, 26, 16, 14, ColorWarmGlow, 0.38)
 	}
 	if fireOn {
-		c.ApplyRadialLight(135, 46, 32.0, ColorFireOrange, 0.40)
+		c.ApplyRadialLight(62, 24, 20.0, ColorFireOrange, 0.40)
 	}
 	if lightning {
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
@@ -2563,9 +2563,9 @@ func (s *ClassicCottageScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type ObservatoryScene struct{}
 
-func (s *ObservatoryScene) ID() SceneType { return SceneObservatory }
-func (s *ObservatoryScene) Name() string { return "Celestial Observatory 🌌" }
-func (s *ObservatoryScene) WindowBounds() Rect { return Rect{X: 20, Y: 6, W: 120, H: 54} }
+func (s *ObservatoryScene) ID() SceneType       { return SceneObservatory }
+func (s *ObservatoryScene) Name() string     { return "Celestial Observatory 🌌" }
+func (s *ObservatoryScene) WindowBounds() Rect { return Rect{X: 10, Y: 3, W: 54, H: 29} }
 
 func (s *ObservatoryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
 	r := s.WindowBounds()
@@ -2576,14 +2576,14 @@ func (s *ObservatoryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 	// Swirling cosmic nebula dust
 	nebulaCols := []colorful.Color{hex("#3d1a45"), hex("#1a2b4c"), hex("#153b3d")}
 	for n := 0; n < 3; n++ {
-		nx := wx + 18 + n*30
-		ny := wy + 8 + n*10
-		c.ApplyRadialLight(nx, ny, 16.0, nebulaCols[n], 0.25)
+		nx := wx + 10 + n*16
+		ny := wy + 4 + n*6
+		c.ApplyRadialLight(nx, ny, 10.0, nebulaCols[n], 0.25)
 	}
 
 	// Bright Crescent Moon
-	c.FillRect(wx+84, wy+8, 12, 10, ColorStars)
-	c.FillRect(wx+80, wy+8, 8, 10, ColorSkyNightTop)
+	c.FillRect(wx+ww-10, wy+4, 6, 5, ColorStars)
+	c.FillRect(wx+ww-12, wy+4, 4, 5, ColorSkyNightTop)
 
 	// Constellation clusters
 	for i, st := range stars {
@@ -2604,8 +2604,8 @@ func (s *ObservatoryScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
 	// Observatory dome architecture
-	c.FillRect(0, 0, wx-1, 60, hex("#10141f"))
-	c.FillRect(wx+ww+1, 0, c.Width-(wx+ww+1), 60, hex("#10141f"))
+	c.FillRect(0, 0, wx-1, 36, hex("#10141f"))
+	c.FillRect(wx+ww+1, 0, c.Width-(wx+ww+1), 36, hex("#10141f"))
 	c.FillRect(0, 0, c.Width, wy-1, hex("#10141f"))
 
 	// Domed brass skylight frame
@@ -2614,44 +2614,44 @@ func (s *ObservatoryScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 	c.FillRect(wx, wy+wh/2-1, ww, 2, ColorLampBrass)
 
 	// Observatory dark stone floor
-	c.FillRect(0, 60, c.Width, c.Height-60, hex("#161b26"))
-	c.FillRect(0, 60, c.Width, 2, ColorLampBrass)
+	c.FillRect(0, 36, c.Width, c.Height-36, hex("#161b26"))
+	c.FillRect(0, 36, c.Width, 1, ColorLampBrass)
 
 	// Large Brass Telescope on heavy wooden tripod facing skylight
-	telX, telY := 96, 28
-	c.FillRect(telX, telY, 24, 6, ColorLampBrass) // brass tube
-	c.FillRect(telX+20, telY-2, 6, 10, ColorLampBrass) // objective lens
-	c.FillRect(telX-2, telY+2, 4, 4, hex("#212529")) // eyepiece
+	telX, telY := 46, 16
+	c.FillRect(telX, telY, 16, 4, ColorLampBrass)        // brass tube
+	c.FillRect(telX+14, telY-1, 4, 6, ColorLampBrass)    // objective lens
+	c.FillRect(telX-2, telY+1, 3, 2, hex("#212529"))     // eyepiece
 	// Tripod legs
-	c.FillRect(telX+10, telY+6, 3, 30, ColorWoodDark)
-	c.FillRect(telX+4, telY+6, 3, 30, ColorWoodDark)
-	c.FillRect(telX+16, telY+6, 3, 30, ColorWoodDark)
+	c.FillRect(telX+6, telY+4, 2, 18, ColorWoodDark)
+	c.FillRect(telX+2, telY+4, 2, 18, ColorWoodDark)
+	c.FillRect(telX+10, telY+4, 2, 18, ColorWoodDark)
 
 	// Focus Buddy at star chart desk on left
 	if buddy != nil {
-		buddy.Draw(c, 30, 34, frameCount)
+		buddy.Draw(c, 14, 20, frameCount)
 	}
 
 	// Star Chart Table
-	c.FillRect(20, 52, 40, 4, ColorWoodMedium)
-	c.FillRect(20, 52, 40, 1, ColorWoodHighlight)
-	c.FillRect(24, 56, 4, 16, ColorWoodDark)
-	c.FillRect(54, 56, 4, 16, ColorWoodDark)
+	c.FillRect(10, 32, 26, 3, ColorWoodMedium)
+	c.FillRect(10, 32, 26, 1, ColorWoodHighlight)
+	c.FillRect(11, 35, 2, 11, ColorWoodDark)
+	c.FillRect(34, 35, 2, 11, ColorWoodDark)
 
 	// Celestial map & brass lantern
-	c.FillRect(36, 50, 14, 3, ColorNotebookPaper)
+	c.FillRect(20, 30, 8, 2, ColorNotebookPaper)
 	if lampOn {
-		c.FillRect(24, 42, 6, 9, ColorLampBrass)
-		c.FillRect(25, 44, 4, 5, ColorWarmGlow)
+		c.FillRect(14, 24, 4, 7, ColorLampBrass)
+		c.FillRect(15, 26, 2, 4, ColorWarmGlow)
 	}
 
 	// Sleeping cat by observation desk
-	renderCatHelper(c, 70, 66, catBreed, frameCount)
+	renderCatHelper(c, 34, 40, catBreed, frameCount)
 }
 
 func (s *ObservatoryScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
 	if lampOn {
-		c.ApplyLightCone(27, 44, 26, 22, ColorWarmGlow, 0.35)
+		c.ApplyLightCone(16, 26, 16, 14, ColorWarmGlow, 0.35)
 	}
 	if lightning {
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
@@ -2671,85 +2671,82 @@ func renderBookshelfHelper(c *Canvas, bx, by, bw, bh int) {
 	// Shelves (3 levels)
 	bookColors := []colorful.Color{ColorBookSpine1, ColorBookSpine2, ColorBookSpine3, ColorBookSpine4}
 	for s := 0; s < 3; s++ {
-		sy := by + 14 + s*13
-		c.FillRect(bx+1, sy, bw-2, 2, ColorWoodMedium)
+		sy := by + 9 + s*9
+		c.FillRect(bx+1, sy, bw-2, 1, ColorWoodMedium)
 
 		// Stacked and standing books on each shelf
-		for b := 0; b < 6; b++ {
+		for b := 0; b < 4; b++ {
 			bX := bx + 2 + b*3
-			bH := 6 + ((b*3+s*5)%5)
+			bH := 4 + ((b*3+s*5)%4)
 			bCol := bookColors[(b+s)%len(bookColors)]
 			c.FillRect(bX, sy-bH, 2, bH, bCol)
 		}
 	}
 
 	// Top shelf: Terracotta pot with trailing ivy vines
-	c.FillRect(bx+4, by-2, 8, 4, ColorPotClay)
-	c.FillRect(bx+5, by-3, 6, 1, ColorLeafLight)
+	c.FillRect(bx+3, by-2, 6, 3, ColorPotClay)
+	c.FillRect(bx+4, by-3, 4, 1, ColorLeafLight)
 	// Trailing green ivy vines dripping down the side
-	c.SetPixel(bx+2, by+2, ColorLeafMedium)
-	c.SetPixel(bx+2, by+4, ColorLeafLight)
-	c.SetPixel(bx+1, by+6, ColorLeafMedium)
-	c.SetPixel(bx+1, by+8, ColorLeafDark)
-	c.SetPixel(bx, by+10, ColorLeafMedium)
+	c.SetPixel(bx+1, by+1, ColorLeafMedium)
+	c.SetPixel(bx+1, by+3, ColorLeafLight)
+	c.SetPixel(bx, by+5, ColorLeafMedium)
+	c.SetPixel(bx, by+7, ColorLeafDark)
 }
 
 // renderPottedSucculent draws a tiny terracotta pot with green leaves.
 func renderPottedSucculent(c *Canvas, px, py int) {
-	c.FillRect(px+1, py+2, 4, 3, ColorPotClay)
-	c.FillRect(px, py+2, 6, 1, ColorPotClay)
-	c.SetPixel(px+2, py+1, ColorLeafLight)
-	c.SetPixel(px+3, py, ColorLeafMedium)
-	c.SetPixel(px+1, py, ColorLeafDark)
-	c.SetPixel(px+4, py+1, ColorLeafMedium)
+	c.FillRect(px+1, py+1, 3, 2, ColorPotClay)
+	c.FillRect(px, py+1, 5, 1, ColorPotClay)
+	c.SetPixel(px+1, py, ColorLeafLight)
+	c.SetPixel(px+2, py, ColorLeafMedium)
+	c.SetPixel(px+3, py, ColorLeafDark)
 }
 
 // renderPottedMonstera draws a large potted monstera plant with split leaves.
 func renderPottedMonstera(c *Canvas, px, py int) {
-	c.FillRect(px+3, py+14, 10, 8, ColorPotClay)
-	c.FillRect(px+2, py+14, 12, 2, ColorPotClay)
+	c.FillRect(px+2, py+10, 6, 6, ColorPotClay)
+	c.FillRect(px+1, py+10, 8, 2, ColorPotClay)
 
 	// Broad green monstera leaves
-	c.FillRect(px, py+4, 6, 6, ColorLeafDark)
-	c.FillRect(px+8, py+2, 7, 7, ColorLeafMedium)
-	c.FillRect(px+4, py, 6, 5, ColorLeafLight)
+	c.FillRect(px, py+3, 4, 4, ColorLeafDark)
+	c.FillRect(px+5, py+1, 5, 5, ColorLeafMedium)
+	c.FillRect(px+2, py, 4, 4, ColorLeafLight)
 	// Leaf cutout details
-	c.SetPixel(px+2, py+6, ColorWallPlank)
-	c.SetPixel(px+10, py+5, ColorWallPlank)
+	c.SetPixel(px+1, py+4, ColorWallPlank)
+	c.SetPixel(px+7, py+3, ColorWallPlank)
 }
 
 // renderDeskHelper draws an oak writing desk with green banker's lamp, journal, and mug.
 func renderDeskHelper(c *Canvas, dx, dy, dw int, lampOn bool) {
 	// Oak desk tabletop
-	c.FillRect(dx, dy, dw, 4, ColorWoodMedium)
+	c.FillRect(dx, dy, dw, 3, ColorWoodMedium)
 	c.FillRect(dx, dy, dw, 1, ColorWoodHighlight)
 	// Desk drawer & legs
-	c.FillRect(dx+2, dy+4, dw-4, 4, ColorWoodDark)
-	c.FillRect(dx+dw/2-2, dy+5, 4, 1, ColorLampBrass) // brass drawer pull
-	c.FillRect(dx+2, dy+8, 3, 16, ColorWoodDark)
-	c.FillRect(dx+dw-5, dy+8, 3, 16, ColorWoodDark)
+	c.FillRect(dx+2, dy+3, dw-4, 3, ColorWoodDark)
+	c.FillRect(dx+dw/2-2, dy+4, 4, 1, ColorLampBrass) // brass drawer pull
+	c.FillRect(dx+2, dy+6, 2, 10, ColorWoodDark)
+	c.FillRect(dx+dw-4, dy+6, 2, 10, ColorWoodDark)
 
 	// Classic Banker's Lamp (Brass neck + Emerald Green glass shade)
 	if lampOn {
-		c.FillRect(dx+4, dy-2, 4, 2, ColorLampBrass)
-		c.FillRect(dx+5, dy-8, 2, 6, ColorLampBrass)
-		c.FillRect(dx+2, dy-12, 8, 4, ColorLampShade)
-		c.FillRect(dx+3, dy-9, 6, 1, ColorWarmGlow)
+		c.FillRect(dx+2, dy-2, 3, 2, ColorLampBrass)
+		c.FillRect(dx+3, dy-6, 1, 4, ColorLampBrass)
+		c.FillRect(dx+1, dy-9, 5, 3, ColorLampShade)
+		c.FillRect(dx+2, dy-7, 3, 1, ColorWarmGlow)
 	} else {
-		c.FillRect(dx+4, dy-2, 4, 2, hex("#495057"))
-		c.FillRect(dx+5, dy-8, 2, 6, hex("#495057"))
-		c.FillRect(dx+2, dy-12, 8, 4, hex("#212529"))
+		c.FillRect(dx+2, dy-2, 3, 2, hex("#495057"))
+		c.FillRect(dx+3, dy-6, 1, 4, hex("#495057"))
+		c.FillRect(dx+1, dy-9, 5, 3, hex("#212529"))
 	}
 
 	// Open Notebook Journal with scribbled lines
-	c.FillRect(dx+16, dy-1, 10, 3, ColorNotebookPaper)
-	c.SetPixel(dx+18, dy, ColorWoodDark)
-	c.SetPixel(dx+20, dy, ColorWoodDark)
-	c.SetPixel(dx+22, dy, ColorWoodDark)
+	c.FillRect(dx+10, dy-1, 7, 2, ColorNotebookPaper)
+	c.SetPixel(dx+12, dy, ColorWoodDark)
+	c.SetPixel(dx+14, dy, ColorWoodDark)
 
 	// Steaming Ceramic Terracotta Mug
-	c.FillRect(dx+28, dy-4, 5, 5, ColorMugCeramic)
-	c.SetPixel(dx+33, dy-3, ColorMugCeramic) // handle
+	c.FillRect(dx+19, dy-3, 3, 3, ColorMugCeramic)
+	c.SetPixel(dx+22, dy-2, ColorMugCeramic) // handle
 }
 
 // renderFireplaceHelper draws a multi-course brick hearth with mantle, candle, and animated flame engine.
@@ -2759,54 +2756,54 @@ func renderFireplaceHelper(c *Canvas, fx, fy, fw, fh int, fireOn bool, frameCoun
 	// Brick mortar lines
 	for by := fy + 3; by < fy+fh; by += 4 {
 		c.FillRect(fx, by, fw, 1, ColorHearthMortar)
-		offset := ((by - fy) / 4) % 2 * 4
-		for bx := fx + offset; bx < fx+fw; bx += 8 {
+		offset := ((by - fy) / 4) % 2 * 3
+		for bx := fx + offset; bx < fx+fw; bx += 6 {
 			c.FillRect(bx, by-3, 1, 3, ColorHearthMortar)
 		}
 	}
 
 	// Timber Mantlepiece at top of fireplace
-	c.FillRect(fx-2, fy, fw+4, 3, ColorWoodDark)
+	c.FillRect(fx-2, fy, fw+4, 2, ColorWoodDark)
 	c.FillRect(fx-2, fy, fw+4, 1, ColorWoodHighlight)
 
 	// Candle on mantlepiece
-	c.FillRect(fx+6, fy-5, 3, 5, ColorCandleWax)
+	c.FillRect(fx+3, fy-4, 2, 4, ColorCandleWax)
 	if fireOn {
-		c.SetPixel(fx+7, fy-6, ColorFireYellow)
+		c.SetPixel(fx+3, fy-5, ColorFireYellow)
 	}
 
 	// Arched firebox interior
-	boxX, boxY, boxW, boxH := fx+6, fy+10, fw-12, fh-12
+	boxX, boxY, boxW, boxH := fx+3, fy+7, fw-6, fh-8
 	c.FillRect(boxX, boxY, boxW, boxH, ColorHearthInterior)
 	c.DrawRectOutline(boxX, boxY, boxW, boxH, ColorHearthBrickDark)
 
 	if !fireOn {
 		// Cold ash bed
-		c.FillRect(boxX+4, boxY+boxH-3, boxW-8, 2, hex("#343a40"))
+		c.FillRect(boxX+2, boxY+boxH-2, boxW-4, 1, hex("#343a40"))
 		return
 	}
 
 	// Hot glowing charcoal / ember bed
-	c.FillRect(boxX+4, boxY+boxH-3, boxW-8, 2, ColorFireEmber)
+	c.FillRect(boxX+2, boxY+boxH-2, boxW-4, 1, ColorFireEmber)
 
 	// Multi-layered animated dancing flames
 	fireCenter := boxX + boxW/2
-	fireTick := (frameCount / 3) % 6
+	fireTick := (frameCount / 3) % 4
 
-	for i := -6; i <= 6; i++ {
+	for i := -3; i <= 3; i++ {
 		px := fireCenter + i
-		flameH := int(7.0 + 4.0*math.Sin(float64(i)*0.8+float64(fireTick)*1.2))
+		flameH := int(5.0 + 3.0*math.Sin(float64(i)*0.8+float64(fireTick)*1.4))
 
 		for fyPos := 0; fyPos < flameH; fyPos++ {
-			py := boxY + boxH - 3 - fyPos
+			py := boxY + boxH - 2 - fyPos
 			if py < boxY {
 				continue
 			}
 			if fyPos < 2 {
 				c.SetPixel(px, py, ColorFireCore)
-			} else if fyPos < 5 {
+			} else if fyPos < 4 {
 				c.SetPixel(px, py, ColorFireYellow)
-			} else if fyPos < 8 {
+			} else if fyPos < 6 {
 				c.SetPixel(px, py, ColorFireOrange)
 			} else {
 				c.SetPixel(px, py, ColorFireRed)
@@ -2818,28 +2815,28 @@ func renderFireplaceHelper(c *Canvas, fx, fy, fw, fh int, fireOn bool, frameCoun
 // renderWoodStoveHelper draws a rustic cast-iron wood stove.
 func renderWoodStoveHelper(c *Canvas, fx, fy, fw, fh int, fireOn bool, frameCount uint64) {
 	// Cast iron stove body
-	c.FillRect(fx+4, fy+10, fw-8, fh-14, hex("#212529"))
-	c.DrawRectOutline(fx+4, fy+10, fw-8, fh-14, hex("#343a40"))
+	c.FillRect(fx+2, fy+6, fw-4, fh-8, hex("#212529"))
+	c.DrawRectOutline(fx+2, fy+6, fw-4, fh-8, hex("#343a40"))
 	// Stove legs
-	c.FillRect(fx+6, fy+fh-4, 3, 4, hex("#10141f"))
-	c.FillRect(fx+fw-9, fy+fh-4, 3, 4, hex("#10141f"))
+	c.FillRect(fx+3, fy+fh-2, 2, 2, hex("#10141f"))
+	c.FillRect(fx+fw-5, fy+fh-2, 2, 2, hex("#10141f"))
 	// Stove pipe chimney
-	c.FillRect(fx+fw/2-2, fy, 4, 10, hex("#212529"))
+	c.FillRect(fx+fw/2-1, fy, 3, 6, hex("#212529"))
 
 	// Glowing stove window
 	if fireOn {
-		c.FillRect(fx+10, fy+16, fw-20, 8, ColorFireOrange)
-		c.FillRect(fx+12, fy+18, fw-24, 4, ColorFireYellow)
+		c.FillRect(fx+5, fy+10, fw-10, 6, ColorFireOrange)
+		c.FillRect(fx+6, fy+11, fw-12, 3, ColorFireYellow)
 	} else {
-		c.FillRect(fx+10, fy+16, fw-20, 8, hex("#10141f"))
+		c.FillRect(fx+5, fy+10, fw-10, 6, hex("#10141f"))
 	}
 }
 
 // renderCatHelper draws an organic, cute sleeping cat companion with smooth micro-animations.
 func renderCatHelper(c *Canvas, cx, cy int, breed CatBreed, frameCount uint64) {
 	// Plush Indigo Velvet Cushion
-	c.FillRect(cx-4, cy+6, 24, 6, ColorCatCushion)
-	c.DrawRectOutline(cx-4, cy+6, 24, 6, hex("#2a2356"))
+	c.FillRect(cx-2, cy+4, 16, 5, ColorCatCushion)
+	c.DrawRectOutline(cx-2, cy+4, 16, 5, hex("#2a2356"))
 
 	var furMain, furDetail colorful.Color
 	switch breed {
@@ -2864,25 +2861,25 @@ func renderCatHelper(c *Canvas, cx, cy int, breed CatBreed, frameCount uint64) {
 	}
 
 	// Curled Body
-	c.FillRect(cx, cy+breathOffset, 14, 7, furMain)
-	c.FillRect(cx+2, cy+1+breathOffset, 10, 5, furDetail)
+	c.FillRect(cx, cy+breathOffset, 10, 5, furMain)
+	c.FillRect(cx+2, cy+1+breathOffset, 6, 3, furDetail)
 
 	// Head tucked in
-	c.FillRect(cx-2, cy+1+breathOffset, 5, 5, furMain)
+	c.FillRect(cx-1, cy+1+breathOffset, 4, 4, furMain)
 	// Cute inner ear pink details
-	c.SetPixel(cx-2, cy+breathOffset, hex("#ff7597"))
+	c.SetPixel(cx-1, cy+breathOffset, hex("#ff7597"))
 	c.SetPixel(cx+1, cy+breathOffset, hex("#ff7597"))
 
 	// Dynamic Tail Wag
 	tailWag := int((frameCount / 18) % 3)
-	c.FillRect(cx+14, cy+3+breathOffset-tailWag, 3, 2, furMain)
-	c.FillRect(cx+16, cy+1+breathOffset-tailWag*2, 2, 3, furMain)
+	c.FillRect(cx+10, cy+2+breathOffset-tailWag, 2, 2, furMain)
+	c.FillRect(cx+11, cy+1+breathOffset-tailWag, 2, 2, furMain)
 
 	// Purr & Sleep glyphs
 	if (frameCount/24)%2 == 1 {
-		c.DrawGlyph(cx+5, (cy-2)/2, '♥', hex("#ff7597"))
+		c.DrawGlyph(cx+4, (cy-2)/2, '♥', hex("#ff7597"))
 	} else if (frameCount/14)%3 == 1 {
-		c.DrawGlyph(cx-3, (cy-3)/2, 'z', hex("#74c0fc"))
+		c.DrawGlyph(cx-2, (cy-2)/2, 'z', hex("#74c0fc"))
 	}
 }
 
