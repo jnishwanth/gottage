@@ -39,6 +39,10 @@ func init() {
 	RegisterScene(&JapaneseJazzKissaScene{})
 	RegisterScene(&StarlitLoftBedScene{})
 	RegisterScene(&AlchemistTowerScene{})
+	RegisterScene(&MachiyaGardenScene{})
+	RegisterScene(&CyberLofiDinerScene{})
+	RegisterScene(&NordicBayWindowScene{})
+	RegisterScene(&ForestTreehouseScene{})
 
 	RegisterScene(&AnimatedGifScene{
 		id:        SceneKirokazeRoom,
@@ -7196,6 +7200,708 @@ func (s *AlchemistTowerScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
 	}
 }
+
+// ---------------------------------------------------------
+// 33. MachiyaGardenScene (Kyoto Machiya Courtyard Garden & Rain Chains)
+// ---------------------------------------------------------
+type MachiyaGardenScene struct{}
+
+func (s *MachiyaGardenScene) ID() SceneType       { return SceneZenBonsai }
+func (s *MachiyaGardenScene) Name() string     { return "Kyoto Machiya Courtyard Garden & Rain Chains 🎋🌧️" }
+func (s *MachiyaGardenScene) WindowBounds() Rect { return Rect{X: 14, Y: 3, W: 46, H: 27} }
+
+func (s *MachiyaGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	var skyTop, skyBot colorful.Color
+	switch tod {
+	case TimeDawn:
+		skyTop, skyBot = ColorSkyDawnTop, ColorSkyDawnBot
+	case TimeDay:
+		skyTop, skyBot = hex("#264653"), hex("#2a9d8f")
+	case TimeSunset:
+		skyTop, skyBot = ColorSkySunsetTop, ColorSkySunsetBot
+	case TimeNight:
+		skyTop, skyBot = hex("#051622"), hex("#1ba098")
+	}
+	if lightning {
+		skyTop, skyBot = PicoWhite, PicoWhite
+	}
+	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
+
+	// Traditional Kyoto Clay Shingle Tiled Courtyard Wall in background
+	wallY := wy + wh - 14
+	c.FillRect(wx, wallY, ww, 4, ColorKyotoClayTile)
+	c.FillRect(wx, wallY+4, ww, 10, hex("#1e293b"))
+	// Tiled ridge cap
+	for tx := wx; tx < wx+ww; tx += 4 {
+		c.FillRect(tx, wallY-1, 3, 2, hex("#475569"))
+	}
+
+	// Slender bamboo stalks rising behind the clay wall
+	for b := 0; b < 7; b++ {
+		bx := wx + 4 + b*6
+		bSway := int(math.Sin(float64(frameCount)*0.07+float64(b))*1.2)
+		c.DrawLine(bx, wallY, bx+bSway, wy+1, ColorBambooGreen)
+		c.FillCircle(bx+bSway, wy+2, 2, ColorLeafLight)
+	}
+
+	// Weathered Pagoda Stone Lantern (Ishidoro) in Courtyard (Right side)
+	lx, ly := wx+ww-12, wallY-2
+	c.FillRect(lx+2, ly+8, 4, 6, ColorStoneLantern) // base
+	c.FillRect(lx+1, ly+4, 6, 4, ColorStoneLantern) // light chamber
+	c.FillRect(lx+2, ly+5, 4, 2, ColorWarmGlow)     // candle core
+	c.FillRect(lx, ly+2, 8, 2, ColorStoneLantern)   // pagoda roof
+	c.SetPixel(lx+4, ly+1, ColorStoneLantern)
+
+	// Mossy Stone Water Basin (Chozubachi) surrounded by river pebbles
+	bx, by := wx+8, wallY+3
+	c.FillRect(bx-2, by+2, 12, 6, ColorTsuboniwaMoss)
+	c.FillRect(bx, by, 8, 5, ColorTsukubaiBasin)
+	c.FillRect(bx+1, by+1, 6, 3, hex("#1d3557")) // water surface
+
+	// Animated Kusari-Doi (Copper Rain Chain) hanging from top roof eave into the basin
+	chainX := bx + 4
+	for cy := wy; cy < by; cy += 3 {
+		// Copper cup link
+		c.FillRect(chainX-1, cy, 3, 2, ColorKusariDoiCopper)
+		c.SetPixel(chainX, cy+1, ColorBrassPendulum)
+	}
+	// Water droplet sliding down the rain chain
+	dropOffset := int((frameCount * 2) % uint64(by-wy))
+	c.SetPixel(chainX, wy+dropOffset, ColorKusariWaterGlint)
+	if dropOffset > (by-wy)-3 {
+		// Water ripples in basin when drop hits
+		c.DrawCircle(chainX, by+2, int(frameCount%4)+1, hex("#38bdf8"))
+	}
+
+	// Falling serene rain droplets across courtyard
+	for i := 0; i < 8; i++ {
+		rx := wx + ((int(frameCount*2) + i*13) % ww)
+		ry := wy + ((int(frameCount*3) + i*7) % (wh - 4))
+		c.SetPixel(rx, ry, ColorRaindropWindow)
+	}
+}
+
+func (s *MachiyaGardenScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	r := s.WindowBounds()
+	wx, wy, ww := r.X, r.Y, r.W
+
+	// Dark Aged Japanese Cedar Timbers (Machiya Posts & Beams)
+	c.FillRect(0, 0, wx, 30, ColorMachiyaCedar)
+	c.FillRect(wx+ww, 0, c.Width-(wx+ww), 30, ColorMachiyaCedar)
+	c.FillRect(0, 0, c.Width, wy, ColorMachiyaCedar)
+
+	// Sliding Shoji Lattice Screens open at sides
+	for sy := wy; sy < 30; sy += 4 {
+		c.FillRect(0, sy, wx-2, 1, ColorShojiLattice)
+		c.FillRect(wx+ww+2, sy, c.Width-(wx+ww+2), 1, ColorShojiLattice)
+		for sx := 2; sx < wx-2; sx += 4 {
+			c.SetPixel(sx, sy, ColorShojiPaper)
+		}
+		for sx := wx + ww + 4; sx < c.Width-2; sx += 4 {
+			c.SetPixel(sx, sy, ColorShojiPaper)
+		}
+	}
+
+	// Veranda Engawa Hinoki Edge Planks (Rows 30 to 33)
+	c.FillRect(0, 30, c.Width, 3, ColorHinokiWood)
+	c.FillRect(0, 30, c.Width, 1, ColorHinokiDark)
+
+	// Traditional Woven Tatami Mat Floor (Rows 33 to Height)
+	c.FillRect(0, 33, c.Width, c.Height-33, ColorTatamiBase)
+	// Dark green woven borders
+	for tx := 16; tx < c.Width; tx += 22 {
+		c.FillRect(tx, 33, 2, c.Height-33, ColorTatamiBorder)
+	}
+
+	// Low Dark Cedar Chabudai Tea Table (Columns 24 to 48, Rows 35 to 42)
+	tx, ty := 24, 35
+	c.FillRect(tx, ty, 24, 6, ColorMachiyaCedar)
+	c.FillRect(tx, ty, 24, 1, ColorWoodHighlight)
+	c.FillRect(tx+2, ty+6, 2, 4, ColorWoodDark)
+	c.FillRect(tx+20, ty+6, 2, 4, ColorWoodDark)
+
+	// Cast-Iron Tetsubin Teapot on Small Hibachi (Left of table)
+	c.FillRect(tx+3, ty-4, 6, 4, ColorStoveCastIron)
+	c.DrawLine(tx+3, ty-4, tx+5, ty-6, ColorStoveCastIron) // handle
+	c.DrawLine(tx+5, ty-6, tx+9, ty-4, ColorStoveCastIron)
+	if fireOn {
+		// Glowing charcoal & steam
+		c.SetPixel(tx+5, ty-1, ColorHibachiCharcoal)
+		c.SetPixel(tx+6, ty-1, ColorFireOrange)
+		c.SetPixel(tx+8, ty-5-int((frameCount/3)%3), ColorMugSteam)
+	}
+
+	// Green Matcha Bowl with whisked froth
+	c.FillRect(tx+12, ty-2, 4, 2, hex("#1f2421"))
+	c.FillRect(tx+13, ty-2, 2, 1, ColorMatchaGreen)
+
+	// Pink Cherry Blossom Wagashi on Cedar Plate
+	c.FillRect(tx+18, ty-2, 4, 1, ColorParchmentPage)
+	c.SetPixel(tx+19, ty-3, ColorSakuraPink)
+
+	// Andoji Paper Floor Lantern (Bottom Right Corner: Columns 62 to 70, Rows 38 to 48)
+	lx, ly := 62, 38
+	c.FillRect(lx, ly, 8, 10, ColorShojiLattice)
+	c.FillRect(lx+1, ly+1, 6, 8, ColorShojiPaper)
+	if lampOn {
+		c.FillRect(lx+2, ly+3, 4, 4, ColorWarmGlow)
+		c.SetPixel(lx+3, ly+4, ColorFireOrange)
+		c.SetPixel(lx+4, ly+4, ColorFireYellow)
+	}
+
+	// FocusBuddy companion sitting serenely at the tea table
+	if buddy != nil {
+		buddy.Draw(c, 34, 27, frameCount)
+	}
+
+	// Calico cat curled up peacefully on an Indigo Zabuton cushion near the engawa
+	c.FillRect(6, 32, 14, 5, ColorNorenIndigo)
+	renderCatHelper(c, 8, 29, CatCalico, frameCount)
+}
+
+func (s *MachiyaGardenScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	if lampOn {
+		c.ApplyRadialLight(66, 42, 16.0, ColorWarmGlow, 0.50)
+	}
+	c.ApplyRadialLight(48, 16, 12.0, ColorWarmGlow, 0.35)
+	if fireOn {
+		c.ApplyRadialLight(30, 34, 10.0, ColorFireOrange, 0.40)
+	}
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
+	}
+}
+
+// ---------------------------------------------------------
+// 34. CyberLofiDinerScene (Rainy Midnight Cyber Lofi Diner & Neon Window Booth)
+// ---------------------------------------------------------
+type CyberLofiDinerScene struct{}
+
+func (s *CyberLofiDinerScene) ID() SceneType       { return SceneCyberDiner }
+func (s *CyberLofiDinerScene) Name() string     { return "Rainy Midnight Cyber Lofi Diner & Neon Booth 🍔☕" }
+func (s *CyberLofiDinerScene) WindowBounds() Rect { return Rect{X: 6, Y: 3, W: 44, H: 24} }
+
+func (s *CyberLofiDinerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	var skyTop, skyBot colorful.Color
+	switch tod {
+	case TimeDawn:
+		skyTop, skyBot = hex("#1a0933"), hex("#591a53")
+	case TimeDay:
+		skyTop, skyBot = hex("#0f172a"), hex("#1e293b")
+	case TimeSunset:
+		skyTop, skyBot = hex("#2e0854"), hex("#b5179e")
+	case TimeNight:
+		skyTop, skyBot = hex("#050512"), hex("#0f1424")
+	}
+	if lightning {
+		skyTop, skyBot = PicoWhite, PicoWhite
+	}
+	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
+
+	// Distant Cyberpunk Skyscraper Silhouettes with Lit Windows
+	for bx := wx; bx < wx+ww; bx += 8 {
+		bH := 8 + (bx*7)%12
+		c.FillRect(bx, wy+wh-bH, 7, bH, hex("#0b0f19"))
+		// Lit window dots
+		for wyy := wy + wh - bH + 2; wyy < wy+wh-1; wyy += 3 {
+			if (bx+wyy)%3 == 0 {
+				c.SetPixel(bx+2, wyy, ColorCityBokehGold)
+				c.SetPixel(bx+4, wyy, ColorCityBokehCyan)
+			}
+		}
+	}
+
+	// Glowing Vertical Neon Signs Outside: "LO-FI" & "DINER 24H"
+	neonPulse := math.Sin(float64(frameCount)*0.12) > 0.0
+	// Cyan "LO-FI" vertical sign
+	signX := wx + 4
+	c.FillRect(signX, wy+2, 4, 14, hex("#0a1128"))
+	if neonPulse {
+		c.DrawLine(signX+1, wy+3, signX+1, wy+14, ColorNeonCyan)
+		c.SetPixel(signX+2, wy+4, ColorNeonCyan)  // L
+		c.SetPixel(signX+2, wy+7, ColorNeonCyan)  // O
+		c.SetPixel(signX+2, wy+10, ColorNeonCyan) // F
+		c.SetPixel(signX+2, wy+13, ColorNeonCyan) // I
+	} else {
+		c.DrawLine(signX+1, wy+3, signX+1, wy+14, hex("#1e3a8a"))
+	}
+
+	// Magenta "DINER" sign
+	sign2X := wx + ww - 8
+	c.FillRect(sign2X, wy+4, 5, 12, hex("#1a051d"))
+	c.DrawLine(sign2X+2, wy+5, sign2X+2, wy+14, ColorNeonMagenta)
+	c.SetPixel(sign2X+1, wy+6, ColorNeonMagenta)
+	c.SetPixel(sign2X+3, wy+10, ColorNeonMagenta)
+
+	// Rain Streaks trickling down outside diner window
+	for i := 0; i < 10; i++ {
+		rx := wx + ((int(frameCount*2) + i*11) % ww)
+		ry := wy + ((int(frameCount*3) + i*5) % (wh - 2))
+		c.SetPixel(rx, ry, ColorRaindropWindow)
+	}
+
+	// Distant moving car headlight streak on street
+	carX := wx + int((frameCount*2)%uint64(ww))
+	c.SetPixel(carX, wy+wh-1, ColorVinylLabelGold)
+	c.SetPixel(carX+1, wy+wh-1, ColorNeonMagenta)
+}
+
+func (s *CyberLofiDinerScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	// Chrome Window Frame with Venetian Blinds
+	c.DrawRectOutline(wx, wy, ww, wh, ColorDinerChromeTrim)
+	c.FillRect(wx, wy, ww, 3, hex("#334155")) // Blinds top housing
+	for by := wy; by < wy+6; by += 2 {
+		c.DrawLine(wx, by, wx+ww, by, hex("#475569"))
+	}
+
+	// Retro Checkerboard Wall (Left & Center Background)
+	c.FillRect(0, 0, wx, c.Height, hex("#1e1b2e"))
+	c.FillRect(wx+ww, 0, c.Width-(wx+ww), c.Height, hex("#1e1b2e"))
+
+	// Padded Red Vinyl Diner Booth Bench (Left Side: Columns 2 to 18)
+	boothX := 2
+	c.FillRect(boothX, 16, 12, 14, ColorDinerVinylRed)
+	// Tufted button seams
+	for by := 18; by < 28; by += 3 {
+		c.SetPixel(boothX+3, by, ColorTrainVelvetDark)
+		c.SetPixel(boothX+8, by, ColorTrainVelvetDark)
+	}
+	c.FillRect(boothX, 28, 14, 6, ColorDinerVinylRed) // Seat cushion
+
+	// Polished Formica & Chrome Edged Diner Table (Columns 14 to 48, Rows 26 to 36)
+	tblX, tblY := 14, 26
+	c.FillRect(tblX, tblY, 34, 4, hex("#38bdf8"))        // Teal Formica top
+	c.FillRect(tblX, tblY+4, 34, 2, ColorDinerChromeTrim) // Chrome trim
+	c.FillRect(tblX+16, tblY+6, 4, 10, ColorDinerChromeTrim) // Center chrome pillar leg
+
+	// Diner Items on Table:
+	// 1. Ceramic Diner Coffee Mug with Steam
+	c.FillRect(tblX+4, tblY-3, 4, 3, PicoWhite)
+	c.FillRect(tblX+5, tblY-3, 2, 1, ColorSiphonBoil)
+	c.SetPixel(tblX+5, tblY-4-int((frameCount/3)%3), ColorMugSteam)
+
+	// 2. Fresh Slice of Cherry Pie on Porcelain Plate
+	c.FillRect(tblX+11, tblY-1, 8, 1, PicoWhite) // plate
+	c.FillRect(tblX+12, tblY-3, 5, 2, ColorCherryPie)
+	c.SetPixel(tblX+12, tblY-4, ColorPieCrust)
+	c.SetPixel(tblX+14, tblY-4, PicoWhite) // whipped cream
+
+	// 3. Ketchup & Mustard Squeeze Bottles
+	c.FillRect(tblX+22, tblY-4, 2, 4, hex("#e63946")) // ketchup
+	c.SetPixel(tblX+22, tblY-5, hex("#e63946"))
+	c.FillRect(tblX+25, tblY-4, 2, 4, hex("#f59e0b")) // mustard
+	c.SetPixel(tblX+25, tblY-5, hex("#f59e0b"))
+
+	// 4. Mini Tabletop Booth Jukebox Selector
+	c.FillRect(tblX+30, tblY-5, 3, 5, ColorDinerChromeTrim)
+	c.SetPixel(tblX+31, tblY-4, ColorNeonMagenta)
+	c.SetPixel(tblX+31, tblY-2, ColorNeonCyan)
+
+	// Standing Retro Wurlitzer Jukebox (Right Side: Columns 52 to 70, Rows 8 to 44)
+	jbxX, jbxY := 52, 8
+	// Main wood & chrome cabinet
+	c.FillRect(jbxX, jbxY+4, 18, 36, hex("#451a03"))
+	// Arched Neon Rainbow Tube
+	jCol := ColorNeonMagenta
+	if (frameCount/8)%3 == 1 {
+		jCol = ColorNeonCyan
+	} else if (frameCount/8)%3 == 2 {
+		jCol = ColorJukeboxRainbow
+	}
+	c.DrawArc(jbxX+9, jbxY+8, 8, 0, math.Pi, jCol)
+	c.DrawRectOutline(jbxX+1, jbxY+8, 16, 28, jCol)
+	// Glass bubble viewing window with spinning turntable
+	c.FillRect(jbxX+4, jbxY+10, 10, 8, hex("#0f172a"))
+	c.FillCircle(jbxX+9, jbxY+14, 3, ColorVinylBlack)
+	c.SetPixel(jbxX+9, jbxY+14, ColorVinylLabelGold)
+	// Speaker Grille with warm amber backlighting
+	c.FillRect(jbxX+3, jbxY+22, 12, 14, ColorWarmGlow)
+	for gy := jbxY + 24; gy < jbxY+34; gy += 2 {
+		c.DrawLine(jbxX+4, gy, jbxX+14, gy, ColorWoodDark)
+	}
+
+	// Rotating Ceiling Fan at Top Center
+	fanX, fanY := 30, 2
+	c.FillCircle(fanX, fanY, 1, ColorDinerChromeTrim)
+	fanPhase := float64(frameCount) * 0.15
+	for b := 0; b < 4; b++ {
+		ang := fanPhase + float64(b)*(math.Pi/2)
+		bx0 := fanX + int(math.Cos(ang)*6)
+		by0 := fanY + int(math.Sin(ang)*2)
+		c.DrawLine(fanX, fanY, bx0, by0, hex("#1e293b"))
+	}
+
+	// FocusBuddy companion sitting in the diner booth
+	if buddy != nil {
+		buddy.Draw(c, 20, 18, frameCount)
+	}
+
+	// Tuxedo cat sleeping comfortably on the red vinyl booth
+	renderCatHelper(c, 4, 24, CatTuxedo, frameCount)
+}
+
+func (s *CyberLofiDinerScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	// Neon Window Signs Ambient Wash
+	c.ApplyRadialLight(12, 8, 16.0, ColorNeonCyan, 0.40)
+	c.ApplyRadialLight(44, 8, 16.0, ColorNeonMagenta, 0.40)
+
+	// Warm Overhead Table Pendant
+	if lampOn {
+		c.ApplyRadialLight(30, 24, 18.0, ColorWarmGlow, 0.50)
+	}
+
+	// Jukebox Multi-Color Glow
+	c.ApplyRadialLight(61, 22, 16.0, ColorJukeboxRainbow, 0.45)
+
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
+	}
+}
+
+// ---------------------------------------------------------
+// 35. NordicBayWindowScene (Nordic Hygge Bay Window & Snowflake Pines)
+// ---------------------------------------------------------
+type NordicBayWindowScene struct{}
+
+func (s *NordicBayWindowScene) ID() SceneType       { return SceneCozyIgloo }
+func (s *NordicBayWindowScene) Name() string     { return "Nordic Hygge Bay Window & Snowflake Pines 🌲🕯️" }
+func (s *NordicBayWindowScene) WindowBounds() Rect { return Rect{X: 10, Y: 2, W: 54, H: 26} }
+
+func (s *NordicBayWindowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	var skyTop, skyBot colorful.Color
+	switch tod {
+	case TimeDawn:
+		skyTop, skyBot = ColorSkyDawnTop, ColorSkyDawnBot
+	case TimeDay:
+		skyTop, skyBot = hex("#1a2e40"), hex("#4a6984")
+	case TimeSunset:
+		skyTop, skyBot = hex("#2b1e3a"), hex("#a26769")
+	case TimeNight:
+		skyTop, skyBot = hex("#09111e"), hex("#1e293b")
+	}
+	if lightning {
+		skyTop, skyBot = PicoWhite, PicoWhite
+	}
+	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
+
+	// Starlit Twilight Sky & North Star
+	c.FillCircle(wx+ww-10, wy+5, 2, ColorStars)
+	c.SetPixel(wx+ww-10, wy+5, PicoWhite)
+
+	// Distant Scandinavian Evergreen Pine Forest Silhouettes with Snow
+	pines := []struct{ X, H int }{
+		{wx + 2, 14}, {wx + 8, 18}, {wx + 15, 12}, {wx + 22, 20},
+		{wx + 30, 16}, {wx + 38, 19}, {wx + 45, 13}, {wx + 50, 17},
+	}
+	for _, p := range pines {
+		py := wy + wh - p.H
+		c.FillRect(p.X+2, py+p.H-3, 2, 3, ColorWoodDark) // trunk
+		for l := 0; l < 4; l++ {
+			lw := 2 + l*2
+			ly := py + l*3
+			c.FillRect(p.X+3-lw/2, ly, lw, 3, hex("#132e27")) // deep evergreen foliage
+			c.FillRect(p.X+3-lw/2, ly, lw, 1, hex("#e2e8f0")) // fresh snow crest
+		}
+	}
+
+	// Tiny Distant Log Cabin with Glowing Warm Window & Smoking Chimney
+	cabX, cabY := wx+26, wy+wh-8
+	c.FillRect(cabX, cabY, 8, 6, ColorWoodDark)
+	c.FillRect(cabX-1, cabY-1, 10, 2, hex("#e2e8f0")) // snow roof
+	c.FillRect(cabX+3, cabY+2, 2, 2, ColorWarmGlow)   // glowing window
+	// Smoke puff
+	c.SetPixel(cabX+1, cabY-2-int((frameCount/3)%4), hex("#cbd5e1"))
+
+	// Gentle Drifting Snowflakes
+	for i := 0; i < 14; i++ {
+		sx := wx + ((int(frameCount) + i*11) % ww)
+		sy := wy + ((int(frameCount*2) + i*7) % (wh - 1))
+		c.SetPixel(sx, sy, hex("#f8fafc"))
+	}
+}
+
+func (s *NordicBayWindowScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	// Scandinavian White-Washed Timber Bay Window Framing
+	c.FillRect(0, 0, wx, c.Height, ColorNordicWoodWhite)
+	c.FillRect(wx+ww, 0, c.Width-(wx+ww), c.Height, ColorNordicWoodWhite)
+	c.FillRect(0, 0, c.Width, wy, ColorNordicWoodWhite)
+	c.DrawRectOutline(wx, wy, ww, wh, hex("#cbd5e1"))
+
+	// Vertical Bay Window Muntin Panes
+	c.DrawLine(wx+ww/3, wy, wx+ww/3, wy+wh, hex("#cbd5e1"))
+	c.DrawLine(wx+2*ww/3, wy, wx+2*ww/3, wy+wh, hex("#cbd5e1"))
+
+	// Twinkling Warm Fairy Light Garland draped across window arch
+	for fx := wx; fx < wx+ww; fx += 4 {
+		fy := wy + 1 + int(math.Sin(float64(fx-wx)*0.2)*2.0)
+		c.SetPixel(fx, fy, ColorLampBrass)
+		if (int(frameCount)+fx)%5 < 3 {
+			c.SetPixel(fx, fy+1, ColorFairyLightFrost)
+			c.SetPixel(fx, fy, ColorFairyLightAmber)
+		}
+	}
+
+	// Deep Cushioned Bay Window Bench (Rows 26 to 36)
+	benchY := 26
+	c.FillRect(wx, benchY, ww, 8, ColorMerinoKnitGrey)
+	// Cable knit stitch lines
+	for kx := wx + 2; kx < wx+ww; kx += 4 {
+		c.DrawLine(kx, benchY, kx, benchY+8, hex("#475569"))
+	}
+
+	// Wide Oak Window Sill Ledge (Rows 34 to 38)
+	c.FillRect(0, benchY+8, c.Width, 4, ColorWoodMedium)
+	c.FillRect(0, benchY+8, c.Width, 1, ColorWoodHighlight)
+
+	// Cozy White-Plush Sheepskin Rug draped across the left bench
+	c.FillCircle(wx+8, benchY+4, 6, ColorSheepskinPlush)
+	c.FillCircle(wx+12, benchY+5, 5, ColorSheepskinPlush)
+
+	// Window Sill Comfort Items:
+	// 1. Ceramic Mug of Spiced Lingonberry Glögg with Cinnamon Stick
+	gX := wx + 18
+	c.FillRect(gX, benchY+5, 4, 4, hex("#1e293b"))
+	c.FillRect(gX+1, benchY+5, 2, 1, ColorSpicedGlogg)
+	c.SetPixel(gX+2, benchY+4, ColorCinnamonStick)
+	c.SetPixel(gX+1, benchY+4, ColorFireOrange) // orange slice
+	c.SetPixel(gX+2, benchY+3-int((frameCount/3)%3), ColorMugSteam)
+
+	// 2. Trio of Scandinavian Pillar Candles on Polished Brass Tray
+	canX := wx + 38
+	c.FillRect(canX-2, benchY+7, 14, 1, ColorLampBrass) // tray
+	candles := []struct{ X, H int }{{canX, 5}, {canX + 4, 7}, {canX + 8, 4}}
+	for _, can := range candles {
+		c.FillRect(can.X, benchY+7-can.H, 2, can.H, ColorCandleWax)
+		if lampOn {
+			c.SetPixel(can.X, benchY+6-can.H, ColorFireOrange)
+			c.SetPixel(can.X, benchY+5-can.H, ColorFireYellow)
+		}
+	}
+
+	// 3. Stack of Hardcover Nordic Novels with Gold Ribbon
+	bkX := wx + 26
+	c.FillRect(bkX, benchY+6, 8, 2, ColorLeatherBurgundy)
+	c.FillRect(bkX+1, benchY+4, 7, 2, ColorLeatherNavy)
+	c.SetPixel(bkX+4, benchY+3, ColorBookGoldGilt) // ribbon
+
+	// Lower Living Room Wall & Baseboard (Rows 38 to Height)
+	c.FillRect(0, benchY+12, c.Width, c.Height-(benchY+12), hex("#f1f5f9"))
+	c.FillRect(0, c.Height-2, c.Width, 2, ColorWoodDark) // baseboard
+
+	// FocusBuddy companion tucked cozy into the bay window cushions
+	if buddy != nil {
+		buddy.Draw(c, 30, 20, frameCount)
+	}
+
+	// Sleeping Ginger Tabby cat curled into a cozy donut on the sheepskin rug
+	renderCatHelper(c, wx+6, benchY+2, CatOrange, frameCount)
+}
+
+func (s *NordicBayWindowScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	// Fairy light ambient glow along the top
+	for fx := 14; fx < 60; fx += 8 {
+		c.ApplyRadialLight(fx, 4, 8.0, ColorFairyLightAmber, 0.25)
+	}
+
+	// Warm candle trio glow on windowsill
+	if lampOn {
+		c.ApplyRadialLight(52, 30, 16.0, ColorWarmGlow, 0.55)
+		c.ApplyRadialLight(32, 31, 10.0, ColorWarmGlow, 0.35)
+	}
+
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
+	}
+}
+
+// ---------------------------------------------------------
+// 36. ForestTreehouseScene (Forest Canopy Treehouse & Starlit Rope Bridge)
+// ---------------------------------------------------------
+type ForestTreehouseScene struct{}
+
+func (s *ForestTreehouseScene) ID() SceneType       { return SceneSkyIsland }
+func (s *ForestTreehouseScene) Name() string     { return "Forest Canopy Treehouse & Starlit Rope Bridge 🌲🌉" }
+func (s *ForestTreehouseScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 30} }
+
+func (s *ForestTreehouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+	r := s.WindowBounds()
+	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
+
+	var skyTop, skyBot colorful.Color
+	switch tod {
+	case TimeDawn:
+		skyTop, skyBot = ColorSkyDawnTop, ColorSkyDawnBot
+	case TimeDay:
+		skyTop, skyBot = hex("#0f2e2e"), hex("#134e4a")
+	case TimeSunset:
+		skyTop, skyBot = ColorSkySunsetTop, ColorSkySunsetBot
+	case TimeNight:
+		skyTop, skyBot = hex("#03071e"), hex("#1e1b4b")
+	}
+	if lightning {
+		skyTop, skyBot = PicoWhite, PicoWhite
+	}
+	c.DrawVerticalGradient(wx, wy, ww, wh, skyTop, skyBot)
+
+	// Drifting Purple/Cyan Cosmic Nebula Clouds
+	for _, star := range stars {
+		if star.X >= wx && star.X < wx+ww && star.Y >= wy && star.Y < wy+wh {
+			twinkle := math.Sin(float64(frameCount)*0.1 + star.Phase)
+			if twinkle > 0.3 {
+				c.SetPixel(star.X, star.Y, ColorStars)
+			}
+		}
+	}
+	// Soft magenta nebula dust band
+	for nx := wx + 10; nx < wx+ww-10; nx += 2 {
+		ny := wy + 6 + int(math.Sin(float64(nx)*0.1)*3.0)
+		c.BlendPixel(nx, ny, ColorCosmicNebula, 0.35)
+		c.BlendPixel(nx+1, ny+1, ColorCrystalPrismCyan, 0.25)
+	}
+
+	// Layered Distant Mountain Ridges beneath the starry canopy
+	for mx := wx; mx < wx+ww; mx++ {
+		mH := int(math.Sin(float64(mx)*0.08)*4.0) + 8
+		c.FillRect(mx, wy+wh-mH, 1, mH, hex("#0b192c"))
+		c.SetPixel(mx, wy+wh-mH, hex("#1e3e62"))
+	}
+
+	// Ancient Cedar Tree Trunk & Massive Canopy Branches framing top & left
+	c.FillRect(0, 0, 8, c.Height, ColorTreehouseTimber) // Main left trunk
+	// Overhanging top branches with lush leafy foliage clusters
+	c.FillCircle(12, wy+2, 8, ColorTreeCanopyFoliage)
+	c.FillCircle(24, wy+1, 6, ColorMossGreen)
+	c.FillCircle(wx+ww-6, wy+2, 8, ColorTreeCanopyFoliage)
+
+	// Suspension Rope Bridge stretching into neighboring canopy (Left to Center-Right)
+	for rx := wx + 6; rx < wx+ww-16; rx += 2 {
+		sagY := wy + 16 + int(math.Sin(float64(rx-wx)*0.06)*4.0)
+		c.SetPixel(rx, sagY-4, ColorRopeBridgeFiber) // top handrail rope
+		c.SetPixel(rx, sagY, ColorRopeBridgeFiber)   // bottom plank rope
+		c.SetPixel(rx, sagY+1, ColorWoodDark)        // wood plank
+		if rx%6 == 0 {
+			c.DrawLine(rx, sagY-4, rx, sagY, ColorRopeBridgeFiber) // vertical rope stays
+			// Little glowing lantern along the bridge
+			c.SetPixel(rx, sagY-2, ColorStormLanternBrass)
+			c.SetPixel(rx, sagY-1, ColorWarmGlow)
+		}
+	}
+
+	// Bioluminescent Fireflies floating across the sky
+	for f := 0; f < 6; f++ {
+		fx := wx + 10 + int((math.Sin(float64(frameCount)*0.04+float64(f))*18.0)+float64(f*9))
+		fy := wy + 8 + int((math.Cos(float64(frameCount)*0.05+float64(f*2))*8.0)+float64(f*3))
+		if fx >= wx && fx < wx+ww && fy >= wy && fy < wy+wh {
+			c.SetPixel(fx, fy, ColorFireflyBiolum)
+			c.BlendPixel(fx-1, fy, ColorFireflyBiolum, 0.4)
+			c.BlendPixel(fx+1, fy, ColorFireflyBiolum, 0.4)
+		}
+	}
+}
+
+func (s *ForestTreehouseScene) RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed) {
+	// Rustic Cedar Treehouse Deck Floor (Rows 32 to Height)
+	deckY := 32
+	c.FillRect(0, deckY, c.Width, c.Height-deckY, ColorTreehouseTimber)
+	c.FillRect(0, deckY, c.Width, 1, ColorWoodHighlight)
+	// Plank seams
+	for dx := 0; dx < c.Width; dx += 8 {
+		c.DrawLine(dx, deckY, dx, c.Height, ColorWoodDark)
+	}
+
+	// Wooden Deck Handrail Posts (Rows 26 to 32)
+	for px := 4; px < c.Width-18; px += 10 {
+		c.FillRect(px, deckY-6, 2, 6, ColorWoodDark)
+	}
+	c.FillRect(0, deckY-6, c.Width-18, 2, ColorWoodMedium) // top railing
+
+	// Treehouse Cozy Bedroom with Warm Circular Bullseye Window (Right Side: Columns 54 to 74, Rows 8 to 32)
+	c.FillRect(54, 8, 20, 24, ColorTreehouseTimber)
+	c.FillCircle(64, 20, 8, ColorWoodDark)
+	c.FillCircle(64, 20, 7, ColorWarmGlow) // glowing interior
+	c.DrawCircle(64, 20, 7, ColorTreehouseTimber)
+	c.DrawLine(64, 13, 64, 27, ColorTreehouseTimber) // window cross
+	c.DrawLine(57, 20, 71, 20, ColorTreehouseTimber)
+
+	// Hanging Brass Storm Lantern swinging gently from overhead branch (Left: Column 14, Rows 4 to 14)
+	sway := int(math.Sin(float64(frameCount)*0.07) * 2.0)
+	lanX := 14 + sway
+	c.DrawLine(14, 0, lanX, 8, ColorBrassPendulum) // hanging chain
+	c.FillRect(lanX-2, 8, 5, 2, ColorStormLanternBrass) // top cap
+	c.FillRect(lanX-1, 10, 3, 4, ColorGlassTint)       // glass cage
+	c.FillRect(lanX-2, 14, 5, 2, ColorStormLanternBrass) // base
+	if lampOn {
+		c.FillRect(lanX-1, 11, 3, 2, ColorFireYellow)
+		c.SetPixel(lanX, 11, ColorFireOrange)
+	}
+
+	// Canvas Hammock strung on Deck (Columns 2 to 24, Rows 26 to 34)
+	c.DrawArc(12, 26, 10, 0, math.Pi, ColorHammockCanvas)
+	c.FillRect(4, 28, 16, 4, ColorHammockCanvas)
+	c.FillRect(6, 29, 12, 2, ColorBlanketTeal) // wool blanket
+
+	// Deck Table with Field Journal & Camping Enamel Mug (Columns 40 to 52, Rows 28 to 34)
+	tblX := 40
+	c.FillRect(tblX, 28, 12, 4, ColorWoodMedium)
+	c.FillRect(tblX+2, 32, 2, 4, ColorWoodDark)
+	c.FillRect(tblX+8, 32, 2, 4, ColorWoodDark)
+
+	// Enamel Camping Mug with Steam
+	c.FillRect(tblX+2, 25, 3, 3, ColorThermosSteel)
+	c.SetPixel(tblX+3, 24-int((frameCount/3)%3), ColorMugSteam)
+
+	// Open Field Journal
+	c.FillRect(tblX+6, 26, 5, 2, ColorParchmentPage)
+	c.SetPixel(tblX+8, 26, ColorStoveCastIron)
+
+	// Brass Astronomical Telescope on Wooden Tripod (Columns 30 to 38, Rows 20 to 32)
+	teleX := 32
+	c.DrawLine(teleX, 20, teleX+6, 16, ColorTelescopeBrass) // telescope tube
+	c.FillRect(teleX+5, 15, 3, 3, ColorTelescopeBrass)
+	c.DrawLine(teleX+2, 20, teleX-2, 32, ColorWoodDark) // tripod leg 1
+	c.DrawLine(teleX+2, 20, teleX+6, 32, ColorWoodDark) // tripod leg 2
+
+	// FocusBuddy companion leaning on the treehouse deck railing looking at the stars
+	if buddy != nil {
+		buddy.Draw(c, 24, 20, frameCount)
+	}
+
+	// Sleeping Ginger Tabby cat nestled comfortably inside the hammock
+	renderCatHelper(c, 8, 25, CatOrange, frameCount)
+}
+
+func (s *ForestTreehouseScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool) {
+	// Storm Lantern radial glow
+	if lampOn {
+		c.ApplyRadialLight(14, 12, 16.0, ColorWarmGlow, 0.55)
+	}
+
+	// Treehouse Bedroom Circular Window warm light spill
+	c.ApplyRadialLight(64, 20, 14.0, ColorWarmGlow, 0.45)
+
+	// Bridge lanterns soft glow
+	c.ApplyRadialLight(40, 20, 10.0, ColorFairyLightAmber, 0.30)
+
+	if lightning {
+		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
+	}
+}
+
 
 
 

@@ -313,11 +313,46 @@ var (
 	ColorCrystalPrismCyan= hex("#38bdf8") // Suspended Cyan Crystal Prism
 	ColorCrystalPrismPink= hex("#f472b6") // Refracted Magenta Light Flare
 	ColorCrucibleFire    = hex("#06b6d4") // Mystical Azure Alchemical Flame
+
+	// Kyoto Machiya Courtyard Garden & Rain Chains
+	ColorMachiyaCedar    = hex("#2b1810") // Dark aged Japanese cedar timbers
+	ColorMachiyaLattice  = hex("#ddb892") // Cedar shoji lattice grid
+	ColorKusariDoiCopper = hex("#b87333") // Copper rain chain links
+	ColorKusariWaterGlint= hex("#90e0ef") // Glistening water droplet glint
+	ColorKyotoClayTile   = hex("#343a40") // Traditional grey clay roof tiles
+	ColorTsuboniwaMoss   = hex("#386641") // Deep velvet courtyard moss
+	ColorHibachiCharcoal = hex("#ff4800") // Glowing binchotan charcoal in hibachi
+
+	// Rainy Midnight Cyber Lofi Diner & Neon Window Booth
+	ColorDinerVinylRed   = hex("#b91c1c") // Padded red vinyl diner booth
+	ColorDinerChromeTrim = hex("#e2e8f0") // Polished chrome booth edging
+	ColorNeonMagenta     = hex("#f72585") // Glowing magenta diner sign
+	ColorNeonCyan        = hex("#4cc9f0") // Glowing cyan 24H neon sign
+	ColorCherryPie       = hex("#780000") // Dark cherry pie filling
+	ColorPieCrust        = hex("#e9c46a") // Flaky golden pie crust
+	ColorJukeboxRainbow  = hex("#7209b7") // Jukebox neon arch
+
+	// Nordic Hygge Bay Window & Snowflake Pines
+	ColorNordicWoodWhite = hex("#e2e8f0") // Scandinavian painted white timber window
+	ColorMerinoKnitGrey  = hex("#64748b") // Chunky cable-knit merino wool throw
+	ColorSheepskinPlush  = hex("#fdf0d5") // Fluffy cream sheepskin rug
+	ColorSpicedGlogg     = hex("#6b2d5c") // Steaming dark lingonberry glogg
+	ColorCinnamonStick   = hex("#854d0e") // Fragrant cinnamon stick
+	ColorFairyLightFrost = hex("#ffeedd") // Twinkling frosted window fairy lights
+
+	// Forest Canopy Treehouse & Starlit Rope Bridge
+	ColorTreehouseTimber     = hex("#452c1e") // Hand-hewn cedar treehouse planks
+	ColorRopeBridgeFiber     = hex("#c29a6a") // Braided hemp rope bridge lashing
+	ColorTreeCanopyFoliage   = hex("#134e4a") // Deep emerald forest canopy leaves
+	ColorStormLanternBrass   = hex("#f59e0b") // Hanging brass storm lantern
+	ColorFireflyBiolum       = hex("#a7f3d0") // Floating bioluminescent firefly glow
+	ColorHammockCanvas       = hex("#e7cba9") // Natural unbleached cotton hammock canvas
 )
 
 func hex(s string) colorful.Color {
 	c, _ := colorful.Hex(s)
 	return c
 }
+
 
 

@@ -396,6 +396,14 @@ func TestAllHandcraftedScenesInView(t *testing.T) {
 		art.SceneBambooGrove,
 		art.SceneWinterCafe,
 		art.SceneAutumnPark,
+		art.SceneFairytaleWindmill,
+		art.SceneCyberBar,
+		art.SceneCloudTemple,
+		art.SceneWizardTower,
+		art.SceneZenBonsai,
+		art.SceneCyberDiner,
+		art.SceneCozyIgloo,
+		art.SceneSkyIsland,
 	}
 
 	m := NewModel()
