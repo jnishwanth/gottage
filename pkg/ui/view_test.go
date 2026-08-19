@@ -388,6 +388,10 @@ func TestAllHandcraftedScenesInView(t *testing.T) {
 		art.SceneMagicSanctuary,
 		art.SceneMountainAuroraShack,
 		art.SceneStarlightTreehouse,
+		art.SceneCoffeeShop,
+		art.SceneEnchantedForest,
+		art.SceneRiverBridge,
+		art.SceneOceanWaves,
 	}
 
 	m := NewModel()
@@ -403,6 +407,40 @@ func TestAllHandcraftedScenesInView(t *testing.T) {
 		if !strings.Contains(v, "GOTTAGE") {
 			t.Errorf("Expected View to contain GOTTAGE for scene %v", st)
 		}
+	}
+}
+
+func TestBeverageSystem(t *testing.T) {
+	m := NewModel()
+	m.Width = 120
+	m.Height = 40
+
+	// Test Header contains Beverage badge
+	v := m.View()
+	if !strings.Contains(v, "Dark Roast") {
+		t.Errorf("Expected View to display default Dark Roast coffee badge")
+	}
+
+	// Test Ambiance View contains Artisan Beverage Bar
+	m.ActiveTab = TabAmbiance
+	vAmb := m.View()
+	if !strings.Contains(vAmb, "Artisan Hot Beverage") {
+		t.Errorf("Expected Ambiance view to render Artisan Hot Beverage section")
+	}
+
+	// Test Key 'J' (Brew Next Drink)
+	updated, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'J'}})
+	m2 := updated.(Model)
+	if !strings.Contains(m2.StatusMsg, "Freshly Brewed") {
+		t.Errorf("Expected 'J' key to brew next drink, got: %s", m2.StatusMsg)
+	}
+
+	// Test Key 'd' (Take a Sip)
+	m2.ActiveTab = TabArt
+	updated2, _ := m2.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'d'}})
+	m3 := updated2.(Model)
+	if !strings.Contains(m3.StatusMsg, "warm") {
+		t.Errorf("Expected 'd' key to take a sip, got: %s", m3.StatusMsg)
 	}
 }
 

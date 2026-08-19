@@ -224,6 +224,33 @@ var (
 	ColorCityBokehCyan   = hex("#4cc9f0") // Distant Skyline Neon Glow
 	ColorThermosSteel    = hex("#457b9d") // Insulated Midnight Thermos
 	ColorBohoRug         = hex("#e76f51") // Patterned Bohemian Floor Rug
+
+	// Antique Bookshop & Reading Nook
+	ColorLeatherBurgundy = hex("#6a040f") // Antique Burgundy Leather Book Binding
+	ColorLeatherNavy     = hex("#03045e") // Navy Moroccan Leather Book Binding
+	ColorLeatherForest   = hex("#1b4332") // Forest Green Gilt Book Binding
+	ColorBookGoldGilt    = hex("#ffd700") // Gold Leaf Spine Lettering
+	ColorParchmentPage   = hex("#fefae0") // Aged Cream Parchment Book Page
+	ColorVelvetArmchair  = hex("#2d6a4f") // Deep Emerald Velvet Wingback Chair
+	ColorLadderBrassRail = hex("#d4af37") // Polished Brass Rolling Ladder Rail
+
+	// Botanical Greenhouse & Potting Shed
+	ColorTerrariumMoss   = hex("#55a630") // Vivid Forest Moss Terrarium
+	ColorMacrameHanger   = hex("#fdf0d5") // Braided Natural Macrame Cord
+	ColorPottingSoil     = hex("#38220f") // Rich Dark Potting Soil
+	ColorGlassCondense   = hex("#748cab") // Glass Condensation Droplets
+
+	// Riverside Moonlit Camp
+	ColorTentAmberGlow   = hex("#e07a5f") // Glowing Canvas Tent Fabric
+	ColorRiverWaterDeep  = hex("#0d1b2a") // Deep Mountain River Current
+	ColorRiverFoamRipples= hex("#778da9") // River Shimmer & Foam Ripple
+	ColorCampLogBench    = hex("#5c3d2e") // Hand-Hewn Pine Log Bench
+	ColorRiverPebbles    = hex("#415a77") // Riverbed Smooth River Stones
+
+	// Seaside Cliffside Balcony & Lighthouse
+	ColorOceanWaveDeep   = hex("#03071e") // Deep Atlantic Ocean Blue
+	ColorTeakDeckWood    = hex("#7f4f24") // Weathered Nautical Teak Deck
+	ColorCoastalLavender = hex("#7b2cbf") // Potted French Coastal Lavender
 )
 
 func hex(s string) colorful.Color {

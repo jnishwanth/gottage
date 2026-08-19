@@ -3,6 +3,8 @@ package ui
 import (
 	"fmt"
 	"strings"
+
+	"gottage/pkg/features"
 )
 
 // CommandItem defines a single quick action inside the Command Palette.
@@ -88,6 +90,110 @@ func GetCommandList(m *Model) []CommandItem {
 		Action: func(m *Model) {
 			q := m.Inspiration.NextQuote()
 			m.SetStatusMsg(fmt.Sprintf("✨ Quote: \"%s\" — %s", q.Quote, q.Author))
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "☕ Beverage: Take a Warm Sip",
+		Category:    "Cozy Beverage",
+		Shortcut:    "[ Ctrl+B / d ]",
+		Description: "Take a soothing warm sip from your hot mug for clarity and comfort",
+		Action: func(m *Model) {
+			if m.Beverage != nil {
+				msg, warmth := m.Beverage.TakeSip()
+				m.SetStatusMsg(fmt.Sprintf("%s (%d%% ♨️)", msg, warmth))
+			}
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "🫖 Beverage: Cycle Next Hot Drink",
+		Category:    "Cozy Beverage",
+		Shortcut:    "[ Shift+J ]",
+		Description: "Freshly brew the next warm beverage from the artisan cottage menu",
+		Action: func(m *Model) {
+			if m.Beverage != nil {
+				drink := m.Beverage.NextDrink()
+				m.SetStatusMsg("Freshly Brewed: " + drink.Name + " ✨ (" + drink.Aroma + ")")
+			}
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "☕ Brew: Pour-Over Dark Roast Coffee",
+		Category:    "Cozy Beverage",
+		Shortcut:    "[ Brew Coffee ]",
+		Description: "Slow-dripped Ethiopian dark roast with velvety crema and roasted hazelnut notes",
+		Action: func(m *Model) {
+			if m.Beverage != nil {
+				drink := m.Beverage.BrewDrink(int(features.DrinkDripCoffee))
+				m.SetStatusMsg("Freshly Brewed: " + drink.Name + " ☕")
+			}
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "🍵 Brew: Ceremonial Matcha Latte",
+		Category:    "Cozy Beverage",
+		Shortcut:    "[ Brew Matcha ]",
+		Description: "Uji ceremonial matcha whisked with warm oat foam for mindful focus",
+		Action: func(m *Model) {
+			if m.Beverage != nil {
+				drink := m.Beverage.BrewDrink(int(features.DrinkMatchaLatte))
+				m.SetStatusMsg("Freshly Whisked: " + drink.Name + " 🍵")
+			}
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "🫖 Brew: Artisan Earl Grey Tea",
+		Category:    "Cozy Beverage",
+		Shortcut:    "[ Brew Earl Grey ]",
+		Description: "Single-origin Ceylon black tea steeped with cold-pressed bergamot peel",
+		Action: func(m *Model) {
+			if m.Beverage != nil {
+				drink := m.Beverage.BrewDrink(int(features.DrinkEarlGrey))
+				m.SetStatusMsg("Steeped Fresh: " + drink.Name + " 🫖")
+			}
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "🍫 Brew: Marshmallow Hot Chocolate",
+		Category:    "Cozy Beverage",
+		Shortcut:    "[ Brew Cocoa ]",
+		Description: "Melted Valrhona cocoa simmered with sweet vanilla and fluffy marshmallows",
+		Action: func(m *Model) {
+			if m.Beverage != nil {
+				drink := m.Beverage.BrewDrink(int(features.DrinkHotCocoa))
+				m.SetStatusMsg("Simmered Fresh: " + drink.Name + " 🍫")
+			}
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "🍯 Brew: Honey Cardamom Spiced Chai",
+		Category:    "Cozy Beverage",
+		Shortcut:    "[ Brew Chai ]",
+		Description: "Simmered Assam tea with cracked spices, fresh ginger, and clover honey",
+		Action: func(m *Model) {
+			if m.Beverage != nil {
+				drink := m.Beverage.BrewDrink(int(features.DrinkSpicedChai))
+				m.SetStatusMsg("Simmered Fresh: " + drink.Name + " 🍯")
+			}
+		},
+	})
+
+	items = append(items, CommandItem{
+		Title:       "🌼 Brew: Calming Chamomile Blossom",
+		Category:    "Cozy Beverage",
+		Shortcut:    "[ Brew Chamomile ]",
+		Description: "Caffeine-free whole flower chamomile infusion for deep tranquil calm",
+		Action: func(m *Model) {
+			if m.Beverage != nil {
+				drink := m.Beverage.BrewDrink(int(features.DrinkChamomile))
+				m.SetStatusMsg("Steeped Fresh: " + drink.Name + " 🌼")
+			}
 		},
 	})
 

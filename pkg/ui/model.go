@@ -84,6 +84,7 @@ type Model struct {
 	Tasks       *features.TaskList
 	Presets     *features.PresetManager
 	Inspiration *features.InspirationManager
+	Beverage    *features.BeverageManager
 
 	// Sub-view State
 	AddingTask bool
@@ -143,6 +144,7 @@ func NewModel() Model {
 		Tasks:       features.NewTaskList(),
 		Presets:     features.NewPresetManager("user_presets.json"),
 		Inspiration: features.NewInspirationManager(),
+		Beverage:    features.NewBeverageManager(),
 
 		AddingTask: false,
 		TextInput:  ti,
@@ -318,14 +320,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 							m.SetStatusMsg("Lofi Radio Paused ⏸️")
 						}
 					}
-				} else if msg.Y >= 12 && msg.Y <= 18 {
+				} else if msg.Y >= 12 && msg.Y <= 17 {
 					m.Timer.Toggle()
 					if m.Timer.Running {
 						m.SetStatusMsg("Timer Started ⏱️")
 					} else {
 						m.SetStatusMsg("Timer Paused ⏸️")
 					}
-				} else if msg.Y >= 20 {
+				} else if msg.Y >= 18 && msg.Y <= 22 {
+					if m.Beverage != nil {
+						msg, warmth := m.Beverage.TakeSip()
+						m.SetStatusMsg(fmt.Sprintf("%s (%d%% ♨️)", msg, warmth))
+					}
+				} else if msg.Y >= 23 {
 					petMsg := m.Scene.PetCat()
 					m.SetStatusMsg(petMsg)
 				}
@@ -728,6 +735,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			q := m.Inspiration.NextQuote()
 			m.SetStatusMsg(fmt.Sprintf("✨ Quote: \"%s\" — %s", q.Quote, q.Author))
 
+		case "J":
+			if m.Beverage != nil {
+				drink := m.Beverage.NextDrink()
+				m.SetStatusMsg("Freshly Brewed: " + drink.Name + " ✨ (" + drink.Aroma + ")")
+			}
+
+		case "ctrl+b":
+			if m.Beverage != nil {
+				msg, warmth := m.Beverage.TakeSip()
+				m.SetStatusMsg(fmt.Sprintf("%s (%d%% ♨️)", msg, warmth))
+			}
+
 		case "b":
 			newScene := m.Scene.PrevScene()
 			m.SetStatusMsg("Switched Scene: " + newScene.String())
@@ -999,6 +1018,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.ActiveTab == TabTasks {
 				m.Tasks.DeleteCurrent()
 				m.SetStatusMsg("Task deleted 🗑️")
+			} else if m.Beverage != nil {
+				msg, warmth := m.Beverage.TakeSip()
+				m.SetStatusMsg(fmt.Sprintf("%s (%d%% ♨️)", msg, warmth))
 			}
 		}
 	}

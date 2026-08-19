@@ -214,6 +214,9 @@ func (m Model) renderHeader() string {
 		miniSpec := RenderAudioSpectrum(6, true, m.Scene.FrameCount, SpectrumBars, m.Styles.BoldAccent)
 		headerBadges = append(headerBadges, m.Styles.StatusBadge.Render(" 🎵 "+miniSpec+" "))
 	}
+	if m.Beverage != nil {
+		headerBadges = append(headerBadges, m.Styles.StatusBadge.Render(" "+m.Beverage.StatusBadge()+" "))
+	}
 	headerBadges = append(headerBadges, m.Styles.MutedText.Render(m.catBlissBadge()))
 	headerBadges = append(headerBadges, themeBadge)
 
@@ -272,15 +275,20 @@ func (m Model) renderArtView() string {
 		m.Scene.ShaderEffect.String(),
 	)
 
-	quickDeck := fmt.Sprintf(" %s Scene  %s Weather  %s Time  %s Lamp %s  %s Fire %s  %s Cat (%s)  %s Pet 🐾  %s Music",
+	bevStr := "☕"
+	if m.Beverage != nil {
+		bevStr = m.Beverage.CurrentDrink().Icon
+	}
+
+	quickDeck := fmt.Sprintf(" %s Scene  %s Weather  %s Time  %s Lamp %s  %s Fire %s  %s Brew %s  %s Sip ♨️  %s Pet 🐾",
 		m.Styles.KeyCap.Render("v"),
 		m.Styles.KeyCap.Render("w"),
 		m.Styles.KeyCap.Render("t"),
 		m.Styles.KeyCap.Render("l"), lampIcon,
 		m.Styles.KeyCap.Render("f"), fireIcon,
-		m.Styles.KeyCap.Render("c"), truncate(m.Scene.CatBreed.String(), 6),
+		m.Styles.KeyCap.Render("J"), bevStr,
+		m.Styles.KeyCap.Render("d"),
 		m.Styles.KeyCap.Render("K"),
-		m.Styles.KeyCap.Render("Space"),
 	)
 
 	content := metaHeader + "\n\n" + artStr + "\n\n" + m.Styles.MutedText.Render(quickDeck)
@@ -468,6 +476,19 @@ func (m Model) renderAmbianceView() string {
 	sb.WriteString(fmt.Sprintf("  %s Weather Audio Auto-Sync: %s\n\n",
 		m.Styles.KeyCap.Render("[A]"), onOffStr(m.AutoSyncAudio)))
 
+	if m.Beverage != nil {
+		drink := m.Beverage.CurrentDrink()
+		wCompleted := m.Beverage.Warmth / 10
+		warmthBar := strings.Repeat("█", wCompleted) + strings.Repeat("░", 10-wCompleted)
+		sb.WriteString(m.Styles.Title.Render("☕ Artisan Hot Beverage & Tea Bar") + "  " + m.Styles.MutedText.Render("(Press [J] to brew next, [d] or [Ctrl+B] to sip)") + "\n")
+		sb.WriteString(fmt.Sprintf("  Active Drink: %s    Warmth: [%s] %d%%    Sips Taken: %d\n",
+			m.Styles.BoldAccent.Render(drink.Name),
+			m.Styles.ProgressBar.Render(warmthBar),
+			m.Beverage.Warmth,
+			m.Beverage.SipCount))
+		sb.WriteString(fmt.Sprintf("  Aroma & Notes: %s\n\n", m.Styles.MutedText.Render(drink.FlavorNotes)))
+	}
+
 	sb.WriteString(m.Styles.Title.Render("🎵 Curated Lofi Streams & Volume (Press n/p to cycle, +/- volume)") + "\n")
 	volStr := "80%"
 	if m.CLIAMP != nil {
@@ -556,7 +577,20 @@ func (m Model) renderSidebar() string {
 
 	sb.WriteString(strings.Repeat("─", 24) + "\n\n")
 
-	// 3. Mindfulness Prompt Card
+	// 3. Cozy Warm Beverage Card
+	if m.Beverage != nil {
+		drink := m.Beverage.CurrentDrink()
+		sb.WriteString(m.Styles.Title.Render("☕ WARM BEVERAGE") + "\n")
+		sb.WriteString(m.Styles.BoldAccent.Render(truncate(drink.Name, 22)) + "\n")
+		wCompleted := m.Beverage.Warmth / 10
+		wBar := strings.Repeat("█", wCompleted) + strings.Repeat("░", 10-wCompleted)
+		sb.WriteString(fmt.Sprintf("Warmth: [%s] %d%%\n", m.Styles.ProgressBar.Render(wBar), m.Beverage.Warmth))
+		sb.WriteString(m.Styles.MutedText.Render(truncate(drink.Aroma, 22)) + "\n")
+		sb.WriteString(m.Styles.MutedText.Render("[d] Sip ♨️ • [J] Brew Next") + "\n\n")
+		sb.WriteString(strings.Repeat("─", 24) + "\n\n")
+	}
+
+	// 4. Mindfulness Prompt Card
 	q := m.Inspiration.CurrentQuote()
 	sb.WriteString(m.Styles.Title.Render("✨ MINDFULNESS PROMPT") + "\n")
 	sb.WriteString(m.Styles.BoldAccent.Render("\""+truncate(q.Quote, 22)+"\"") + "\n")
@@ -564,7 +598,7 @@ func (m Model) renderSidebar() string {
 
 	sb.WriteString(strings.Repeat("─", 24) + "\n\n")
 
-	// 4. Quick Companion Controls Card
+	// 5. Quick Companion Controls Card
 	sb.WriteString(m.Styles.Title.Render("🌿 COZY COMPANION") + "\n")
 	catName := "Sparky"
 	switch m.Scene.CatBreed {
@@ -606,6 +640,12 @@ func (m Model) renderHelpModal(bg string) string {
   [Y]      Cycle Auto-Cycle Scene Rotation Mode (1m, 3m, 5m, 10m, Timer-Linked)
   [U]      Toggle Auto-Cycle Scope (Favorites Only / All 370+ Scenes)
   [v/b]    Cycle Next / Previous Scene Preset
+
+  COZY BEVERAGE & COMPANION:
+  [J]      Brew Next Warm Drink (Coffee, Matcha, Earl Grey, Chai, Cocoa, Chamomile)
+  [d]      Take a Soothing Warm Sip from Hot Mug ([Ctrl+B])
+  [K]      Pet Cozy Cat Companion (Heart Particles & Purrs)
+  [Q]      Cycle Mindfulness & Focus Inspiration Quotes
 
   [C]      Cycle Color Filter (Natural, Warm Amber, Cool Synth, Phosphor, Sepia, Midnight)
   [P]      Cycle Screen Particle Overlay (Sakura, Embers, Snow, Matrix, Stars)
