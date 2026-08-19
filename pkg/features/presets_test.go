@@ -12,8 +12,8 @@ func TestPresetManager(t *testing.T) {
 	defer os.Remove(tmpFile)
 
 	pm := NewPresetManager(tmpFile)
-	if len(pm.Presets) < 4 {
-		t.Fatalf("expected at least 4 builtin presets, got %d", len(pm.Presets))
+	if len(pm.Presets) < 10 {
+		t.Fatalf("expected at least 10 builtin presets, got %d", len(pm.Presets))
 	}
 
 	custom := AtmospherePreset{

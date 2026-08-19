@@ -294,6 +294,47 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		cmds = append(cmds, m.timerTick())
 
+	case tea.MouseMsg:
+		if msg.Button == tea.MouseButtonLeft && msg.Action == tea.MouseActionPress {
+			if msg.Y <= 2 {
+				// Header tabs clicked
+				if msg.X > m.Width/2 {
+					tabSpan := 12
+					tabIdx := (msg.X - (m.Width / 2)) / tabSpan
+					if tabIdx >= 0 && tabIdx < 4 {
+						m.ActiveTab = ActiveTab(tabIdx)
+						m.SetStatusMsg("Switched Tab: " + m.ActiveTab.String())
+					}
+				}
+			} else if msg.X > m.mainWidth() {
+				// Sidebar cards clicked
+				if msg.Y >= 3 && msg.Y <= 10 {
+					if m.CLIAMP != nil {
+						_ = m.CLIAMP.TogglePlayPause()
+						st := m.CLIAMP.GetStatus()
+						if st.Playing {
+							m.SetStatusMsg(fmt.Sprintf("Playing Lofi: %s 🎵", st.TrackTitle))
+						} else {
+							m.SetStatusMsg("Lofi Radio Paused ⏸️")
+						}
+					}
+				} else if msg.Y >= 12 && msg.Y <= 18 {
+					m.Timer.Toggle()
+					if m.Timer.Running {
+						m.SetStatusMsg("Timer Started ⏱️")
+					} else {
+						m.SetStatusMsg("Timer Paused ⏸️")
+					}
+				} else if msg.Y >= 20 {
+					petMsg := m.Scene.PetCat()
+					m.SetStatusMsg(petMsg)
+				}
+			} else if m.ActiveTab == TabArt {
+				// Canvas click -> Pet cat companion
+				petMsg := m.Scene.PetCat()
+				m.SetStatusMsg(petMsg)
+			}
+		}
 
 	case tea.KeyMsg:
 		// Modal: 2D Audio Visualizer & Spectrum Studio

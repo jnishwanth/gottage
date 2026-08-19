@@ -123,9 +123,44 @@ var (
 	ColorCocoaHot       = hex("#3b1f14") // Rich Hot Chocolate
 	ColorMarshmallow    = hex("#fffdfa") // Fluffy Marshmallow
 	ColorFrostIce       = hex("#e0f2fe") // Window Frost Crystals
+
+	// Greenhouse & Glass Solarium
+	ColorGreenhouseFrame= hex("#1f2d16") // Dark Forest Green Iron Ribs
+	ColorMonsteraDark   = hex("#0f2411") // Deep Emerald Monstera Leaf
+	ColorFernGreen      = hex("#38b000") // Lush Trailing Fern
+	ColorHangingPotClay = hex("#cb6843") // Terracotta Hanging Planter
+	ColorCopperWaterCan = hex("#b87333") // Polished Copper Watering Can
+
+	// Midnight Stained Glass Library
+	ColorStainedGlassBlue = hex("#1d3557") // Sapphire Stained Glass
+	ColorStainedGlassGold = hex("#e9c46a") // Warm Amber Stained Glass
+	ColorStainedGlassRuby = hex("#9b2226") // Deep Ruby Stained Glass
+	ColorMahoganyBookcase = hex("#311811") // Deep Rich Mahogany
+	ColorGoldFoilSpine    = hex("#e5b869") // Gilded Book Lettering
+	ColorGrandfatherClock = hex("#442211") // Antique Grandfather Clock
+	ColorBrassPendulum    = hex("#e0a96d") // Swinging Brass Pendulum
+	ColorBankerGreen      = hex("#2d6a4f") // Emerald Banker's Lamp Glass
+
+	// Coastal Ocean Lighthouse Study
+	ColorOceanDeepBlue  = hex("#09111e") // Midnight Abyssal Ocean
+	ColorOceanWaveMid   = hex("#1b2838") // Rolling Swell Water
+	ColorOceanWaveCrest = hex("#e2eafc") // Frothing Whitecap Foam
+	ColorLighthouseWhite= hex("#edf2f4") // Whitewashed Lighthouse Tower
+	ColorLighthouseRed  = hex("#d90429") // Classic Red Spiral Band
+	ColorLighthouseBeam = hex("#fff3b0") // Sweeping Amber Searchlight Beam
+	ColorNauticalChart  = hex("#f4ebd9") // Antique Maritime Map
+	ColorStoveCastIron  = hex("#1e2124") // Potbelly Cast Iron Stove
+
+	// Hearthside Autumn Bakery
+	ColorBreadCrustGold = hex("#c67d3b") // Artisan Sourdough Crust
+	ColorBreadFlourDust = hex("#fefae0") // Dusted Baker's Flour
+	ColorBrickOvenStone = hex("#584b42") // Rustic Oven Masonry
+	ColorGarlicBraid    = hex("#e9ecef") // Braided Garlic Bulbs
+	ColorCopperKettle   = hex("#ca6702") // Whistling Copper Kettle
 )
 
 func hex(s string) colorful.Color {
 	c, _ := colorful.Hex(s)
 	return c
 }
+

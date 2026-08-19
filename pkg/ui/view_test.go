@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"gottage/pkg/art"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 func TestVisualizers(t *testing.T) {
@@ -317,5 +319,84 @@ func TestModelViewModals(t *testing.T) {
 		t.Error("Expected InspirationManager.NextQuote to cycle to a new quote")
 	}
 }
+
+func TestMouseEvents(t *testing.T) {
+	m := NewModel()
+	m.Width = 120
+	m.Height = 40
+
+	// Test clicking header tabs
+	mouseMsg := tea.MouseMsg{
+		X:      75,
+		Y:      1,
+		Button: tea.MouseButtonLeft,
+		Action: tea.MouseActionPress,
+	}
+	updated, _ := m.Update(mouseMsg)
+	mUpdated := updated.(Model)
+	if mUpdated.StatusMsg == "" {
+		t.Error("Expected tab click to set status message")
+	}
+
+	// Test clicking sidebar music card
+	sidebarMusicClick := tea.MouseMsg{
+		X:      100,
+		Y:      5,
+		Button: tea.MouseButtonLeft,
+		Action: tea.MouseActionPress,
+	}
+	updated2, _ := mUpdated.Update(sidebarMusicClick)
+	m2 := updated2.(Model)
+	if m2.StatusMsg == "" {
+		t.Error("Expected sidebar music click to set status message")
+	}
+
+	// Test clicking canvas to pet cat (on TabArt)
+	m2.ActiveTab = TabArt
+	canvasClick := tea.MouseMsg{
+		X:      40,
+		Y:      20,
+		Button: tea.MouseButtonLeft,
+		Action: tea.MouseActionPress,
+	}
+	updated3, _ := m2.Update(canvasClick)
+	m3 := updated3.(Model)
+	if !strings.Contains(m3.StatusMsg, "Bliss") {
+		t.Errorf("Expected canvas click to pet cat companion, got status: %s", m3.StatusMsg)
+	}
+}
+
+func TestAllHandcraftedScenesInView(t *testing.T) {
+	scenes := []art.SceneType{
+		art.SceneRainyCity,
+		art.SceneForestCabin,
+		art.SceneCottageClassic,
+		art.SceneObservatory,
+		art.SceneZenTeahouse,
+		art.SceneCozyCampfire,
+		art.SceneCozyAttic,
+		art.ScenePixelWinterCabin,
+		art.SceneCozyGreenhouse,
+		art.SceneCozyLibrary,
+		art.SceneLighthouseCliff,
+		art.ScenePixelBakery,
+	}
+
+	m := NewModel()
+	m.Width = 120
+	m.Height = 40
+
+	for _, st := range scenes {
+		m.Scene.CurrentScene = st
+		v := m.View()
+		if len(v) == 0 {
+			t.Errorf("Expected non-empty View output for scene %v", st)
+		}
+		if !strings.Contains(v, "GOTTAGE") {
+			t.Errorf("Expected View to contain GOTTAGE for scene %v", st)
+		}
+	}
+}
+
 
 

@@ -119,6 +119,10 @@ func TestHandcraftedProceduralScenes(t *testing.T) {
 		SceneCozyCampfire,
 		SceneCozyAttic,
 		ScenePixelWinterCabin,
+		SceneCozyGreenhouse,
+		SceneCozyLibrary,
+		SceneLighthouseCliff,
+		ScenePixelBakery,
 	}
 
 	cs := NewCottageScene(74, 52)
@@ -156,3 +160,18 @@ func TestHandcraftedProceduralScenes(t *testing.T) {
 		}
 	}
 }
+
+func TestCanvasGeometryPrimitives(t *testing.T) {
+	c := NewCanvas(40, 40)
+	c.DrawCircle(20, 20, 8, PicoRed)
+	c.FillCircle(20, 20, 4, PicoYellow)
+	c.DrawEllipse(20, 20, 10, 5, PicoCyan)
+	c.FillEllipse(20, 20, 6, 3, PicoGreen)
+	c.DrawArc(20, 20, 12, 0, 3.14, PicoPink)
+
+	rendered := c.Render()
+	if len(rendered) == 0 {
+		t.Errorf("Expected non-empty rendered canvas for geometry primitives")
+	}
+}
+

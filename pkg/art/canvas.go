@@ -227,6 +227,98 @@ func (c *Canvas) DrawLine(x0, y0, x1, y1 int, color colorful.Color) {
 	}
 }
 
+// DrawCircle draws a 1-pixel circle outline centered at (cx, cy) with radius r.
+func (c *Canvas) DrawCircle(cx, cy, r int, color colorful.Color) {
+	if r <= 0 {
+		c.SetPixel(cx, cy, color)
+		return
+	}
+	x := 0
+	y := r
+	d := 3 - 2*r
+	c.drawCirclePoints(cx, cy, x, y, color)
+	for y >= x {
+		x++
+		if d > 0 {
+			y--
+			d = d + 4*(x-y) + 10
+		} else {
+			d = d + 4*x + 6
+		}
+		c.drawCirclePoints(cx, cy, x, y, color)
+	}
+}
+
+func (c *Canvas) drawCirclePoints(cx, cy, x, y int, color colorful.Color) {
+	c.SetPixel(cx+x, cy+y, color)
+	c.SetPixel(cx-x, cy+y, color)
+	c.SetPixel(cx+x, cy-y, color)
+	c.SetPixel(cx-x, cy-y, color)
+	c.SetPixel(cx+y, cy+x, color)
+	c.SetPixel(cx-y, cy+x, color)
+	c.SetPixel(cx+y, cy-x, color)
+	c.SetPixel(cx-y, cy-x, color)
+}
+
+// FillCircle draws a filled circle centered at (cx, cy) with radius r.
+func (c *Canvas) FillCircle(cx, cy, r int, color colorful.Color) {
+	if r <= 0 {
+		c.SetPixel(cx, cy, color)
+		return
+	}
+	for dy := -r; dy <= r; dy++ {
+		span := int(math.Sqrt(float64(r*r - dy*dy)))
+		for dx := -span; dx <= span; dx++ {
+			c.SetPixel(cx+dx, cy+dy, color)
+		}
+	}
+}
+
+// DrawEllipse draws an ellipse outline with horizontal radius rx and vertical radius ry.
+func (c *Canvas) DrawEllipse(cx, cy, rx, ry int, color colorful.Color) {
+	if rx <= 0 || ry <= 0 {
+		c.SetPixel(cx, cy, color)
+		return
+	}
+	for angle := 0.0; angle < 2*math.Pi; angle += 0.05 {
+		px := cx + int(math.Round(float64(rx)*math.Cos(angle)))
+		py := cy + int(math.Round(float64(ry)*math.Sin(angle)))
+		c.SetPixel(px, py, color)
+	}
+}
+
+// FillEllipse fills an ellipse with horizontal radius rx and vertical radius ry.
+func (c *Canvas) FillEllipse(cx, cy, rx, ry int, color colorful.Color) {
+	if rx <= 0 || ry <= 0 {
+		c.SetPixel(cx, cy, color)
+		return
+	}
+	for dy := -ry; dy <= ry; dy++ {
+		t := float64(dy) / float64(ry)
+		if math.Abs(t) <= 1.0 {
+			span := int(math.Round(float64(rx) * math.Sqrt(1.0-t*t)))
+			for dx := -span; dx <= span; dx++ {
+				c.SetPixel(cx+dx, cy+dy, color)
+			}
+		}
+	}
+}
+
+// DrawArc draws a circular arc from startAngle to endAngle (in radians).
+func (c *Canvas) DrawArc(cx, cy, r int, startAngle, endAngle float64, color colorful.Color) {
+	if r <= 0 {
+		c.SetPixel(cx, cy, color)
+		return
+	}
+	step := 1.0 / float64(r*2)
+	for angle := startAngle; angle <= endAngle; angle += step {
+		px := cx + int(math.Round(float64(r)*math.Cos(angle)))
+		py := cy + int(math.Round(float64(r)*math.Sin(angle)))
+		c.SetPixel(px, py, color)
+	}
+}
+
+
 // ApplyRadialLight applies a warm radial light source centered at (cx, cy) in pixel coords.
 func (c *Canvas) ApplyRadialLight(cx, cy int, radius float64, lightColor colorful.Color, maxIntensity float64) {
 	minY := int(math.Max(0, float64(cy)-radius))
