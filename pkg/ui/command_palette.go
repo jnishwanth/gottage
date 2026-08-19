@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"gottage/pkg/art"
 	"gottage/pkg/features"
 )
 
@@ -332,6 +333,46 @@ func GetCommandList(m *Model) []CommandItem {
 			Action: func(m *Model) {
 				ns := m.Scene.PrevScene()
 				m.SetStatusMsg("Switched Scene: " + ns.String())
+			},
+		},
+		CommandItem{
+			Title:       "🎧 Scene: Lofi Study Desk & Rainy Window",
+			Category:    "Aesthetics",
+			Shortcut:    "[ Lofi Desk ]",
+			Description: "Switch to handcrafted Lofi Study Desk with rain-streaked window and sleeping cat",
+			Action: func(m *Model) {
+				m.Scene.SetSceneWithTransition(art.SceneSunsetStation)
+				m.SetStatusMsg("Switched Scene: Lofi Study Desk & Rainy Window 🎧🌧️")
+			},
+		},
+		CommandItem{
+			Title:       "🎋 Scene: Zen Rain Garden & Bamboo Water Clacker",
+			Category:    "Aesthetics",
+			Shortcut:    "[ Zen Garden ]",
+			Description: "Switch to Japanese tatami room with animated shishi-odoshi bamboo water fountain",
+			Action: func(m *Model) {
+				m.Scene.SetSceneWithTransition(art.SceneBambooGrove)
+				m.SetStatusMsg("Switched Scene: Zen Rain Garden & Bamboo Water Clacker 🎋🌧️")
+			},
+		},
+		CommandItem{
+			Title:       "🐈 Scene: Cozy Cat Cafe & Espresso Nook",
+			Category:    "Aesthetics",
+			Shortcut:    "[ Cat Cafe ]",
+			Description: "Switch to warm wooden Cat Cafe with climbing tree, chrome espresso machine, and sleeping cats",
+			Action: func(m *Model) {
+				m.Scene.SetSceneWithTransition(art.SceneWinterCafe)
+				m.SetStatusMsg("Switched Scene: Cozy Cat Cafe & Espresso Nook 🐈☕")
+			},
+		},
+		CommandItem{
+			Title:       "🍂 Scene: Autumn Lake Dock & Sunrise Mist",
+			Category:    "Aesthetics",
+			Shortcut:    "[ Autumn Dock ]",
+			Description: "Switch to peaceful autumn mountain lake dock with morning mist and plaid blanket",
+			Action: func(m *Model) {
+				m.Scene.SetSceneWithTransition(art.SceneAutumnPark)
+				m.SetStatusMsg("Switched Scene: Autumn Lake Dock & Sunrise Mist 🍂🌅")
 			},
 		},
 		CommandItem{

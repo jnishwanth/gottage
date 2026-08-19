@@ -251,6 +251,37 @@ var (
 	ColorOceanWaveDeep   = hex("#03071e") // Deep Atlantic Ocean Blue
 	ColorTeakDeckWood    = hex("#7f4f24") // Weathered Nautical Teak Deck
 	ColorCoastalLavender = hex("#7b2cbf") // Potted French Coastal Lavender
+
+	// Lofi Study Desk & Rainy Window
+	ColorCorkboard       = hex("#c9a26b") // Natural Cork Bulletin Board
+	ColorStickyNotePink  = hex("#ff7597") // Pastel Pink Sticky Note
+	ColorStickyNoteYellow= hex("#fef08a") // Sunny Yellow Sticky Note
+	ColorStickyNoteCyan  = hex("#7dd3fc") // Sky Cyan Sticky Note
+	ColorHeadphonesNavy  = hex("#1e293b") // Over-Ear Studio Headphones
+	ColorRaindropWindow  = hex("#93c5fd") // Raindrop Beads on Window Pane
+	ColorPenPotWood      = hex("#854d0e") // Turned Oak Pen Cup
+
+	// Zen Rain Garden & Bamboo Water Clacker (Shishi-Odoshi)
+	ColorBambooGreen     = hex("#4d7c0f") // Fresh Forest Green Bamboo Culm
+	ColorBambooDry       = hex("#a38560") // Weathered Bamboo Rocker Arm
+	ColorTsukubaiBasin   = hex("#475569") // Carved Granite Tsukubai Basin
+	ColorChasenBamboo    = hex("#eab308") // Split Bamboo Matcha Whisk
+
+	// Cozy Cat Cafe & Espresso Nook
+	ColorEspressoChrome  = hex("#cbd5e1") // Mirror-Polished Chrome Espresso Machine
+	ColorChalkboard      = hex("#1e293b") // Slate Chalkboard Menu
+	ColorChalkWhite      = hex("#f1f5f9") // Handwritten Chalkboard Lettering
+	ColorCatTreeSisal    = hex("#d4a373") // Sisal Rope Scratching Post
+	ColorPastryCroissant = hex("#d97706") // Golden Flaky Baked Croissant
+	ColorEdisonGlow      = hex("#fbbf24") // Filament Amber Pendant Glow
+
+	// Autumn Lake Dock & Sunrise Mist
+	ColorAutumnMapleRed  = hex("#b91c1c") // Crimson Sugar Maple Leaf
+	ColorAutumnMapleGold = hex("#f59e0b") // Golden Amber Maple Foliage
+	ColorSunriseMist     = hex("#fed7aa") // Swirling Golden Lake Morning Mist
+	ColorLakeReflectGold = hex("#c2410c") // Golden Hour Lake Shimmer
+	ColorDockPilingWood  = hex("#573d2a") // Weathered Cedar Dock Piling
+	ColorTinLantern      = hex("#64748b") // Galvanized Tin Campsite Lantern
 )
 
 func hex(s string) colorful.Color {
