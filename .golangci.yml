@@ -25,10 +25,12 @@ linters:
 
   settings:
     errcheck:
-      # Without these, errcheck reports 122 findings, of which 111 are
-      # strings.Builder / bytes.Buffer writes whose error is documented as
-      # always nil (pkg/ui/view.go 67, pkg/art/canvas.go 24,
-      # pkg/ui/visualizers.go 13). Excluding them leaves the 47 real ones.
+      # Without these, errcheck is dominated by strings.Builder /
+      # bytes.Buffer writes, whose error is documented as always nil. The
+      # finding counts that used to be recorded here did not reconcile with
+      # each other and are removed rather than guessed; golangci-lint is not
+      # installed on this machine, so whoever installs it first should
+      # re-measure and record what the tool actually reports.
       exclude-functions:
         - (*strings.Builder).Write
         - (*strings.Builder).WriteByte
@@ -45,8 +47,8 @@ linters:
       - std-error-handling
 
     rules:
-      # TODO(phase-11): 34 ignored errors, 19 in ambient.go alone. The
-      # load-bearing one is `tmpDir, _ := os.MkdirTemp(...)` at ambient.go:55.
+      # TODO(phase-11): ignored errors throughout pkg/audio. The load-bearing
+      # one is `tmpDir, _ := os.MkdirTemp(...)` at ambient.go:55.
       # On failure am.tempDir is "", generateAmbientFiles returns at its guard
       # (:89-92) so no WAV is written at all, and runLoop hands the player a
       # bare "rain.wav" (:201) — silent no-audio, no error anywhere. See

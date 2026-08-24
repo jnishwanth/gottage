@@ -1,8 +1,18 @@
 GO  ?= go
 BIN := gottage
 
-# tracked .go files that still exist in the working tree
-GOFILES_CMD = git ls-files '*.go' | while IFS= read -r f; do if [ -f "$$f" ]; then printf '%s\n' "$$f"; fi; done
+# Sets $files to the tracked .go files that still exist in the working tree.
+# Aborts rather than yielding an empty list: a formatting gate that checked
+# nothing must not report success.
+GOFILES_SH = files="$$(git ls-files '*.go')" || { \
+	  echo "make: cannot list Go files - 'git ls-files' failed (not a git repository?)" >&2; \
+	  exit 1; \
+	}; \
+	files="$$(printf '%s\n' "$$files" | while IFS= read -r f; do if [ -f "$$f" ]; then printf '%s\n' "$$f"; fi; done)"; \
+	if [ -z "$$files" ]; then \
+	  echo "make: 'git ls-files' listed no Go files - refusing to pass a gate that checked nothing" >&2; \
+	  exit 1; \
+	fi
 
 .DEFAULT_GOAL := help
 .PHONY: check fmt fmt-check vet tidy-check test test-race lint build run hooks clean help
@@ -12,14 +22,12 @@ check: fmt-check vet tidy-check test
 
 ## fmt        rewrite tracked Go files with gofmt (exact inverse of fmt-check)
 fmt:
-	@files="$$($(GOFILES_CMD))"; \
-	if [ -z "$$files" ]; then echo "no tracked Go files"; exit 0; fi; \
+	@$(GOFILES_SH); \
 	gofmt -w $$files
 
 ## fmt-check  fail if any tracked Go file is unformatted
 fmt-check:
-	@files="$$($(GOFILES_CMD))"; \
-	if [ -z "$$files" ]; then exit 0; fi; \
+	@$(GOFILES_SH); \
 	if ! out="$$(gofmt -l $$files)"; then \
 	  echo "gofmt failed on a tracked file (errors above)"; \
 	  exit 1; \

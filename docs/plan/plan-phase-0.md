@@ -23,6 +23,10 @@
 >   not shrink `.git`; it stays at 88MB, deliberately (§0.1). The purge belongs to
 >   Phase 1 §1.8, which rewrites binary *and* dropped-asset blobs in one
 >   `git-filter-repo` pass. The Goal below is scoped accordingly.
+> - **§0.5's fmt gate was narrowed to tracked files.** `fmt-check` runs `gofmt`
+>   over `git ls-files '*.go'`, not `gofmt -l .`, so it no longer walks
+>   `.gnhf/` or other untracked scratch. §0.3's and §0.5's `gofmt -l .` wording
+>   below predates that; `make fmt-check` is the current command.
 > - Phase-1 handoff notes were written into `plan-phase-1.md`.
 
 ---

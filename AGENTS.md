@@ -17,10 +17,10 @@ looks like bureaucracy, the failure it cites is the argument.
 ## 1. The gate
 
 ```bash
-make check     # gofmt (repo-wide) + go vet + go mod tidy -diff + go test
+make check     # gofmt (all tracked .go) + go vet + go mod tidy -diff + go test
 ```
 
-Run it before every commit. **Never commit with `gofmt -l .` non-empty.**
+Run it before every commit. **Never commit with `make fmt-check` failing.**
 
 A `pre-commit` hook is committed in `hooks/`. Activate it once per clone:
 
@@ -31,7 +31,8 @@ make hooks     # sets core.hooksPath=hooks
 The hook is the fast subset (~0.2s): `gofmt` on **staged** `.go` files, plus
 `go vet` and `go mod tidy -diff`. It deliberately does not run the test suite —
 `pkg/art` alone takes 17s, and a gate slow enough to be annoying is a gate that
-gets bypassed. `make check` is the complete, repo-wide gate; run it yourself.
+gets bypassed. `make check` is the complete gate, over every tracked `.go`
+file; run it yourself.
 
 Two caveats worth knowing:
 
@@ -95,8 +96,7 @@ The same applies to any `len(x) == 0` guard standing in for a correctness check.
 - **Guard slow tests** with `testing.Short()`. `TestVerifyDownloadedGifs`
   (`pkg/art/gif_loader_test.go:41`) decoded every GIF in `assets/` on each run.
   Since the §1.8 purge its `../../assets/animations` path no longer resolves, so
-  it now fails outright — the known cause of the red suite at this commit. The
-  rule applies again once Phase 1 restores the curated set.
+  it now fails outright — the known cause of the red suite at this commit.
 
 ---
 
@@ -126,9 +126,9 @@ every existing `user_presets.json`. Add at the end; delete only from the end.
 ## 5. Assets
 
 Before Phase 1's curation, `assets/` held 367 files totalling 31MB; Phase 1
-curates that set to ~40 GIFs. Phase 1 §1.8's history purge has since removed the
-originals, so no `assets/` exists at this commit — the rules below govern the
-curated set Phase 1 restores.
+curates that set to ~40 GIFs (`plan-phase-1.md` §1.3). §1.8's `git filter-repo`
+purge stripped the pre-curation asset blobs from every commit in this range, so
+no commit here contains any file under `assets/`.
 
 - **No asset over ~300KB** without discussion. That distribution was heavily
   skewed — mean 76KB, but the top 5 files alone were 9MB. A large GIF is

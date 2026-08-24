@@ -6,13 +6,14 @@
 # run the test suite: pkg/art alone takes ~17s, and a hook slow enough to be
 # annoying is a hook that gets bypassed with --no-verify.
 #
-# The full, repo-wide gate is `make check` (adds repo-wide gofmt + go test).
+# The full gate is `make check` (adds gofmt over all tracked .go files, plus
+# go test).
 #
 # gofmt is checked against STAGED .go files only, for two reasons:
 #   1. It is what this commit is responsible for.
-#   2. `make check`'s repo-wide gofmt is expected to fail until Phase 1 §1.7
-#      runs `gofmt -w`. A repo-wide hook would block every Phase 0 and Phase 1
-#      commit, which just trains the --no-verify habit.
+#   2. `make check`'s all-tracked-files gofmt is expected to fail until Phase 1
+#      §1.7 runs `gofmt -w`. A hook with that same scope would block every
+#      Phase 0 and Phase 1 commit, which just trains the --no-verify habit.
 #
 # Caveat: gofmt reads the working tree, not the index, so a partially-staged
 # file is judged by its on-disk contents.

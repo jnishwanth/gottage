@@ -30,10 +30,12 @@
    `SceneOrder` is declared at `scene_interface.go:27`, **not** in
    `categories.go`.
 6. **`gofmt` is untouched, by design.** Still 16 of 34 files, 1,745 diff lines.
-   `make check` fails on `fmt-check` and passes `vet`, `tidy-check` and `test`
-   individually. §1.7 (`gofmt -w`, last commit of the phase) is what turns it
-   green. The pre-commit hook gates **staged** files only, so it will not block
-   your deletion commits.
+   `make check` fails on `fmt-check`; `vet` and `tidy-check` pass individually.
+   `test` does **not**: `TestVerifyDownloadedGifs`
+   (`pkg/art/gif_loader_test.go:41`) reads `../../assets/animations`, which the
+   §1.8 purge removed, so the suite is red at this commit. §1.7 (`gofmt -w`, last
+   commit of the phase) is what clears `fmt-check`. The pre-commit hook gates
+   **staged** files only, so it will not block your deletion commits.
 7. **Lint is not blocking.** `golangci-lint` is not installed and `make lint`
    degrades gracefully; `check` does not depend on it. `.golangci.yml` excludes
    `errcheck` on `pkg/audio/`, `pkg/features/presets.go` and `pkg/(ui|art)/` with
@@ -293,7 +295,7 @@ Expected result: `.git` from **88MB to roughly 8MB** — the in-pack total was 8
 ```bash
 go build ./... && go vet ./...
 go test ./... -count=1                          # panic-free => zero duplicate registrations
-gofmt -l . | wc -l                              # 0
+make fmt-check                                  # passes
 make check                                      # now fully green
 du -sh assets/                                  # ~1-3M with the size cap held (was 31M)
 stat -f '%z' assets/animations/*.gif | sort -rn | head -1   # largest keeper under ~300KB
@@ -321,7 +323,7 @@ New tests must pass: `TestNoDuplicateSceneRegistrations`, `TestHandcraftedScenes
 - [ ] `assets/` ≈ 1-3MB and no keeper over ~300KB; every registered `gifPath` resolves; zero orphan GIFs
 - [ ] All 1.4 dead code deleted; `Delays` and `showBuddy` preserved with TODO markers
 - [ ] `TestHandcraftedProceduralScenes` asserts distinct-color-count, not `len != 0`
-- [ ] `gofmt -l .` empty; `make check` green
+- [ ] `make fmt-check` passes; `make check` green
 - [ ] Aesthetic curation bar written down
 - [ ] **History purged in one pass**: `.git` ~8MB, zero `gottage` blobs, zero dropped-asset blobs, every surviving asset still present and tests green
 
