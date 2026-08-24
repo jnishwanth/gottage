@@ -27,6 +27,7 @@ Everything is ordered most-fundamental-first, so no phase's work is made obsolet
 | 0 | Repo & Toolchain Foundation | S | — | Backup, untrack binary; `AGENTS.md`, LICENSE, `make check` |
 | 1 | Content Triage | L | 0 | **20 dead scenes start rendering**; assets 31MB → **1.78MB**; **`.git` 88MB → 2.2MB** |
 | 2 | Asset Pipeline & Embed | S | 1 | Runs from any directory |
+| 2b | Simplify: drop scene categories | S | 2 | One fewer concept; picker is a flat list |
 | 3 | Config & Persistence | M | 2 | The one on-disk format break; state survives restart |
 | 4 | Canvas Core | L | 0 | ~3,800 → <10 allocs/frame; `RenderTo` |
 | 5 | Determinism & Goldens | M | 4 | Rendering becomes testable at all |
@@ -50,6 +51,13 @@ Phases 9 and 10 split further if a session runs long — per-scene work cuts cle
 - **Procedural first, curate GIFs** — handcrafted wins every collision. Landed as 36 handcrafted + **10** curated GIFs, not the ~40 planned: everything clearing the mechanical bar was kept, then a manual aesthetic pass over a rendered contact sheet of all 324 survivors cut deeper. The bar is `AGENTS.md` §7; the resulting counts are in `plan-phase-2.md`.
 - **Ambient audio rewritten on a real Go audio library** — in-process PCM, not subprocesses.
 - **History purged in one `git-filter-repo` pass at the end of Phase 1** — binary *and* dropped assets together, since curation must decide the asset list first. `.git` 88MB → **2.2MB**, better than the ~8MB predicted; `plan-phase-2.md` records the two deviations from `plan-phase-1.md` §1.8 that got it there. **Back up before Phase 0.**
+- **Simplify toward *Virtual Cottage*** — the target is an animation and some
+  music, not a feature catalogue. Phase 2b takes the first cut (scene
+  categories, already provably broken after Phase 1's curation). **How much
+  further to cut is deferred to Phase 8**, which is already gated on reference
+  frames and is where an explicit statement of what the app is for belongs.
+  Deciding before Phase 3 matters: Phase 3 is the one on-disk format break, and
+  it should not persist state for features that are about to be deleted.
 - **Personal tool, done well** — module path stays `gottage`; no CI/goreleaser; local `Makefile`; assets embedded.
 - **No Git LFS.** The curated set is only 1-3MB, and an LFS pointer file would be silently embedded by `//go:embed` in place of the GIF — build green, every scene garbage. `.gitattributes` marks binaries instead. Full reasoning and revisit conditions in `AGENTS.md` §5.
 

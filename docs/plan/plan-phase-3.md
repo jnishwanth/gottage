@@ -53,6 +53,34 @@ Theme names carry emoji (`pkg/ui/styles.go:20` → `"Cozy Autumn 🍁"`); built-
 
 ## Workstreams
 
+### 3.0 — An unguarded load path Phase 1 left behind
+
+> Recorded at the end of Phase 1 so it is not rediscovered as a bug report.
+
+Phase 1 cut 314 GIF registrations without pruning the `SceneType` enum, so **314
+constants are now valid enum values that nothing registers.** A saved
+`user_presets.json` written before that curation can name one, and nothing on the
+load path notices:
+
+- `LoadFromFile` unmarshals the raw int with no range or liveness check.
+- `ApplyPreset` (`pkg/ui/model.go`) assigns it to `Scene.CurrentScene` unvalidated.
+- `GetScene` (`pkg/art/scene_interface.go`) falls back to `SceneRainyCity` for an
+  unregistered type — no error, no log.
+- `SceneType.String()` misses the registry and returns the 4-case switch default,
+  `"8-Bit Pixel Animation 🎨"`.
+
+Net effect: the app silently shows the rainy-city scene under a header naming
+neither that scene nor the one the preset asked for. Phase 1 added
+`TestBuiltinPresetScenesAreRegistered` covering the **built-in** presets, which is
+what caught two of them at the time; **user-saved presets have no equivalent
+guard**, and a test cannot supply one because the input is a user's file.
+
+This is not a bug to patch here — §3.1's `UnmarshalJSON` over stable string keys
+is the fix, provided it treats an unknown key as the documented "fall back to a
+default **and record a warning**" case rather than silently zeroing it. The int
+form must get the same treatment during migration: an int with no live
+registration is exactly as unknown as an unrecognised string.
+
 ### 3.1 — Stable string identities for `art` enums
 
 Give `SceneType`, `ColorFilter`, `ParticleOverlay`, `ShaderEffect`, `AnimSpeed`, `TimeOfDay`, `Weather`, `CatBreed` `MarshalJSON`/`UnmarshalJSON` over stable string keys (`"SceneRainyCity"`, not `0`).
