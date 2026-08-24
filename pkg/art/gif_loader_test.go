@@ -36,14 +36,12 @@ func TestAnimatedGifLoader(t *testing.T) {
 
 }
 
-// TestVerifyDownloadedGifs decodes every GIF on disk and checks it is a real,
-// non-empty animation.
+// TestVerifyDownloadedGifs decodes every GIF in assets/animations and checks each
+// one is a real, non-empty animation.
 //
-// It asserts against the number of registered GIF scenes rather than a hardcoded
-// file count: the previous `gifCount < 356` broke the moment an asset was pruned,
-// and a floor that only ever gets edited downward is not an assertion. Tying it to
-// the registry also catches the case this phase cares about — an asset on disk that
-// nothing registers, or a registration whose asset was cut.
+// It deliberately asserts nothing about registry/asset agreement: TestEverySceneHasAsset
+// already asserts that in both directions at path granularity, which is strictly
+// stronger than any count comparison here could be.
 //
 // Guarded by testing.Short(): it decodes every GIF at 160x90 into the unbounded
 // package-level loader cache and is the single slowest test in the repo.
@@ -58,12 +56,10 @@ func TestVerifyDownloadedGifs(t *testing.T) {
 		t.Fatalf("Failed to read animations directory: %v", err)
 	}
 
-	gifCount := 0
 	for _, f := range files {
 		if filepath.Ext(f.Name()) != ".gif" {
 			continue
 		}
-		gifCount++
 		path := filepath.Join(animDir, f.Name())
 		anim, err := LoadAnimatedGif(path, 160, 90)
 		if err != nil {
@@ -73,16 +69,5 @@ func TestVerifyDownloadedGifs(t *testing.T) {
 		if anim.FrameCount == 0 {
 			t.Errorf("GIF %s has 0 frames", f.Name())
 		}
-	}
-
-	registered := 0
-	for _, sc := range SceneRegistry {
-		if _, ok := sc.(*AnimatedGifScene); ok {
-			registered++
-		}
-	}
-	if gifCount < registered {
-		t.Errorf("%d GIFs on disk but %d registered GIF scenes: at least one registration has no asset",
-			gifCount, registered)
 	}
 }
