@@ -13,7 +13,10 @@ type SceneInterface interface {
 	WindowBounds() Rect
 
 	// RenderSky renders Layer 1: Sky, stars, moon, distant mountains/buildings outside window.
-	RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 })
+	RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+		X, Y  int
+		Phase float64
+	})
 
 	// RenderForeground renders Layer 3..5: Window frames, room walls, floor, desk, objects, and Focus Buddy companion.
 	RenderForeground(c *Canvas, frameCount uint64, buddy *FocusBuddy, lampOn, fireOn bool, catBreed CatBreed)

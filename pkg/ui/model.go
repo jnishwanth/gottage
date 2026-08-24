@@ -45,36 +45,36 @@ type timerTickMsg time.Time
 
 // Model is the main Bubbletea model.
 type Model struct {
-	Width              int
-	Height             int
-	Styles             Styles
-	ActiveTab          ActiveTab
-	ShowHelp           bool
-	ShowScenePicker    bool
-	PickerCategoryIdx  int
-	PickerSceneIdx     int
-	PickerSearchMode   bool
-	PickerSearchInput  textinput.Model
-	ShowThemePicker    bool
-	PickerThemeIdx     int
-	ShowSceneInfoModal bool
-	ShowCommandPalette bool
-	CommandInput       textinput.Model
-	CommandIdx         int
-	ShowPresetModal    bool
-	PresetIdx          int
-	PresetSaving       bool
-	PresetInputText    textinput.Model
+	Width               int
+	Height              int
+	Styles              Styles
+	ActiveTab           ActiveTab
+	ShowHelp            bool
+	ShowScenePicker     bool
+	PickerCategoryIdx   int
+	PickerSceneIdx      int
+	PickerSearchMode    bool
+	PickerSearchInput   textinput.Model
+	ShowThemePicker     bool
+	PickerThemeIdx      int
+	ShowSceneInfoModal  bool
+	ShowCommandPalette  bool
+	CommandInput        textinput.Model
+	CommandIdx          int
+	ShowPresetModal     bool
+	PresetIdx           int
+	PresetSaving        bool
+	PresetInputText     textinput.Model
 	ShowSoundMixerModal bool
-	MixerChannelIdx    int
-	ShowSpectrumModal  bool
-	SpectrumMode       SpectrumStyle
-	ZenMode            bool
-	AutoSyncAudio      bool
-	StatusMsg          string
-	StatusMsgTime      time.Time
-	UseGPURender       bool
-	FavoriteScenes     map[art.SceneType]bool
+	MixerChannelIdx     int
+	ShowSpectrumModal   bool
+	SpectrumMode        SpectrumStyle
+	ZenMode             bool
+	AutoSyncAudio       bool
+	StatusMsg           string
+	StatusMsgTime       time.Time
+	UseGPURender        bool
+	FavoriteScenes      map[art.SceneType]bool
 
 	// Core Components
 	Scene       *art.CottageScene
@@ -750,7 +750,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "b":
 			newScene := m.Scene.PrevScene()
 			m.SetStatusMsg("Switched Scene: " + newScene.String())
-
 
 		case "C":
 			filter := m.Scene.CycleColorFilter()

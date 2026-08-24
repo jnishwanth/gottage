@@ -307,7 +307,10 @@ type CottageScene struct {
 	OverlayParticles []Particle
 	ShaderParticles  []Particle
 	Ripples          []CanvasRipple
-	Stars            []struct{ X, Y int; Phase float64 }
+	Stars            []struct {
+		X, Y  int
+		Phase float64
+	}
 
 	rng *rand.Rand
 }
@@ -557,11 +560,13 @@ func (cs *CottageScene) RandomScene() SceneType {
 	return cs.CurrentScene
 }
 
-
 func (cs *CottageScene) initStars() {
 	cs.Stars = nil
 	for i := 0; i < 20; i++ {
-		cs.Stars = append(cs.Stars, struct{ X, Y int; Phase float64 }{
+		cs.Stars = append(cs.Stars, struct {
+			X, Y  int
+			Phase float64
+		}{
 			X:     cs.rng.Intn(60),
 			Y:     cs.rng.Intn(30),
 			Phase: cs.rng.Float64() * math.Pi * 2,

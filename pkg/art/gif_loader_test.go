@@ -68,4 +68,3 @@ func TestVerifyDownloadedGifs(t *testing.T) {
 		t.Errorf("Expected at least 356 GIF animations, found %d", gifCount)
 	}
 }
-

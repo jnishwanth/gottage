@@ -198,4 +198,3 @@ func TestCanvasGeometryPrimitives(t *testing.T) {
 		t.Errorf("Expected non-empty rendered canvas for geometry primitives")
 	}
 }
-

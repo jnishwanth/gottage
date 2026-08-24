@@ -455,6 +455,3 @@ func TestBeverageSystem(t *testing.T) {
 		t.Errorf("Expected 'd' key to take a sip, got: %s", m3.StatusMsg)
 	}
 }
-
-
-

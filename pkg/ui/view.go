@@ -464,7 +464,6 @@ func (m Model) renderAmbianceView() string {
 		m.Styles.KeyCap.Render("[f]"), onOffStr(m.Scene.FireOn),
 		m.Styles.KeyCap.Render("[s]"), onOffStr(m.Scene.FairyLightsOn)))
 
-
 	sb.WriteString(m.Styles.Title.Render("🌧️ 5-Channel Procedural Ambient Sound Console") + "  " + m.Styles.MutedText.Render("(Press [Shift+X] for Equalizer Mixer)") + "\n")
 	sb.WriteString(fmt.Sprintf("  %s Rain: %s (%.0f%%)    %s Fireplace: %s (%.0f%%)    %s Wind Breeze: %s (%.0f%%)\n",
 		m.Styles.KeyCap.Render("[r]"), onOffStr(m.Ambient.RainActive), m.Ambient.RainVol*100,
@@ -756,8 +755,8 @@ func (m Model) renderPresetModal(bg string) string {
 			"%s\n\n%s\n\n%s  %s",
 			m.Styles.BoldAccent.Render("Save Current Ambiance as Custom Preset:"),
 			m.PresetInputText.View(),
-			m.Styles.KeyCap.Render(" Enter ") + " Save Preset",
-			m.Styles.KeyCap.Render(" Esc ") + " Cancel",
+			m.Styles.KeyCap.Render(" Enter ")+" Save Preset",
+			m.Styles.KeyCap.Render(" Esc ")+" Cancel",
 		)
 	} else {
 		var presetRows []string
@@ -1248,5 +1247,3 @@ func (m Model) renderSpectrumModal(bg string) string {
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, dialogBox)
 }
-
-

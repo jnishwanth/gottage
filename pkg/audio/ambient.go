@@ -127,7 +127,7 @@ func (am *AmbientManager) generateAmbientFiles() {
 		prevCafe = prevCafe*0.80 + (hum+raw)*0.20
 		clink := 0.0
 		if math.Sin(t*4.0) > 0.98 {
-			clink = math.Sin(t * 2.0 * math.Pi * 3200.0) * 0.08
+			clink = math.Sin(t*2.0*math.Pi*3200.0) * 0.08
 		}
 		return prevCafe + clink
 	})
@@ -163,8 +163,8 @@ func (am *AmbientManager) createProceduralWAV(duration float64, sampleFunc func(
 	binary.Write(buf, binary.LittleEndian, uint16(1))  // NumChannels (1 mono)
 	binary.Write(buf, binary.LittleEndian, uint32(sampleRate))
 	binary.Write(buf, binary.LittleEndian, uint32(sampleRate*2)) // ByteRate
-	binary.Write(buf, binary.LittleEndian, uint16(2))           // BlockAlign
-	binary.Write(buf, binary.LittleEndian, uint16(16))          // BitsPerSample
+	binary.Write(buf, binary.LittleEndian, uint16(2))            // BlockAlign
+	binary.Write(buf, binary.LittleEndian, uint16(16))           // BitsPerSample
 	buf.WriteString("data")
 	binary.Write(buf, binary.LittleEndian, uint32(dataSize))
 

@@ -246,7 +246,6 @@ func GetCommandList(m *Model) []CommandItem {
 		},
 	})
 
-
 	// Views & Navigation
 	items = append(items,
 		CommandItem{

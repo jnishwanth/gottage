@@ -34,13 +34,19 @@ The hook is the fast subset (~0.2s): `gofmt` on **staged** `.go` files, plus
 gets bypassed. `make check` is the complete gate, over every tracked `.go`
 file; run it yourself.
 
-Two caveats worth knowing:
+One caveat worth knowing:
 
 - `gofmt -l` reads the **working tree**, not the index. A partially-staged file is
   judged by its on-disk contents.
-- `make check` is expected to **fail on `gofmt` until Phase 1 §1.7**, which runs
-  `gofmt -w` as its final commit. Reformatting 1,745 lines that Phase 1 is about
-  to delete would be wasted diff. Do not "fix" this early.
+
+**The repo is `gofmt`-clean as of Phase 1's first commit.** Phase 1 §1.7 originally
+scheduled `gofmt -w` as the phase's *last* commit, to avoid reformatting 1,745 lines
+that curation was about to delete. That was reversed, for two reasons: six of the
+sixteen unformatted files are files Phase 1 must edit, and the pre-commit hook rejects
+staged unformatted `.go` files — so every functional commit in the phase would have
+been blocked, or pushed through with `--no-verify`. And the "wasted diff" premise
+dissolved when curation was scoped to keep the GIF set rather than cut it to ~40:
+`scenes_modular.go` loses ~120 lines, not ~1,800.
 
 `make lint` (golangci-lint) is **not** part of `make check`, so `check` still
 works on a machine without the linter installed.

@@ -50,10 +50,10 @@ type TaskItem struct {
 
 // TaskList manages to-do tasks.
 type TaskList struct {
-	Items     []TaskItem
-	Cursor    int
-	Filter    TaskFilter
-	nextID    int
+	Items  []TaskItem
+	Cursor int
+	Filter TaskFilter
+	nextID int
 }
 
 // NewTaskList creates task list with sample cozy tasks.

@@ -2123,11 +2123,14 @@ type AnimatedGifScene struct {
 	buddyY    int
 }
 
-func (s *AnimatedGifScene) ID() SceneType       { return s.id }
-func (s *AnimatedGifScene) Name() string     { return s.name }
+func (s *AnimatedGifScene) ID() SceneType      { return s.id }
+func (s *AnimatedGifScene) Name() string       { return s.name }
 func (s *AnimatedGifScene) WindowBounds() Rect { return s.winBounds }
 
-func (s *AnimatedGifScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *AnimatedGifScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	anim, err := LoadAnimatedGif(s.gifPath, c.Width, c.Height)
 	if err == nil && anim != nil {
 		anim.DrawFrame(c, frameCount)
@@ -2153,11 +2156,14 @@ func (s *AnimatedGifScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type CityCafeScene struct{}
 
-func (s *CityCafeScene) ID() SceneType       { return SceneRainyCity }
-func (s *CityCafeScene) Name() string     { return "Rainy City Lofi Cafe 🏙️" }
+func (s *CityCafeScene) ID() SceneType      { return SceneRainyCity }
+func (s *CityCafeScene) Name() string       { return "Rainy City Lofi Cafe 🏙️" }
 func (s *CityCafeScene) WindowBounds() Rect { return Rect{X: 8, Y: 4, W: 58, H: 30} }
 
-func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2185,7 +2191,7 @@ func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, fram
 	for b := 0; b < 8; b++ {
 		bx := wx + b*7 + 1
 		bw := 6
-		bh := 12 + ((b*13+5)%15)
+		bh := 12 + ((b*13 + 5) % 15)
 		c.FillRect(bx, wy+wh-bh, bw, bh, bldgColors[b%3])
 
 		// Warm illuminated apartment windows
@@ -2280,11 +2286,14 @@ func (s *CityCafeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool)
 // ---------------------------------------------------------
 type ForestCabinScene struct{}
 
-func (s *ForestCabinScene) ID() SceneType       { return SceneForestCabin }
-func (s *ForestCabinScene) Name() string     { return "Forest Sanctuary Cabin 🌲" }
+func (s *ForestCabinScene) ID() SceneType      { return SceneForestCabin }
+func (s *ForestCabinScene) Name() string       { return "Forest Sanctuary Cabin 🌲" }
 func (s *ForestCabinScene) WindowBounds() Rect { return Rect{X: 12, Y: 4, W: 50, H: 28} }
 
-func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2312,8 +2321,8 @@ func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 			treeCol = hex("#10281b") // distant dark green
 		}
 		for i := 0; i < 7; i++ {
-			tx := wx + i*8 + (layer*4)
-			th := 14 + ((i*7+layer*5)%11)
+			tx := wx + i*8 + (layer * 4)
+			th := 14 + ((i*7 + layer*5) % 11)
 			// Trunk
 			c.FillRect(tx+2, wy+wh-th, 2, th, ColorWoodDark)
 			// Layered needle tiers
@@ -2395,11 +2404,14 @@ func (s *ForestCabinScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type ClassicCottageScene struct{}
 
-func (s *ClassicCottageScene) ID() SceneType       { return SceneCottageClassic }
-func (s *ClassicCottageScene) Name() string     { return "Classic Cozy Cottage 🏡" }
+func (s *ClassicCottageScene) ID() SceneType      { return SceneCottageClassic }
+func (s *ClassicCottageScene) Name() string       { return "Classic Cozy Cottage 🏡" }
 func (s *ClassicCottageScene) WindowBounds() Rect { return Rect{X: 18, Y: 4, W: 34, H: 26} }
 
-func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2523,11 +2535,14 @@ func (s *ClassicCottageScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type ObservatoryScene struct{}
 
-func (s *ObservatoryScene) ID() SceneType       { return SceneObservatory }
-func (s *ObservatoryScene) Name() string     { return "Celestial Observatory 🌌" }
+func (s *ObservatoryScene) ID() SceneType      { return SceneObservatory }
+func (s *ObservatoryScene) Name() string       { return "Celestial Observatory 🌌" }
 func (s *ObservatoryScene) WindowBounds() Rect { return Rect{X: 10, Y: 3, W: 54, H: 29} }
 
-func (s *ObservatoryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ObservatoryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2579,9 +2594,9 @@ func (s *ObservatoryScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 
 	// Large Brass Telescope on heavy wooden tripod facing skylight
 	telX, telY := 46, 16
-	c.FillRect(telX, telY, 16, 4, ColorLampBrass)        // brass tube
-	c.FillRect(telX+14, telY-1, 4, 6, ColorLampBrass)    // objective lens
-	c.FillRect(telX-2, telY+1, 3, 2, hex("#212529"))     // eyepiece
+	c.FillRect(telX, telY, 16, 4, ColorLampBrass)     // brass tube
+	c.FillRect(telX+14, telY-1, 4, 6, ColorLampBrass) // objective lens
+	c.FillRect(telX-2, telY+1, 3, 2, hex("#212529"))  // eyepiece
 	// Tripod legs
 	c.FillRect(telX+6, telY+4, 2, 18, ColorWoodDark)
 	c.FillRect(telX+2, telY+4, 2, 18, ColorWoodDark)
@@ -2637,7 +2652,7 @@ func renderBookshelfHelper(c *Canvas, bx, by, bw, bh int) {
 		// Stacked and standing books on each shelf
 		for b := 0; b < 4; b++ {
 			bX := bx + 2 + b*3
-			bH := 4 + ((b*3+s*5)%4)
+			bH := 4 + ((b*3 + s*5) % 4)
 			bCol := bookColors[(b+s)%len(bookColors)]
 			c.FillRect(bX, sy-bH, 2, bH, bCol)
 		}
@@ -2848,11 +2863,14 @@ func renderCatHelper(c *Canvas, cx, cy int, breed CatBreed, frameCount uint64) {
 // ---------------------------------------------------------
 type ZenTeahouseScene struct{}
 
-func (s *ZenTeahouseScene) ID() SceneType       { return SceneZenTeahouse }
-func (s *ZenTeahouseScene) Name() string     { return "Zen Engawa Tea Sanctuary 🍵" }
+func (s *ZenTeahouseScene) ID() SceneType      { return SceneZenTeahouse }
+func (s *ZenTeahouseScene) Name() string       { return "Zen Engawa Tea Sanctuary 🍵" }
 func (s *ZenTeahouseScene) WindowBounds() Rect { return Rect{X: 12, Y: 4, W: 50, H: 28} }
 
-func (s *ZenTeahouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ZenTeahouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2935,7 +2953,7 @@ func (s *ZenTeahouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 	// Bamboo Grove stalks on left side of garden
 	for b := 0; b < 3; b++ {
 		bx := wx + 2 + b*3
-		sway := int(math.Sin(float64(frameCount)*0.05 + float64(b))*0.8)
+		sway := int(math.Sin(float64(frameCount)*0.05+float64(b)) * 0.8)
 		c.FillRect(bx+sway, wy+3, 2, wh-6, ColorLeafDark)
 		for ny := wy + 6; ny < wy+wh-5; ny += 5 {
 			c.SetPixel(bx+sway, ny, ColorLeafLight)
@@ -2986,7 +3004,7 @@ func (s *ZenTeahouseScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 
 	// Hanging bronze wind chime (Furin) with swaying paper slip
 	furinX := wx + 10
-	furinSway := int(math.Sin(float64(frameCount)*0.08)*1.2)
+	furinSway := int(math.Sin(float64(frameCount)*0.08) * 1.2)
 	c.FillRect(furinX, wy, 1, 2, ColorLampBrass)
 	c.FillRect(furinX-1, wy+2, 3, 2, ColorLampBrass)
 	c.FillRect(furinX+furinSway, wy+4, 1, 4, ColorShojiPaper)
@@ -3042,11 +3060,14 @@ func (s *ZenTeahouseScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type CozyCampfireScene struct{}
 
-func (s *CozyCampfireScene) ID() SceneType       { return SceneCozyCampfire }
-func (s *CozyCampfireScene) Name() string     { return "Starlit Alpine Campfire 🏕️" }
+func (s *CozyCampfireScene) ID() SceneType      { return SceneCozyCampfire }
+func (s *CozyCampfireScene) Name() string       { return "Starlit Alpine Campfire 🏕️" }
 func (s *CozyCampfireScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 34} }
 
-func (s *CozyCampfireScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CozyCampfireScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3092,7 +3113,7 @@ func (s *CozyCampfireScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, 
 	// Pine tree shoreline silhouettes
 	for i := 0; i < 9; i++ {
 		px := wx + i*7 + 1
-		ph := 8 + ((i*11)%6)
+		ph := 8 + ((i * 11) % 6)
 		c.FillRect(px+1, wy+wh-10-ph, 2, ph, ColorPineSilhouette)
 		for t := 0; t < 3; t++ {
 			c.FillRect(px+2-t, wy+wh-10-ph+t*2, 1+t*2, 2, ColorPineSilhouette)
@@ -3218,11 +3239,14 @@ func (s *CozyCampfireScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning b
 // ---------------------------------------------------------
 type CozyAtticScene struct{}
 
-func (s *CozyAtticScene) ID() SceneType       { return SceneCozyAttic }
-func (s *CozyAtticScene) Name() string     { return "Sunlit Attic Artist Atelier 🎨" }
+func (s *CozyAtticScene) ID() SceneType      { return SceneCozyAttic }
+func (s *CozyAtticScene) Name() string       { return "Sunlit Attic Artist Atelier 🎨" }
 func (s *CozyAtticScene) WindowBounds() Rect { return Rect{X: 18, Y: 4, W: 36, H: 24} }
 
-func (s *CozyAtticScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CozyAtticScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3339,11 +3363,14 @@ func (s *CozyAtticScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool
 // ---------------------------------------------------------
 type WinterCabinScene struct{}
 
-func (s *WinterCabinScene) ID() SceneType       { return ScenePixelWinterCabin }
-func (s *WinterCabinScene) Name() string     { return "Winter Snowfall Hearth Cabin ❄️" }
+func (s *WinterCabinScene) ID() SceneType      { return ScenePixelWinterCabin }
+func (s *WinterCabinScene) Name() string       { return "Winter Snowfall Hearth Cabin ❄️" }
 func (s *WinterCabinScene) WindowBounds() Rect { return Rect{X: 16, Y: 4, W: 34, H: 26} }
 
-func (s *WinterCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *WinterCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3448,11 +3475,14 @@ func (s *WinterCabinScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type CozyGreenhouseScene struct{}
 
-func (s *CozyGreenhouseScene) ID() SceneType       { return SceneCozyGreenhouse }
-func (s *CozyGreenhouseScene) Name() string     { return "Glasshouse Solarium Sanctuary 🌿" }
+func (s *CozyGreenhouseScene) ID() SceneType      { return SceneCozyGreenhouse }
+func (s *CozyGreenhouseScene) Name() string       { return "Glasshouse Solarium Sanctuary 🌿" }
 func (s *CozyGreenhouseScene) WindowBounds() Rect { return Rect{X: 6, Y: 2, W: 62, H: 32} }
 
-func (s *CozyGreenhouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CozyGreenhouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3611,11 +3641,14 @@ func (s *CozyGreenhouseScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type MidnightLibraryScene struct{}
 
-func (s *MidnightLibraryScene) ID() SceneType       { return SceneCozyLibrary }
-func (s *MidnightLibraryScene) Name() string     { return "Midnight Stained Glass Library 📚" }
+func (s *MidnightLibraryScene) ID() SceneType      { return SceneCozyLibrary }
+func (s *MidnightLibraryScene) Name() string       { return "Midnight Stained Glass Library 📚" }
 func (s *MidnightLibraryScene) WindowBounds() Rect { return Rect{X: 20, Y: 3, W: 34, H: 26} }
 
-func (s *MidnightLibraryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *MidnightLibraryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3703,7 +3736,7 @@ func (s *MidnightLibraryScene) RenderForeground(c *Canvas, frameCount uint64, bu
 		c.FillRect(57, shelfY+8, 15, 2, ColorWoodMedium)
 		for b := 0; b < 5; b++ {
 			bx := 58 + b*3
-			bh := 5 + ((b*2)%4)
+			bh := 5 + ((b * 2) % 4)
 			col := bookCols[(b+tier*2+2)%len(bookCols)]
 			c.FillRect(bx, shelfY+8-bh, 2, bh, col)
 			c.SetPixel(bx+1, shelfY+8-bh+2, ColorGoldFoilSpine)
@@ -3774,11 +3807,14 @@ func (s *MidnightLibraryScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 // ---------------------------------------------------------
 type LighthouseStudyScene struct{}
 
-func (s *LighthouseStudyScene) ID() SceneType       { return SceneLighthouseCliff }
-func (s *LighthouseStudyScene) Name() string     { return "Coastal Ocean Lighthouse Study 🌊" }
+func (s *LighthouseStudyScene) ID() SceneType      { return SceneLighthouseCliff }
+func (s *LighthouseStudyScene) Name() string       { return "Coastal Ocean Lighthouse Study 🌊" }
 func (s *LighthouseStudyScene) WindowBounds() Rect { return Rect{X: 8, Y: 3, W: 58, H: 28} }
 
-func (s *LighthouseStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *LighthouseStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3815,7 +3851,7 @@ func (s *LighthouseStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning boo
 	for w := 0; w < 4; w++ {
 		waveY := oceanY + 2 + w*3
 		for x := wx; x < wx+ww; x++ {
-			waveOffset := int(math.Sin(float64(x)*0.2 + float64(frameCount)*0.08 + float64(w)*1.5)*1.2)
+			waveOffset := int(math.Sin(float64(x)*0.2+float64(frameCount)*0.08+float64(w)*1.5) * 1.2)
 			py := waveY + waveOffset
 			if py >= oceanY && py < wy+wh {
 				if (x+int(frameCount/4))%6 == 0 {
@@ -3922,11 +3958,14 @@ func (s *LighthouseStudyScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 // ---------------------------------------------------------
 type PixelBakeryScene struct{}
 
-func (s *PixelBakeryScene) ID() SceneType       { return ScenePixelBakery }
-func (s *PixelBakeryScene) Name() string     { return "Hearthside Autumn Village Bakery 🥐" }
+func (s *PixelBakeryScene) ID() SceneType      { return ScenePixelBakery }
+func (s *PixelBakeryScene) Name() string       { return "Hearthside Autumn Village Bakery 🥐" }
 func (s *PixelBakeryScene) WindowBounds() Rect { return Rect{X: 16, Y: 4, W: 36, H: 24} }
 
-func (s *PixelBakeryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *PixelBakeryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4055,11 +4094,14 @@ func (s *PixelBakeryScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type RetroLofiTrainScene struct{}
 
-func (s *RetroLofiTrainScene) ID() SceneType       { return SceneRetroLofiTrain }
-func (s *RetroLofiTrainScene) Name() string     { return "Vintage Lofi Train Carriage 🚂" }
+func (s *RetroLofiTrainScene) ID() SceneType      { return SceneRetroLofiTrain }
+func (s *RetroLofiTrainScene) Name() string       { return "Vintage Lofi Train Carriage 🚂" }
 func (s *RetroLofiTrainScene) WindowBounds() Rect { return Rect{X: 12, Y: 4, W: 50, H: 26} }
 
-func (s *RetroLofiTrainScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *RetroLofiTrainScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4232,11 +4274,14 @@ func (s *RetroLofiTrainScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type ZenOnsenScene struct{}
 
-func (s *ZenOnsenScene) ID() SceneType       { return SceneZenWaterfallShrine }
-func (s *ZenOnsenScene) Name() string     { return "Moonlit Mountain Hot Spring Onsen ♨️" }
+func (s *ZenOnsenScene) ID() SceneType      { return SceneZenWaterfallShrine }
+func (s *ZenOnsenScene) Name() string       { return "Moonlit Mountain Hot Spring Onsen ♨️" }
 func (s *ZenOnsenScene) WindowBounds() Rect { return Rect{X: 6, Y: 2, W: 62, H: 30} }
 
-func (s *ZenOnsenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ZenOnsenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4282,7 +4327,7 @@ func (s *ZenOnsenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, fram
 	// Layered Pine & Bamboo silhouettes in mountain breeze
 	for b := 0; b < 6; b++ {
 		bx := wx + b*10 + 2
-		bSway := int(math.Sin(float64(frameCount)*0.05+float64(b))*1.2)
+		bSway := int(math.Sin(float64(frameCount)*0.05+float64(b)) * 1.2)
 		c.FillCircle(bx+bSway, wy+wh/2+2, 5, hex("#0f2411"))
 	}
 }
@@ -4303,7 +4348,7 @@ func (s *ZenOnsenScene) RenderForeground(c *Canvas, frameCount uint64, buddy *Fo
 	for w := 0; w < 3; w++ {
 		waveY := 30 + w*5
 		for x := 10; x < 42; x++ {
-			wOffset := int(math.Sin(float64(x)*0.25+float64(frameCount)*0.08+float64(w))*1.0)
+			wOffset := int(math.Sin(float64(x)*0.25+float64(frameCount)*0.08+float64(w)) * 1.0)
 			py := waveY + wOffset
 			if py >= 28 && py < 46 {
 				c.SetPixel(x, py, ColorOnsenWaterMid)
@@ -4385,11 +4430,14 @@ func (s *ZenOnsenScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool)
 // ---------------------------------------------------------
 type VinylLoungeScene struct{}
 
-func (s *VinylLoungeScene) ID() SceneType       { return SceneNeonBistro }
-func (s *VinylLoungeScene) Name() string     { return "Rainy Midnight Vinyl Lounge 📻" }
+func (s *VinylLoungeScene) ID() SceneType      { return SceneNeonBistro }
+func (s *VinylLoungeScene) Name() string       { return "Rainy Midnight Vinyl Lounge 📻" }
 func (s *VinylLoungeScene) WindowBounds() Rect { return Rect{X: 18, Y: 4, W: 36, H: 24} }
 
-func (s *VinylLoungeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *VinylLoungeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4497,7 +4545,7 @@ func (s *VinylLoungeScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 
 	// 4. Acoustic Guitar leaning against wall on far right (Columns 54 to 62)
 	c.FillEllipse(58, 28, 3, 5, ColorGuitarWood)
-	c.FillCircle(58, 28, 1, PicoBlack) // soundhole
+	c.FillCircle(58, 28, 1, PicoBlack)       // soundhole
 	c.FillRect(57, 16, 2, 10, ColorWoodDark) // neck
 	c.FillRect(56, 14, 4, 3, ColorWoodDark)  // headstock
 
@@ -4537,11 +4585,14 @@ func (s *VinylLoungeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type SunkenHearthScene struct{}
 
-func (s *SunkenHearthScene) ID() SceneType       { return SceneStarlightCamp }
-func (s *SunkenHearthScene) Name() string     { return "Sunken Hearth & Blanket Fort 🏕️" }
+func (s *SunkenHearthScene) ID() SceneType      { return SceneStarlightCamp }
+func (s *SunkenHearthScene) Name() string       { return "Sunken Hearth & Blanket Fort 🏕️" }
 func (s *SunkenHearthScene) WindowBounds() Rect { return Rect{X: 14, Y: 3, W: 46, H: 23} }
 
-func (s *SunkenHearthScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *SunkenHearthScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4687,11 +4738,14 @@ func (s *SunkenHearthScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning b
 // ---------------------------------------------------------
 type MidnightRamenBarScene struct{}
 
-func (s *MidnightRamenBarScene) ID() SceneType       { return SceneRamenShop }
-func (s *MidnightRamenBarScene) Name() string     { return "Midnight Tokyo Ramen Bar 🍜" }
+func (s *MidnightRamenBarScene) ID() SceneType      { return SceneRamenShop }
+func (s *MidnightRamenBarScene) Name() string       { return "Midnight Tokyo Ramen Bar 🍜" }
 func (s *MidnightRamenBarScene) WindowBounds() Rect { return Rect{X: 8, Y: 3, W: 58, H: 27} }
 
-func (s *MidnightRamenBarScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *MidnightRamenBarScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4800,7 +4854,7 @@ func (s *MidnightRamenBarScene) RenderForeground(c *Canvas, frameCount uint64, b
 	potY := 26
 	c.FillRect(potX, potY, 10, 7, ColorStoveCastIron)
 	c.FillRect(potX+1, potY+1, 8, 5, ColorRamenBroth)
-	c.SetPixel(potX-1, potY+2, ColorLampBrass) // left handle
+	c.SetPixel(potX-1, potY+2, ColorLampBrass)  // left handle
 	c.SetPixel(potX+10, potY+2, ColorLampBrass) // right handle
 
 	// Animated Rising Steam Trails from Boiling Stock Pot
@@ -4826,9 +4880,9 @@ func (s *MidnightRamenBarScene) RenderForeground(c *Canvas, frameCount uint64, b
 	c.DrawLine(bowlX+1, bowlY+4, bowlX+8, bowlY+4, ColorWoodHighlight)
 
 	// Condiment Ceramic Shaker & Soy Sauce Cruet
-	c.FillRect(44, 28, 2, 4, ColorPotClay)       // Shichimi shaker
-	c.FillRect(48, 27, 3, 5, ColorNorenIndigo)   // Soy sauce cruet
-	c.SetPixel(49, 26, ColorMugCeramic)          // cork stopper
+	c.FillRect(44, 28, 2, 4, ColorPotClay)     // Shichimi shaker
+	c.FillRect(48, 27, 3, 5, ColorNorenIndigo) // Soy sauce cruet
+	c.SetPixel(49, 26, ColorMugCeramic)        // cork stopper
 
 	// FocusBuddy seated at ramen counter
 	if buddy != nil {
@@ -4864,11 +4918,14 @@ func (s *MidnightRamenBarScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightni
 // ---------------------------------------------------------
 type BotanicalApothecaryScene struct{}
 
-func (s *BotanicalApothecaryScene) ID() SceneType       { return SceneMagicSanctuary }
-func (s *BotanicalApothecaryScene) Name() string     { return "Botanical Herbal Apothecary 🌿🔮" }
+func (s *BotanicalApothecaryScene) ID() SceneType      { return SceneMagicSanctuary }
+func (s *BotanicalApothecaryScene) Name() string       { return "Botanical Herbal Apothecary 🌿🔮" }
 func (s *BotanicalApothecaryScene) WindowBounds() Rect { return Rect{X: 16, Y: 3, W: 42, H: 24} }
 
-func (s *BotanicalApothecaryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *BotanicalApothecaryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4937,7 +4994,7 @@ func (s *BotanicalApothecaryScene) RenderForeground(c *Canvas, frameCount uint64
 	}
 	for _, b := range herbBundles {
 		c.DrawLine(b.x, 3, b.x, 7, ColorWoodHighlight) // twine string
-		c.FillEllipse(b.x, 9, 2, 3, b.col)              // herb bundle
+		c.FillEllipse(b.x, 9, 2, 3, b.col)             // herb bundle
 	}
 
 	// Arched Stone Window Frame
@@ -4997,10 +5054,10 @@ func (s *BotanicalApothecaryScene) RenderForeground(c *Canvas, frameCount uint64
 	c.FillRect(20, 28, 9, 4, ColorNotebookPaper)
 	c.DrawRectOutline(20, 28, 9, 4, ColorGrimoireLeather)
 	c.FillRect(24, 28, 1, 4, ColorGrimoireLeather) // book spine
-	c.SetPixel(22, 29, ColorHerbSage)             // pressed flower illustration
-	c.SetPixel(26, 29, ColorWoodDark)             // ink script
+	c.SetPixel(22, 29, ColorHerbSage)              // pressed flower illustration
+	c.SetPixel(26, 29, ColorWoodDark)              // ink script
 	c.SetPixel(26, 30, ColorWoodDark)
-	c.SetPixel(30, 28, ColorLampBrass)            // brass quill pen
+	c.SetPixel(30, 28, ColorLampBrass) // brass quill pen
 
 	// Mortar and Pestle with Fresh Ground Herbs
 	c.FillRect(34, 29, 3, 2, hex("#adb5bd"))
@@ -5038,11 +5095,14 @@ func (s *BotanicalApothecaryScene) ApplyLighting(c *Canvas, lampOn, fireOn, ligh
 // ---------------------------------------------------------
 type NordicAuroraPierScene struct{}
 
-func (s *NordicAuroraPierScene) ID() SceneType       { return SceneMountainAuroraShack }
-func (s *NordicAuroraPierScene) Name() string     { return "Nordic Fjord Pier & Aurora Sauna 🌌❄️" }
+func (s *NordicAuroraPierScene) ID() SceneType      { return SceneMountainAuroraShack }
+func (s *NordicAuroraPierScene) Name() string       { return "Nordic Fjord Pier & Aurora Sauna 🌌❄️" }
 func (s *NordicAuroraPierScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 34} }
 
-func (s *NordicAuroraPierScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *NordicAuroraPierScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5194,11 +5254,16 @@ func (s *NordicAuroraPierScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightni
 // ---------------------------------------------------------
 type StarlitRooftopStudyScene struct{}
 
-func (s *StarlitRooftopStudyScene) ID() SceneType       { return SceneStarlightTreehouse }
-func (s *StarlitRooftopStudyScene) Name() string     { return "Starlit Urban Rooftop Sanctuary 🌟🏙️" }
+func (s *StarlitRooftopStudyScene) ID() SceneType { return SceneStarlightTreehouse }
+func (s *StarlitRooftopStudyScene) Name() string {
+	return "Starlit Urban Rooftop Sanctuary 🌟🏙️"
+}
 func (s *StarlitRooftopStudyScene) WindowBounds() Rect { return Rect{X: 6, Y: 2, W: 62, H: 28} }
 
-func (s *StarlitRooftopStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *StarlitRooftopStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5358,11 +5423,14 @@ func (s *StarlitRooftopStudyScene) ApplyLighting(c *Canvas, lampOn, fireOn, ligh
 // ---------------------------------------------------------
 type AntiqueBookshopScene struct{}
 
-func (s *AntiqueBookshopScene) ID() SceneType       { return SceneCoffeeShop }
-func (s *AntiqueBookshopScene) Name() string     { return "Antique Corner Bookshop & Reading Nook 📚☕" }
+func (s *AntiqueBookshopScene) ID() SceneType      { return SceneCoffeeShop }
+func (s *AntiqueBookshopScene) Name() string       { return "Antique Corner Bookshop & Reading Nook 📚☕" }
 func (s *AntiqueBookshopScene) WindowBounds() Rect { return Rect{X: 18, Y: 3, W: 38, H: 26} }
 
-func (s *AntiqueBookshopScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *AntiqueBookshopScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5516,11 +5584,16 @@ func (s *AntiqueBookshopScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 // ---------------------------------------------------------
 type GlasshouseBotanicalScene struct{}
 
-func (s *GlasshouseBotanicalScene) ID() SceneType       { return SceneEnchantedForest }
-func (s *GlasshouseBotanicalScene) Name() string     { return "Misty Botanical Greenhouse & Potting Shed 🌿🪴" }
+func (s *GlasshouseBotanicalScene) ID() SceneType { return SceneEnchantedForest }
+func (s *GlasshouseBotanicalScene) Name() string {
+	return "Misty Botanical Greenhouse & Potting Shed 🌿🪴"
+}
 func (s *GlasshouseBotanicalScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 28} }
 
-func (s *GlasshouseBotanicalScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *GlasshouseBotanicalScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5578,7 +5651,7 @@ func (s *GlasshouseBotanicalScene) RenderForeground(c *Canvas, frameCount uint64
 		c.DrawLine(h.x, 0, h.x, h.y+4, ColorMacrameHanger)
 		c.FillRect(h.x-2, h.y+4, 4, 3, ColorPotClay)
 		// Cascading String-of-Pearls & Boston Fern Leaves swaying
-		sway := int(math.Sin(float64(frameCount)*0.08+float64(h.x))*1.5)
+		sway := int(math.Sin(float64(frameCount)*0.08+float64(h.x)) * 1.5)
 		c.FillCircle(h.x+sway, h.y+3, 3, ColorLeafLight)
 		c.FillCircle(h.x-1+sway, h.y+2, 2, ColorLeafMedium)
 		c.DrawLine(h.x+sway, h.y+6, h.x-1+sway, h.y+12, ColorLeafLight)
@@ -5591,8 +5664,8 @@ func (s *GlasshouseBotanicalScene) RenderForeground(c *Canvas, frameCount uint64
 	benchW := 52
 	c.FillRect(benchX, benchY, benchW, 4, ColorWoodMedium)
 	c.FillRect(benchX, benchY, benchW, 1, ColorWoodHighlight)
-	c.FillRect(benchX+2, benchY+4, 3, 10, ColorWoodDark)  // left leg
-	c.FillRect(benchX+benchW-5, benchY+4, 3, 10, ColorWoodDark) // right leg
+	c.FillRect(benchX+2, benchY+4, 3, 10, ColorWoodDark)          // left leg
+	c.FillRect(benchX+benchW-5, benchY+4, 3, 10, ColorWoodDark)   // right leg
 	c.FillRect(benchX+benchW/2-1, benchY+4, 3, 10, ColorWoodDark) // center leg
 
 	// Terracotta Pots on Potting Bench
@@ -5663,11 +5736,16 @@ func (s *GlasshouseBotanicalScene) ApplyLighting(c *Canvas, lampOn, fireOn, ligh
 // ---------------------------------------------------------
 type RiversideCampScene struct{}
 
-func (s *RiversideCampScene) ID() SceneType       { return SceneRiverBridge }
-func (s *RiversideCampScene) Name() string     { return "Midnight Riverside Camp & Starlit River 🏕️🌌" }
+func (s *RiversideCampScene) ID() SceneType { return SceneRiverBridge }
+func (s *RiversideCampScene) Name() string {
+	return "Midnight Riverside Camp & Starlit River 🏕️🌌"
+}
 func (s *RiversideCampScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 34} }
 
-func (s *RiversideCampScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *RiversideCampScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5765,7 +5843,7 @@ func (s *RiversideCampScene) RenderForeground(c *Canvas, frameCount uint64, budd
 
 	if fireOn {
 		// Multi-tier animated fire physics
-		flicker := int(frameCount%4)
+		flicker := int(frameCount % 4)
 		c.FillEllipse(fireCenterX, fireCenterY-1, 4, 3+flicker, ColorFireRed)
 		c.FillEllipse(fireCenterX, fireCenterY-2, 3, 2+flicker, ColorFireOrange)
 		c.FillEllipse(fireCenterX, fireCenterY-3, 2, 2, ColorFireYellow)
@@ -5827,11 +5905,16 @@ func (s *RiversideCampScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning 
 // ---------------------------------------------------------
 type CoastalBalconyScene struct{}
 
-func (s *CoastalBalconyScene) ID() SceneType       { return SceneOceanWaves }
-func (s *CoastalBalconyScene) Name() string     { return "Seaside Cliffside Balcony & Lighthouse 🌊🏖️" }
+func (s *CoastalBalconyScene) ID() SceneType { return SceneOceanWaves }
+func (s *CoastalBalconyScene) Name() string {
+	return "Seaside Cliffside Balcony & Lighthouse 🌊🏖️"
+}
 func (s *CoastalBalconyScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 32} }
 
-func (s *CoastalBalconyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CoastalBalconyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5918,7 +6001,7 @@ func (s *CoastalBalconyScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	c.DrawLine(teleX, teleY+2, teleX, teleY+10, ColorWoodDark)
 
 	// Adirondack Coastal Lounge Chair draped with Striped Knitted Throw (Columns 12 to 26, Rows 24 to 36)
-	c.FillRect(14, 26, 12, 8, hex("#e2e8f0")) // painted white adirondack slats
+	c.FillRect(14, 26, 12, 8, hex("#e2e8f0"))   // painted white adirondack slats
 	c.FillRect(14, 28, 12, 4, ColorBlanketTeal) // throw blanket
 	c.SetPixel(16, 29, ColorPlaidRed)
 	c.SetPixel(20, 29, ColorPlaidRed)
@@ -5948,7 +6031,7 @@ func (s *CoastalBalconyScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	c.FillCircle(8, 20, 2, ColorCoastalLavender)
 
 	// Hanging Bamboo & Seashell Wind Chimes (Top Left, Columns 8 to 14)
-	sway := int(math.Sin(float64(frameCount)*0.09)*1.5)
+	sway := int(math.Sin(float64(frameCount)*0.09) * 1.5)
 	c.DrawLine(10, 0, 10+sway, 6, ColorWoodMedium)
 	c.DrawLine(9+sway, 6, 9+sway, 12, ColorMacrameHanger)
 	c.DrawLine(11+sway, 6, 11+sway, 10, ColorMacrameHanger)
@@ -5980,11 +6063,14 @@ func (s *CoastalBalconyScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type LofiStudyDeskScene struct{}
 
-func (s *LofiStudyDeskScene) ID() SceneType       { return SceneSunsetStation }
-func (s *LofiStudyDeskScene) Name() string     { return "Lofi Study Desk & Rainy Window 🎧🌧️" }
+func (s *LofiStudyDeskScene) ID() SceneType      { return SceneSunsetStation }
+func (s *LofiStudyDeskScene) Name() string       { return "Lofi Study Desk & Rainy Window 🎧🌧️" }
 func (s *LofiStudyDeskScene) WindowBounds() Rect { return Rect{X: 6, Y: 4, W: 38, H: 26} }
 
-func (s *LofiStudyDeskScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *LofiStudyDeskScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6009,7 +6095,7 @@ func (s *LofiStudyDeskScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool,
 	for b := 0; b < 6; b++ {
 		bx := wx + b*6 + 1
 		bw := 5
-		bh := 8 + ((b*11+3)%12)
+		bh := 8 + ((b*11 + 3) % 12)
 		c.FillRect(bx, wy+wh-bh, bw, bh, bldgCols[b%3])
 
 		// Warm illuminated windows
@@ -6157,11 +6243,16 @@ func (s *LofiStudyDeskScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning 
 // ---------------------------------------------------------
 type ZenRainGardenScene struct{}
 
-func (s *ZenRainGardenScene) ID() SceneType       { return SceneBambooGrove }
-func (s *ZenRainGardenScene) Name() string     { return "Zen Rain Garden & Bamboo Water Clacker 🎋🌧️" }
+func (s *ZenRainGardenScene) ID() SceneType { return SceneBambooGrove }
+func (s *ZenRainGardenScene) Name() string {
+	return "Zen Rain Garden & Bamboo Water Clacker 🎋🌧️"
+}
 func (s *ZenRainGardenScene) WindowBounds() Rect { return Rect{X: 8, Y: 3, W: 58, H: 26} }
 
-func (s *ZenRainGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ZenRainGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6184,7 +6275,7 @@ func (s *ZenRainGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool,
 	// Swaying Lush Bamboo Grove in Background Garden
 	for b := 0; b < 10; b++ {
 		bx := wx + b*6 + 2
-		bSway := int(math.Sin(float64(frameCount)*0.06+float64(b))*1.5)
+		bSway := int(math.Sin(float64(frameCount)*0.06+float64(b)) * 1.5)
 		c.DrawLine(bx, wy+wh-2, bx+bSway, wy+2, ColorBambooGreen)
 		c.DrawLine(bx+1, wy+wh-2, bx+1+bSway, wy+2, ColorBambooGreen)
 
@@ -6237,7 +6328,7 @@ func (s *ZenRainGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool,
 	basinY := fountainY + 3
 	c.FillRect(basinX, basinY, 10, 5, ColorTsukubaiBasin)
 	c.FillRect(basinX+2, basinY+1, 6, 2, ColorPondDeep) // water pool
-	c.SetPixel(basinX+4, basinY+1, hex("#38bdf8"))       // water shimmer
+	c.SetPixel(basinX+4, basinY+1, hex("#38bdf8"))      // water shimmer
 
 	// Japanese Stone Toro Garden Lantern (Columns wx+40 to wx+48)
 	lanternX := wx + 42
@@ -6326,11 +6417,14 @@ func (s *ZenRainGardenScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning 
 // ---------------------------------------------------------
 type CozyCatCafeScene struct{}
 
-func (s *CozyCatCafeScene) ID() SceneType       { return SceneWinterCafe }
-func (s *CozyCatCafeScene) Name() string     { return "Cozy Cat Cafe & Espresso Nook 🐈☕" }
+func (s *CozyCatCafeScene) ID() SceneType      { return SceneWinterCafe }
+func (s *CozyCatCafeScene) Name() string       { return "Cozy Cat Cafe & Espresso Nook 🐈☕" }
 func (s *CozyCatCafeScene) WindowBounds() Rect { return Rect{X: 6, Y: 4, W: 30, H: 24} }
 
-func (s *CozyCatCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CozyCatCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6417,7 +6511,7 @@ func (s *CozyCatCafeScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 	machX := 10
 	machY := 18
 	c.FillRect(machX, machY, 16, 10, ColorEspressoChrome)
-	c.FillRect(machX+2, machY+2, 12, 2, ColorLampBrass) // cup warmer tray
+	c.FillRect(machX+2, machY+2, 12, 2, ColorLampBrass)    // cup warmer tray
 	c.FillRect(machX+3, machY+5, 2, 3, ColorStoveCastIron) // portafilter 1
 	c.FillRect(machX+9, machY+5, 2, 3, ColorStoveCastIron) // portafilter 2
 	c.SetPixel(machX+14, machY+4, PicoRed)                 // power light
@@ -6460,11 +6554,14 @@ func (s *CozyCatCafeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type AutumnLakeDockScene struct{}
 
-func (s *AutumnLakeDockScene) ID() SceneType       { return SceneAutumnPark }
-func (s *AutumnLakeDockScene) Name() string     { return "Autumn Lake Dock & Sunrise Mist 🍂🌅" }
+func (s *AutumnLakeDockScene) ID() SceneType      { return SceneAutumnPark }
+func (s *AutumnLakeDockScene) Name() string       { return "Autumn Lake Dock & Sunrise Mist 🍂🌅" }
 func (s *AutumnLakeDockScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 32} }
 
-func (s *AutumnLakeDockScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *AutumnLakeDockScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6546,7 +6643,7 @@ func (s *AutumnLakeDockScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	// Adirondack Wooden Lounge Chair draped with Buffalo Plaid Blanket (Columns 14 to 28, Rows 22 to 34)
 	chairX := 14
 	chairY := 22
-	c.FillRect(chairX, chairY, 14, 10, hex("#f1f5f9")) // white painted slats
+	c.FillRect(chairX, chairY, 14, 10, hex("#f1f5f9"))   // white painted slats
 	c.FillRect(chairX+1, chairY+2, 12, 6, ColorPlaidRed) // red plaid throw
 	c.SetPixel(chairX+3, chairY+3, ColorPlaidNavy)
 	c.SetPixel(chairX+7, chairY+3, ColorPlaidNavy)
@@ -6599,11 +6696,14 @@ func (s *AutumnLakeDockScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type HobbitBurrowScene struct{}
 
-func (s *HobbitBurrowScene) ID() SceneType       { return SceneFairytaleWindmill }
-func (s *HobbitBurrowScene) Name() string     { return "Shire Hill Hobbit Burrow & Hearth 🌿🚪" }
+func (s *HobbitBurrowScene) ID() SceneType      { return SceneFairytaleWindmill }
+func (s *HobbitBurrowScene) Name() string       { return "Shire Hill Hobbit Burrow & Hearth 🌿🚪" }
 func (s *HobbitBurrowScene) WindowBounds() Rect { return Rect{X: 18, Y: 2, W: 38, H: 26} }
 
-func (s *HobbitBurrowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *HobbitBurrowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6704,7 +6804,7 @@ func (s *HobbitBurrowScene) RenderForeground(c *Canvas, frameCount uint64, buddy
 	c.FillRect(60, 8, 3, 4, ColorJamBerry)
 	c.FillRect(64, 8, 3, 4, ColorJamHoney)
 	c.FillRect(68, 8, 3, 4, ColorMatchaGreen)
-	c.FillRect(60, 16, 4, 4, ColorPotClay)    // stoneware crock
+	c.FillRect(60, 16, 4, 4, ColorPotClay) // stoneware crock
 	c.FillRect(66, 16, 3, 4, ColorJamBerry)
 	c.FillRect(60, 24, 4, 4, ColorJamHoney)
 	c.FillRect(66, 24, 4, 4, ColorCopperWaterCan)
@@ -6713,7 +6813,7 @@ func (s *HobbitBurrowScene) RenderForeground(c *Canvas, frameCount uint64, buddy
 	tableX, tableY := 26, 26
 	c.FillRect(tableX, tableY, 22, 10, ColorWoodMedium)
 	c.FillRect(tableX, tableY, 22, 1, ColorWoodHighlight)
-	c.FillRect(tableX+2, tableY+10, 3, 4, ColorWoodDark) // leg
+	c.FillRect(tableX+2, tableY+10, 3, 4, ColorWoodDark)  // leg
 	c.FillRect(tableX+17, tableY+10, 3, 4, ColorWoodDark) // leg
 
 	// On Table: Spiced Seed Cake with sliced crumbs
@@ -6772,11 +6872,16 @@ func (s *HobbitBurrowScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning b
 // ---------------------------------------------------------
 type JapaneseJazzKissaScene struct{}
 
-func (s *JapaneseJazzKissaScene) ID() SceneType       { return SceneCyberBar }
-func (s *JapaneseJazzKissaScene) Name() string     { return "Rainy Japanese Jazz Kissa & Siphon Bar 🎷☕" }
+func (s *JapaneseJazzKissaScene) ID() SceneType { return SceneCyberBar }
+func (s *JapaneseJazzKissaScene) Name() string {
+	return "Rainy Japanese Jazz Kissa & Siphon Bar 🎷☕"
+}
 func (s *JapaneseJazzKissaScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 32, H: 20} }
 
-func (s *JapaneseJazzKissaScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *JapaneseJazzKissaScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6793,8 +6898,8 @@ func (s *JapaneseJazzKissaScene) RenderSky(c *Canvas, tod TimeOfDay, lightning b
 
 	// Rain streaks running down the window pane
 	for i := 0; i < 14; i++ {
-		rx := wx + ((i * 7 + int(frameCount)) % ww)
-		ry := wy + ((i * 11 + int(frameCount*2)) % wh)
+		rx := wx + ((i*7 + int(frameCount)) % ww)
+		ry := wy + ((i*11 + int(frameCount*2)) % wh)
 		c.SetPixel(rx, ry, ColorRainDrop)
 		if ry+1 < wy+wh {
 			c.SetPixel(rx, ry+1, ColorRainSplash)
@@ -6816,11 +6921,11 @@ func (s *JapaneseJazzKissaScene) RenderForeground(c *Canvas, frameCount uint64, 
 	// Wall Shelves with Classic Jazz Vinyl Sleeves
 	shelfY := 4
 	c.FillRect(38, shelfY+7, 34, 2, ColorWoodMedium)
-	c.FillRect(40, shelfY, 8, 7, ColorJazzVinylBlue)     // Blue album cover
+	c.FillRect(40, shelfY, 8, 7, ColorJazzVinylBlue) // Blue album cover
 	c.FillRect(41, shelfY+1, 6, 5, PicoWhite)
-	c.FillRect(50, shelfY, 8, 7, ColorTrainVelvet)      // Red album cover
+	c.FillRect(50, shelfY, 8, 7, ColorTrainVelvet) // Red album cover
 	c.FillRect(51, shelfY+1, 6, 5, ColorParchmentPage)
-	c.FillRect(60, shelfY, 8, 7, ColorStoveCastIron)    // Black/Gold album cover
+	c.FillRect(60, shelfY, 8, 7, ColorStoveCastIron) // Black/Gold album cover
 	c.FillRect(61, shelfY+1, 6, 5, ColorVinylLabelGold)
 
 	// Polished Dark Walnut Bar Counter (Rows 24 to Height)
@@ -6907,11 +7012,14 @@ func (s *JapaneseJazzKissaScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightn
 // ---------------------------------------------------------
 type StarlitLoftBedScene struct{}
 
-func (s *StarlitLoftBedScene) ID() SceneType       { return SceneCloudTemple }
-func (s *StarlitLoftBedScene) Name() string     { return "Starlit A-Frame Loft Bed & Skylight 🌌🛏️" }
+func (s *StarlitLoftBedScene) ID() SceneType      { return SceneCloudTemple }
+func (s *StarlitLoftBedScene) Name() string       { return "Starlit A-Frame Loft Bed & Skylight 🌌🛏️" }
 func (s *StarlitLoftBedScene) WindowBounds() Rect { return Rect{X: 12, Y: 0, W: 50, H: 22} }
 
-func (s *StarlitLoftBedScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *StarlitLoftBedScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7059,11 +7167,14 @@ func (s *StarlitLoftBedScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type AlchemistTowerScene struct{}
 
-func (s *AlchemistTowerScene) ID() SceneType       { return SceneWizardTower }
-func (s *AlchemistTowerScene) Name() string     { return "Alchemist's Starlit Tower & Astrolabe 🔮✨" }
+func (s *AlchemistTowerScene) ID() SceneType      { return SceneWizardTower }
+func (s *AlchemistTowerScene) Name() string       { return "Alchemist's Starlit Tower & Astrolabe 🔮✨" }
 func (s *AlchemistTowerScene) WindowBounds() Rect { return Rect{X: 18, Y: 2, W: 38, H: 20} }
 
-func (s *AlchemistTowerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *AlchemistTowerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7206,11 +7317,16 @@ func (s *AlchemistTowerScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type MachiyaGardenScene struct{}
 
-func (s *MachiyaGardenScene) ID() SceneType       { return SceneZenBonsai }
-func (s *MachiyaGardenScene) Name() string     { return "Kyoto Machiya Courtyard Garden & Rain Chains 🎋🌧️" }
+func (s *MachiyaGardenScene) ID() SceneType { return SceneZenBonsai }
+func (s *MachiyaGardenScene) Name() string {
+	return "Kyoto Machiya Courtyard Garden & Rain Chains 🎋🌧️"
+}
 func (s *MachiyaGardenScene) WindowBounds() Rect { return Rect{X: 14, Y: 3, W: 46, H: 27} }
 
-func (s *MachiyaGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *MachiyaGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7242,7 +7358,7 @@ func (s *MachiyaGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool,
 	// Slender bamboo stalks rising behind the clay wall
 	for b := 0; b < 7; b++ {
 		bx := wx + 4 + b*6
-		bSway := int(math.Sin(float64(frameCount)*0.07+float64(b))*1.2)
+		bSway := int(math.Sin(float64(frameCount)*0.07+float64(b)) * 1.2)
 		c.DrawLine(bx, wallY, bx+bSway, wy+1, ColorBambooGreen)
 		c.FillCircle(bx+bSway, wy+2, 2, ColorLeafLight)
 	}
@@ -7380,11 +7496,16 @@ func (s *MachiyaGardenScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning 
 // ---------------------------------------------------------
 type CyberLofiDinerScene struct{}
 
-func (s *CyberLofiDinerScene) ID() SceneType       { return SceneCyberDiner }
-func (s *CyberLofiDinerScene) Name() string     { return "Rainy Midnight Cyber Lofi Diner & Neon Booth 🍔☕" }
+func (s *CyberLofiDinerScene) ID() SceneType { return SceneCyberDiner }
+func (s *CyberLofiDinerScene) Name() string {
+	return "Rainy Midnight Cyber Lofi Diner & Neon Booth 🍔☕"
+}
 func (s *CyberLofiDinerScene) WindowBounds() Rect { return Rect{X: 6, Y: 3, W: 44, H: 24} }
 
-func (s *CyberLofiDinerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CyberLofiDinerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7479,8 +7600,8 @@ func (s *CyberLofiDinerScene) RenderForeground(c *Canvas, frameCount uint64, bud
 
 	// Polished Formica & Chrome Edged Diner Table (Columns 14 to 48, Rows 26 to 36)
 	tblX, tblY := 14, 26
-	c.FillRect(tblX, tblY, 34, 4, hex("#38bdf8"))        // Teal Formica top
-	c.FillRect(tblX, tblY+4, 34, 2, ColorDinerChromeTrim) // Chrome trim
+	c.FillRect(tblX, tblY, 34, 4, hex("#38bdf8"))            // Teal Formica top
+	c.FillRect(tblX, tblY+4, 34, 2, ColorDinerChromeTrim)    // Chrome trim
 	c.FillRect(tblX+16, tblY+6, 4, 10, ColorDinerChromeTrim) // Center chrome pillar leg
 
 	// Diner Items on Table:
@@ -7572,11 +7693,16 @@ func (s *CyberLofiDinerScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type NordicBayWindowScene struct{}
 
-func (s *NordicBayWindowScene) ID() SceneType       { return SceneCozyIgloo }
-func (s *NordicBayWindowScene) Name() string     { return "Nordic Hygge Bay Window & Snowflake Pines 🌲🕯️" }
+func (s *NordicBayWindowScene) ID() SceneType { return SceneCozyIgloo }
+func (s *NordicBayWindowScene) Name() string {
+	return "Nordic Hygge Bay Window & Snowflake Pines 🌲🕯️"
+}
 func (s *NordicBayWindowScene) WindowBounds() Rect { return Rect{X: 10, Y: 2, W: 54, H: 26} }
 
-func (s *NordicBayWindowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *NordicBayWindowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7734,11 +7860,16 @@ func (s *NordicBayWindowScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 // ---------------------------------------------------------
 type ForestTreehouseScene struct{}
 
-func (s *ForestTreehouseScene) ID() SceneType       { return SceneSkyIsland }
-func (s *ForestTreehouseScene) Name() string     { return "Forest Canopy Treehouse & Starlit Rope Bridge 🌲🌉" }
+func (s *ForestTreehouseScene) ID() SceneType { return SceneSkyIsland }
+func (s *ForestTreehouseScene) Name() string {
+	return "Forest Canopy Treehouse & Starlit Rope Bridge 🌲🌉"
+}
 func (s *ForestTreehouseScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 30} }
 
-func (s *ForestTreehouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ForestTreehouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7841,9 +7972,9 @@ func (s *ForestTreehouseScene) RenderForeground(c *Canvas, frameCount uint64, bu
 	// Hanging Brass Storm Lantern swinging gently from overhead branch (Left: Column 14, Rows 4 to 14)
 	sway := int(math.Sin(float64(frameCount)*0.07) * 2.0)
 	lanX := 14 + sway
-	c.DrawLine(14, 0, lanX, 8, ColorBrassPendulum) // hanging chain
-	c.FillRect(lanX-2, 8, 5, 2, ColorStormLanternBrass) // top cap
-	c.FillRect(lanX-1, 10, 3, 4, ColorGlassTint)       // glass cage
+	c.DrawLine(14, 0, lanX, 8, ColorBrassPendulum)       // hanging chain
+	c.FillRect(lanX-2, 8, 5, 2, ColorStormLanternBrass)  // top cap
+	c.FillRect(lanX-1, 10, 3, 4, ColorGlassTint)         // glass cage
 	c.FillRect(lanX-2, 14, 5, 2, ColorStormLanternBrass) // base
 	if lampOn {
 		c.FillRect(lanX-1, 11, 3, 2, ColorFireYellow)
@@ -7901,9 +8032,3 @@ func (s *ForestTreehouseScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
 	}
 }
-
-
-
-
-
-

@@ -318,7 +318,6 @@ func (c *Canvas) DrawArc(cx, cy, r int, startAngle, endAngle float64, color colo
 	}
 }
 
-
 // ApplyRadialLight applies a warm radial light source centered at (cx, cy) in pixel coords.
 func (c *Canvas) ApplyRadialLight(cx, cy int, radius float64, lightColor colorful.Color, maxIntensity float64) {
 	minY := int(math.Max(0, float64(cy)-radius))
@@ -747,5 +746,3 @@ func (c *Canvas) ApplyCRTScanlines(depth float64) {
 		}
 	}
 }
-
-
