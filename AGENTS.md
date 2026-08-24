@@ -30,17 +30,24 @@ make hooks     # sets core.hooksPath=hooks
 
 The hook is the fast subset (~0.2s): `gofmt` on **staged** `.go` files, plus
 `go vet` and `go mod tidy -diff`. It deliberately does not run the test suite —
-`pkg/art` alone takes 17s, and a gate slow enough to be annoying is a gate that
-gets bypassed. `make check` is the complete gate, over every tracked `.go`
-file; run it yourself.
+a gate slow enough to be annoying is a gate that gets bypassed. (`pkg/art` used
+to be 17s of a 21s suite; Phase 1's curation brought the whole suite to ~2s, but
+the rule holds as the suite grows back.) `make check` is the complete gate, over
+every tracked `.go` file; run it yourself.
 
-Two caveats worth knowing:
+One caveat worth knowing:
 
 - `gofmt -l` reads the **working tree**, not the index. A partially-staged file is
   judged by its on-disk contents.
-- `make check` is expected to **fail on `gofmt` until Phase 1 §1.7**, which runs
-  `gofmt -w` as its final commit. Reformatting 1,745 lines that Phase 1 is about
-  to delete would be wasted diff. Do not "fix" this early.
+
+**The repo is `gofmt`-clean as of Phase 1's first commit.** Phase 1 §1.7 originally
+scheduled `gofmt -w` as the phase's *last* commit, to avoid reformatting 1,745 lines
+that curation was about to delete. That was reversed, for two reasons: six of the
+sixteen unformatted files are files Phase 1 must edit, and the pre-commit hook rejects
+staged unformatted `.go` files — so every functional commit in the phase would have
+been blocked, or pushed through with `--no-verify`. And the "wasted diff" premise
+dissolved when curation was scoped to keep the GIF set rather than cut it to ~40:
+`scenes_modular.go` loses ~120 lines, not ~1,800.
 
 `make lint` (golangci-lint) is **not** part of `make check`, so `check` still
 works on a machine without the linter installed.
@@ -71,14 +78,17 @@ belong in a test, not a commit message.
 
 This is the single most expensive mistake in this repo's history.
 
-`TestHandcraftedProceduralScenes` renders all 36 scenes across 4 times of day —
-144 frames — and asserts only that the output string is non-empty. When a scene
+`TestHandcraftedProceduralScenes` rendered all 36 scenes across 4 times of day —
+144 frames — and asserted only that the output string was non-empty. When a scene
 fails to load its asset it falls back to `c.Clear(PicoNavy)`, so **the test was
 asserting that a solid navy rectangle is not zero-length.** It passed through 8
 consecutive commits while 20 scenes were silently broken.
 
 Assert something a broken render cannot satisfy: a distinct-RGB count, an exact
-golden, a specific pixel. "It produced bytes" is not a test.
+golden, a specific pixel. "It produced bytes" is not a test. Phase 1 replaced it
+with a distinct-color floor over each scene's *own* layers — `renderSceneLayers`
+in `pkg/art/scene_test.go` records why the composited frame cannot be measured
+instead, and that reasoning is the transferable part.
 
 The same applies to any `len(x) == 0` guard standing in for a correctness check.
 
@@ -94,9 +104,9 @@ The same applies to any `len(x) == 0` guard standing in for a correctness check.
   (`pkg/ui/view_test.go:37-321`) is 285 lines with ~40 unrelated assertions
   against shared mutating state — a failure in the middle hides everything after.
 - **Guard slow tests** with `testing.Short()`. `TestVerifyDownloadedGifs`
-  (`pkg/art/gif_loader_test.go:41`) decoded every GIF in `assets/` on each run.
-  Since the §1.8 purge its `../../assets/animations` path no longer resolves, so
-  it now fails outright — the known cause of the red suite at this commit.
+  (`pkg/art/gif_loader_test.go`) decoded every GIF in `assets/` into the unbounded
+  loader cache on each run — 15.75s of a 21s suite. Phase 1 guarded it and cut what
+  it decodes from 363 files to 10.
 
 ---
 
@@ -105,12 +115,14 @@ The same applies to any `len(x) == 0` guard standing in for a correctness check.
 **Anything that registers by key needs a uniqueness test.** Two live bugs, one
 root cause — nothing in this repo ever checks for a duplicate key:
 
-- `RegisterScene` (`pkg/art/scene_interface.go:30`) ends in an unconditional
-  `SceneRegistry[s.ID()] = s`. Of 380 registrations, **20 IDs are claimed twice**;
-  the second silently wins. That is the 20 dead scenes. Phase 1 makes it panic.
+- `RegisterScene` (`pkg/art/scene_interface.go`) ended in an unconditional
+  `SceneRegistry[s.ID()] = s`. Of 380 registrations, **20 IDs were claimed twice**
+  and the second silently won. That is the 20 dead scenes. Phase 1 made it panic;
+  `TestRegisterSceneRejectsDuplicateID` and `TestNoDuplicateSceneRegistrations`
+  (`pkg/art/scene_test.go`) hold the line.
 - `GetCommandList` (`pkg/ui/command_palette.go`) is an append-only slice with no
-  key at all. `Shortcut: "[ K ]"` appears at both `:78` and `:510`, while
-  `pkg/ui/model.go:966` binds `K` to only the first — so the palette advertises a
+  key at all. `Shortcut: "[ K ]"` appears on two different entries, while the `"K"`
+  case in `pkg/ui/model.go` binds only the first — so the palette advertises a
   shortcut that does something else. Phase 13 owns the fix.
 
 Prefer **panic in `init()`** over log-and-skip. Log-and-skip converts a
@@ -125,15 +137,16 @@ every existing `user_presets.json`. Add at the end; delete only from the end.
 
 ## 5. Assets
 
-Before Phase 1's curation, `assets/` held 367 files totalling 31MB; Phase 1
-curates that set to ~40 GIFs (`plan-phase-1.md` §1.3). §1.8's `git filter-repo`
-purge stripped the pre-curation asset blobs from every commit in this range, so
-no commit here contains any file under `assets/`.
+Before Phase 1's curation, `assets/` held 367 files totalling 31MB. §1.8's
+`git filter-repo` purge stripped the pre-curation asset blobs from every commit
+in this range, so no commit before Phase 1's re-encode contains any file under
+`assets/`. **§7 is the bar every asset must clear** — read it before adding or
+cutting one.
 
-- **No asset over ~300KB** without discussion. That distribution was heavily
-  skewed — mean 76KB, but the top 5 files alone were 9MB. A large GIF is
-  usually large because of frame count or palette width, neither of which
-  survives downsampling to 74×52 half-blocks. Re-encode rather than ship it.
+- **No asset over ~300KB, over 64 frames, or above 640×360** — see §7 for why all
+  three caps are needed and why on-disk size alone is not enough. On-disk size does
+  not predict decoded cost: a 515KB/431-frame GIF is 142MB resident. Re-encode
+  rather than ship an offender; drop it only if it fails the aesthetic bar too.
 - **Never commit build artifacts.** `make build` writes `./gottage`, which is
   gitignored.
 - **Batch asset churn.** Replacing an asset adds a permanent blob to history —
@@ -171,7 +184,7 @@ The instinct is reasonable and the answer is still no, on four counts:
    that embedding is scheduled to replace, not a replacement for it. Do not read
    this condition as satisfied merely because no `//go:embed` exists yet.
 
-What actually controls asset bloat here is the size cap and the churn discipline
+What actually controls asset bloat here is the §7 caps and the churn discipline
 above, not LFS.
 
 ---
@@ -194,20 +207,57 @@ divergence inexpressible. "This is obviously broken, let me just fix it" is how
 work gets done twice.
 
 **Line anchors drift.** Re-derive them with `grep -n` rather than trusting numbers
-cited in a doc, especially in `pkg/art/scenes_modular.go` (Phase 1 halves it) and
-`pkg/ui/view.go` (Phases 12-14 move it repeatedly).
+cited in a doc, especially in `pkg/art/scenes_modular.go` (Phase 1 took it 7,909 →
+6,035 lines, so every anchor into it in a Phase 4+ doc is wrong) and `pkg/ui/view.go`
+(Phases 12-14 move it repeatedly).
 
 ---
 
 ## 7. Asset curation bar
 
-<!-- PLACEHOLDER — Phase 1 §1.3 fills this in as its first act, before cutting
-     any asset. It is the criterion Phase 8's reference frames get judged
-     against, so it has to be written down before curation starts, not after.
+An asset earns its place in `assets/animations/` only if it clears **both** bars
+below. This is also the criterion Phase 8's reference frames get judged against, so
+it is written down before any curation happens rather than reverse-engineered after.
 
-     Suggested starting point from plan-phase-1.md §1.3: reads clearly at 74×52
-     half-blocks; a coherent cozy interior or view rather than an abstract loop;
-     visible micro-animation; a palette compatible with the app's warm tokens;
-     under ~300KB. -->
+### Aesthetic
 
-_Not yet written — see Phase 1 §1.3._
+- **Reads at 74×52 half-blocks.** Silhouette and value structure survive the
+  downsample; fine line-art and small text do not. Check the actual rendered frame,
+  not the source GIF in an image viewer.
+- **A coherent cozy interior or view** — a room, a window, a street at night. Not an
+  abstract loop, a logo, a character sheet, or a demo reel.
+- **Visible micro-animation.** Rain, steam, flicker, drift, a passing train. A frame
+  that only cross-fades is a still image with extra bytes.
+- **A palette compatible with the app's warm tokens.** Phase 7 defines them; until
+  then, judge against the existing handcrafted scenes.
+- **Somewhere a person would want to sit.** This is the whole product thesis and it
+  is the criterion that actually does the cutting.
+
+### Hard caps
+
+Mechanically checkable, all three required:
+
+| Cap | Value | Why |
+|---|---|---|
+| On-disk size | **≤ 300 KB** | Phase 2 embeds every asset into the binary. |
+| Frame count | **≤ 64** | Decoded cost is `frames × W × H × 24` bytes (`colorful.Color` is 3×float64) and the loader cache is unbounded until Phase 6. |
+| Source dimensions | **≤ 640×360** | The renderer downsamples to canvas size. Anything larger is wasted bytes and a slower decode. |
+
+`TestAssetsRespectHardCaps` (`pkg/art/asset_caps_test.go`) enforces all three
+against every file in `assets/animations`, so an offending asset fails `make check`
+rather than shipping.
+
+**The frame cap is not redundant with the size cap.** Measured on the pre-curation set,
+`waneella_street.gif` was 515 KB on disk — comfortably under 300 KB after a downscale —
+but 431 frames, which is **142 MB resident** once decoded at 160×90. `cyber_bot.gif` was
+152 KB and 221 frames (73 MB). On-disk size does not predict memory cost; only frame
+count does.
+
+**An oversized asset that clears the aesthetic bar gets re-encoded, not dropped.** A
+large GIF is large because of source resolution or frame count, and neither survives the
+downsample to 74×52. `ffmpeg` with `fps=…,scale=…,palettegen/paletteuse` handles both.
+Prefer the `fps` filter over frame-dropping: it re-times the result, so the animation
+still plays at its authored wall-clock speed once Phase 15 starts honoring `Delays`.
+
+Re-encode **outside the repo and commit once** — see §5. Every intermediate version you
+commit is a permanent blob.

@@ -101,7 +101,7 @@ func RenderAudioSpectrum2D(width int, height int, isPlaying bool, frame uint64, 
 		if isPlaying {
 			phase := float64(frame)*0.25 + float64(i)*0.45
 			hVal := (math.Sin(phase)*0.5 + 0.5) * (math.Cos(phase*0.85)*0.35 + 0.65)
-			hVal += 0.15 * math.Abs(math.Sin(float64(frame)*0.4 + float64(i*2)))
+			hVal += 0.15 * math.Abs(math.Sin(float64(frame)*0.4+float64(i*2)))
 			if hVal < 0.05 {
 				hVal = 0.05
 			}
@@ -137,7 +137,7 @@ func RenderAudioSpectrum2D(width int, height int, isPlaying bool, frame uint64, 
 		for i := 0; i < numBands; i++ {
 			if mode == SpectrumWave {
 				// Oscilloscope scope curve
-				sineY := int((math.Sin(float64(frame)*0.2 + float64(i)*0.4)*0.5 + 0.5) * float64(height-1))
+				sineY := int((math.Sin(float64(frame)*0.2+float64(i)*0.4)*0.5 + 0.5) * float64(height-1))
 				if r == sineY {
 					rowBuf.WriteString(styles.BoldAccent.Render("∿ "))
 				} else if r == sineY-1 || r == sineY+1 {
@@ -194,7 +194,6 @@ func RenderAudioSpectrum2D(width int, height int, isPlaying bool, frame uint64, 
 
 	return strings.Join(rows, "\n")
 }
-
 
 // ZenBreathState represents current phase of the 4-4-4-4 box breathing cycle.
 type ZenBreathState struct {

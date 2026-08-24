@@ -45,36 +45,36 @@ type timerTickMsg time.Time
 
 // Model is the main Bubbletea model.
 type Model struct {
-	Width              int
-	Height             int
-	Styles             Styles
-	ActiveTab          ActiveTab
-	ShowHelp           bool
-	ShowScenePicker    bool
-	PickerCategoryIdx  int
-	PickerSceneIdx     int
-	PickerSearchMode   bool
-	PickerSearchInput  textinput.Model
-	ShowThemePicker    bool
-	PickerThemeIdx     int
-	ShowSceneInfoModal bool
-	ShowCommandPalette bool
-	CommandInput       textinput.Model
-	CommandIdx         int
-	ShowPresetModal    bool
-	PresetIdx          int
-	PresetSaving       bool
-	PresetInputText    textinput.Model
+	Width               int
+	Height              int
+	Styles              Styles
+	ActiveTab           ActiveTab
+	ShowHelp            bool
+	ShowScenePicker     bool
+	PickerCategoryIdx   int
+	PickerSceneIdx      int
+	PickerSearchMode    bool
+	PickerSearchInput   textinput.Model
+	ShowThemePicker     bool
+	PickerThemeIdx      int
+	ShowSceneInfoModal  bool
+	ShowCommandPalette  bool
+	CommandInput        textinput.Model
+	CommandIdx          int
+	ShowPresetModal     bool
+	PresetIdx           int
+	PresetSaving        bool
+	PresetInputText     textinput.Model
 	ShowSoundMixerModal bool
-	MixerChannelIdx    int
-	ShowSpectrumModal  bool
-	SpectrumMode       SpectrumStyle
-	ZenMode            bool
-	AutoSyncAudio      bool
-	StatusMsg          string
-	StatusMsgTime      time.Time
-	UseGPURender       bool
-	FavoriteScenes     map[art.SceneType]bool
+	MixerChannelIdx     int
+	ShowSpectrumModal   bool
+	SpectrumMode        SpectrumStyle
+	ZenMode             bool
+	AutoSyncAudio       bool
+	StatusMsg           string
+	StatusMsgTime       time.Time
+	UseGPURender        bool
+	FavoriteScenes      map[art.SceneType]bool
 
 	// Core Components
 	Scene       *art.CottageScene
@@ -99,7 +99,9 @@ func NewModel() Model {
 	ti.Width = 40
 
 	si := textinput.New()
-	si.Placeholder = "Type keyword to filter 370+ scenes..."
+	// Constructor time is render time for this count: RegisterScene runs only
+	// from init(), so SceneOrder is final before NewModel can be reached.
+	si.Placeholder = fmt.Sprintf("Type keyword to filter %d scenes...", len(art.SceneOrder))
 	si.CharLimit = 30
 	si.Width = 36
 
@@ -728,7 +730,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if favOnly {
 				m.SetStatusMsg("🎬 Auto-Cycle Scope: Favorites Only ⭐")
 			} else {
-				m.SetStatusMsg("🎬 Auto-Cycle Scope: All 370+ Scenes 🎨")
+				m.SetStatusMsg(fmt.Sprintf("🎬 Auto-Cycle Scope: All %d Scenes 🎨", len(art.SceneOrder)))
 			}
 
 		case "Q":
@@ -750,7 +752,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "b":
 			newScene := m.Scene.PrevScene()
 			m.SetStatusMsg("Switched Scene: " + newScene.String())
-
 
 		case "C":
 			filter := m.Scene.CycleColorFilter()

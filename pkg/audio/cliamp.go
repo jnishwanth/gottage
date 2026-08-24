@@ -276,15 +276,6 @@ func (c *CLIAMPController) startNativeStream(idx int) error {
 	return nil
 }
 
-// SetVolume adjusts volume in dB or percentage.
-func (c *CLIAMPController) SetVolume(db string) error {
-	if !c.status.Installed {
-		return nil
-	}
-	cmd := exec.Command(c.cliampPath, "volume", db)
-	return cmd.Run()
-}
-
 // GetStatus returns the cached status.
 func (c *CLIAMPController) GetStatus() CLIAMPStatus {
 	c.mu.Lock()

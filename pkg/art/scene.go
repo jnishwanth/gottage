@@ -257,7 +257,6 @@ type Particle struct {
 	Vx, Vy  float64
 	Life    float64
 	MaxLife float64
-	Char    rune
 }
 
 // CanvasRipple represents an expanding energy ring dropped onto the canvas.
@@ -307,7 +306,10 @@ type CottageScene struct {
 	OverlayParticles []Particle
 	ShaderParticles  []Particle
 	Ripples          []CanvasRipple
-	Stars            []struct{ X, Y int; Phase float64 }
+	Stars            []struct {
+		X, Y  int
+		Phase float64
+	}
 
 	rng *rand.Rand
 }
@@ -425,8 +427,6 @@ func (cs *CottageScene) PetCat() string {
 	}
 
 	cs.TriggerCanvasRippleHex(cx, cy, "#ff7597")
-
-	heartRunes := []rune{'♥', '💖', '✨', '🐾', '💕'}
 	for i := 0; i < 8; i++ {
 		angle := cs.rng.Float64() * 2 * math.Pi
 		speed := 0.5 + cs.rng.Float64()*1.2
@@ -437,7 +437,6 @@ func (cs *CottageScene) PetCat() string {
 			Vy:      -0.6 - cs.rng.Float64()*0.8,
 			Life:    0,
 			MaxLife: 20 + cs.rng.Float64()*15,
-			Char:    heartRunes[cs.rng.Intn(len(heartRunes))],
 		})
 	}
 
@@ -557,11 +556,13 @@ func (cs *CottageScene) RandomScene() SceneType {
 	return cs.CurrentScene
 }
 
-
 func (cs *CottageScene) initStars() {
 	cs.Stars = nil
 	for i := 0; i < 20; i++ {
-		cs.Stars = append(cs.Stars, struct{ X, Y int; Phase float64 }{
+		cs.Stars = append(cs.Stars, struct {
+			X, Y  int
+			Phase float64
+		}{
 			X:     cs.rng.Intn(60),
 			Y:     cs.rng.Intn(30),
 			Phase: cs.rng.Float64() * math.Pi * 2,
@@ -573,11 +574,10 @@ func (cs *CottageScene) initParticles() {
 	// Rain drops
 	for i := 0; i < 24; i++ {
 		cs.RainParticles = append(cs.RainParticles, Particle{
-			X:    float64(10 + cs.rng.Intn(50)),
-			Y:    float64(4 + cs.rng.Intn(30)),
-			Vy:   1.2 + cs.rng.Float64()*0.4,
-			Vx:   -0.2,
-			Char: '\\',
+			X:  float64(10 + cs.rng.Intn(50)),
+			Y:  float64(4 + cs.rng.Intn(30)),
+			Vy: 1.2 + cs.rng.Float64()*0.4,
+			Vx: -0.2,
 		})
 	}
 

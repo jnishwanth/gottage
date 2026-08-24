@@ -47,11 +47,11 @@ vet:
 tidy-check:
 	@$(GO) mod tidy -diff || { echo "not tidy - run: $(GO) mod tidy"; exit 1; }
 
-## test       run the suite (~21s; pkg/art alone is ~17s)
+## test       run the suite
 test:
 	$(GO) test ./... -count=1
 
-## test-race  race detector (slow: pkg/art is ~222s under -race)
+## test-race  race detector (much slower than `make test`)
 test-race:
 	$(GO) test -race ./... -count=1
 

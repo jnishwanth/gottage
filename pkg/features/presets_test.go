@@ -43,3 +43,21 @@ func TestPresetManager(t *testing.T) {
 		t.Fatalf("expected successful preset deletion")
 	}
 }
+
+// TestBuiltinPresetScenesAreRegistered guards against a preset pointing at a
+// SceneType that nothing registers.
+//
+// art.GetScene falls back to SceneRainyCity for an unregistered type, so such a
+// preset silently loads the wrong scene -- no error, no log. Phase 1 pruned the
+// GIF scene set from 344 to 10, and two built-in presets (Cyberpunk Hackathon Deck
+// and Stargazing Observatory) referenced scenes that went with it. This test is
+// what makes the next prune fail loudly instead.
+func TestBuiltinPresetScenesAreRegistered(t *testing.T) {
+	pm := NewPresetManager("")
+	for _, p := range pm.Presets {
+		if _, ok := art.SceneRegistry[p.Scene]; !ok {
+			t.Errorf("preset %q references SceneType %d, which no scene registers "+
+				"(GetScene would silently fall back to SceneRainyCity)", p.Name, p.Scene)
+		}
+	}
+}

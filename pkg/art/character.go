@@ -63,10 +63,10 @@ func (fb *FocusBuddy) Draw(c *Canvas, cx, cy int, frameCount uint64) {
 	c.FillRect(cx+4, cy+4+breathY, 6, 2, PicoNavy) // Hood collar
 
 	// 3. Head & Hair (Pixel details)
-	c.FillRect(cx+4, cy-2+breathY, 7, 6, fb.SkinCol)  // Face
-	c.FillRect(cx+3, cy-5+breathY, 9, 4, fb.HairCol)  // Hair top
-	c.FillRect(cx+3, cy-2+breathY, 2, 4, fb.HairCol)  // Hair side
-	c.FillRect(cx+8, cy+breathY, 1, 1, PicoBlack)     // Eye focused on work
+	c.FillRect(cx+4, cy-2+breathY, 7, 6, fb.SkinCol) // Face
+	c.FillRect(cx+3, cy-5+breathY, 9, 4, fb.HairCol) // Hair top
+	c.FillRect(cx+3, cy-2+breathY, 2, 4, fb.HairCol) // Hair side
+	c.FillRect(cx+8, cy+breathY, 1, 1, PicoBlack)    // Eye focused on work
 
 	// 4. State-dependent Arms & Actions
 	switch state {

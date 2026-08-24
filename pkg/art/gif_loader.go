@@ -13,11 +13,16 @@ import (
 
 // AnimatedGif holds decoded and pre-scaled pixel frames for multi-frame 8-bit / pixel-art GIF animations.
 type AnimatedGif struct {
-	FilePath   string
-	Width      int
-	Height     int
-	Frames     [][][]colorful.Color // [frameIndex][y][x]
-	Delays     []int                // Frame delays in centiseconds (10ms units)
+	FilePath string
+	Width    int
+	Height   int
+	Frames   [][][]colorful.Color // [frameIndex][y][x]
+	// Delays holds each frame's authored duration in centiseconds. It is populated
+	// but never read: playback below advances by the 60ms UI tick instead, so every
+	// GIF ignores its own timing -- a 10fps GIF renders at 16.7fps and a 4fps one
+	// runs 4x too fast. Deliberately preserved, not dead code.
+	// TODO(phase-15): drive frame selection from Delays, with a 100ms fallback.
+	Delays     []int
 	FrameCount int
 }
 
@@ -135,6 +140,8 @@ func (anim *AnimatedGif) GetFrame(tick uint64) [][]colorful.Color {
 	if anim.FrameCount == 0 {
 		return nil
 	}
+	// TODO(phase-15): honor anim.Delays here rather than advancing one source frame
+	// per UI tick, which discards every GIF's authored frame timing.
 	idx := int(tick) % anim.FrameCount
 	return anim.Frames[idx]
 }
@@ -149,35 +156,6 @@ func (anim *AnimatedGif) DrawFrame(canvas *Canvas, tick uint64) {
 	for y := 0; y < h; y++ {
 		w := minInt(canvas.Width, len(matrix[y]))
 		copy(canvas.Pixels[y][:w], matrix[y][:w])
-	}
-}
-
-// DrawFrameAt renders the GIF frame corresponding to tick into destination rectangle (dstX, dstY, dstW, dstH).
-func (anim *AnimatedGif) DrawFrameAt(canvas *Canvas, dstX, dstY, dstW, dstH int, tick uint64) {
-	matrix := anim.GetFrame(tick)
-	if matrix == nil {
-		return
-	}
-	srcH := len(matrix)
-	if srcH == 0 {
-		return
-	}
-	srcW := len(matrix[0])
-
-	for y := 0; y < dstH; y++ {
-		py := dstY + y
-		if py < 0 || py >= canvas.Height {
-			continue
-		}
-		srcY := (y * srcH) / dstH
-		for x := 0; x < dstW; x++ {
-			px := dstX + x
-			if px < 0 || px >= canvas.Width {
-				continue
-			}
-			srcX := (x * srcW) / dstW
-			canvas.Pixels[py][px] = matrix[srcY][srcX]
-		}
 	}
 }
 

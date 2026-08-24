@@ -38,73 +38,73 @@ var (
 	ColorWallPaperDay   = hex("#6b5b6e") // Cozy Day Wallpaper
 
 	// Fireplace & Warm Light
-	ColorHearthBrick    = hex("#6e2d22") // Terracotta Brick
-	ColorHearthBrickDark= hex("#441b15") // Brick Shadow
-	ColorHearthMortar   = hex("#8f6a5b") // Brick Mortar
-	ColorHearthInterior = hex("#140a08") // Fireplace Backwall
-	ColorFireCore       = hex("#fff3b0") // White-Hot Flame Core
-	ColorFireYellow     = hex("#ffcc00") // Bright Golden Flame
-	ColorFireOrange     = hex("#ff7b00") // Rich Orange Flame
-	ColorFireRed        = hex("#d9381e") // Deep Red Flame
-	ColorFireEmber      = hex("#801100") // Smoldering Embers
-	ColorWarmGlow       = hex("#ffd166") // Ambient Lamp/Fire Glow
-	ColorLampShade      = hex("#2a9d8f") // Classic Banker's Green / Brass Shade
-	ColorLampBrass      = hex("#e7c169") // Polished Brass Lamp Base
-	ColorCandleWax      = hex("#faedcd") // Cream Candle Wax
+	ColorHearthBrick     = hex("#6e2d22") // Terracotta Brick
+	ColorHearthBrickDark = hex("#441b15") // Brick Shadow
+	ColorHearthMortar    = hex("#8f6a5b") // Brick Mortar
+	ColorHearthInterior  = hex("#140a08") // Fireplace Backwall
+	ColorFireCore        = hex("#fff3b0") // White-Hot Flame Core
+	ColorFireYellow      = hex("#ffcc00") // Bright Golden Flame
+	ColorFireOrange      = hex("#ff7b00") // Rich Orange Flame
+	ColorFireRed         = hex("#d9381e") // Deep Red Flame
+	ColorFireEmber       = hex("#801100") // Smoldering Embers
+	ColorWarmGlow        = hex("#ffd166") // Ambient Lamp/Fire Glow
+	ColorLampShade       = hex("#2a9d8f") // Classic Banker's Green / Brass Shade
+	ColorLampBrass       = hex("#e7c169") // Polished Brass Lamp Base
+	ColorCandleWax       = hex("#faedcd") // Cream Candle Wax
 
 	// Nature & Plants
-	ColorLeafDark       = hex("#1b4332") // Dark Monstera Leaf
-	ColorLeafMedium     = hex("#2d6a4f") // Pothos Green
-	ColorLeafLight      = hex("#52b788") // Fresh Vine Sprout
-	ColorLeafHighlight  = hex("#95d5b2") // Leaf Sun Bleed
-	ColorPotClay        = hex("#b05a3c") // Terracotta Plant Pot
+	ColorLeafDark      = hex("#1b4332") // Dark Monstera Leaf
+	ColorLeafMedium    = hex("#2d6a4f") // Pothos Green
+	ColorLeafLight     = hex("#52b788") // Fresh Vine Sprout
+	ColorLeafHighlight = hex("#95d5b2") // Leaf Sun Bleed
+	ColorPotClay       = hex("#b05a3c") // Terracotta Plant Pot
 
 	// Sky & Atmosphere
-	ColorSkyNightTop    = hex("#0a0e17") // Deep Cosmic Obsidian
-	ColorSkyNightMid    = hex("#121b2d") // Midnight Indigo
-	ColorSkyNightBot    = hex("#1e2942") // Distant Horizon Blue
-	ColorSkySunsetTop   = hex("#2b1b3d") // Violet Sunset Dusk
-	ColorSkySunsetMid   = hex("#a23e48") // Rose Sunset Horizon
-	ColorSkySunsetBot   = hex("#f38d68") // Golden Amber Horizon
-	ColorSkyDawnTop     = hex("#1f1a3a") // Twilight Purple
-	ColorSkyDawnMid     = hex("#6c4f70") // Morning Lilac
-	ColorSkyDawnBot     = hex("#e8998d") // Peach Dawn Sky
-	ColorSkyDayTop      = hex("#3a7ca5") // Crisp Blue Sky
-	ColorSkyDayMid      = hex("#81c3d7") // Soft Atmosphere
-	ColorSkyDayBot      = hex("#d9dcd6") // Misty Distant Horizon
+	ColorSkyNightTop  = hex("#0a0e17") // Deep Cosmic Obsidian
+	ColorSkyNightMid  = hex("#121b2d") // Midnight Indigo
+	ColorSkyNightBot  = hex("#1e2942") // Distant Horizon Blue
+	ColorSkySunsetTop = hex("#2b1b3d") // Violet Sunset Dusk
+	ColorSkySunsetMid = hex("#a23e48") // Rose Sunset Horizon
+	ColorSkySunsetBot = hex("#f38d68") // Golden Amber Horizon
+	ColorSkyDawnTop   = hex("#1f1a3a") // Twilight Purple
+	ColorSkyDawnMid   = hex("#6c4f70") // Morning Lilac
+	ColorSkyDawnBot   = hex("#e8998d") // Peach Dawn Sky
+	ColorSkyDayTop    = hex("#3a7ca5") // Crisp Blue Sky
+	ColorSkyDayMid    = hex("#81c3d7") // Soft Atmosphere
+	ColorSkyDayBot    = hex("#d9dcd6") // Misty Distant Horizon
 
 	// Window & Rain
-	ColorWindowFrame    = hex("#3e2723") // Dark Timber Window Frame
-	ColorWindowSill     = hex("#5d4037") // Window Sill Wood
-	ColorGlassTint      = hex("#1b263b") // Rainwashed Glass
-	ColorRainDrop       = hex("#a0c4e2") // Rain Streak
-	ColorRainSplash     = hex("#e0fbfc") // Window Sill Rain Mist
-	ColorSnowFlake      = hex("#ffffff") // Crisp Snowflake
-	ColorStars          = hex("#fff8dc") // Warm Twinkling Star
+	ColorWindowFrame = hex("#3e2723") // Dark Timber Window Frame
+	ColorWindowSill  = hex("#5d4037") // Window Sill Wood
+	ColorGlassTint   = hex("#1b263b") // Rainwashed Glass
+	ColorRainDrop    = hex("#a0c4e2") // Rain Streak
+	ColorRainSplash  = hex("#e0fbfc") // Window Sill Rain Mist
+	ColorSnowFlake   = hex("#ffffff") // Crisp Snowflake
+	ColorStars       = hex("#fff8dc") // Warm Twinkling Star
 
 	// Books, Mug & Details
-	ColorBookSpine1     = hex("#9b2226") // Burgundy Book
-	ColorBookSpine2     = hex("#005f73") // Deep Teal Book
-	ColorBookSpine3     = hex("#bb3e03") // Rust Orange Book
-	ColorBookSpine4     = hex("#588157") // Sage Green Book
-	ColorMugCeramic     = hex("#e76f51") // Warm Ceramic Terracotta Mug
-	ColorMugSteam       = hex("#e2eafc") // Soft Drifting Steam
-	ColorNotebookPaper  = hex("#fdf0d5") // Cream Journal Pages
-	ColorCatCushion     = hex("#3d348b") // Velvet Indigo Cushion
+	ColorBookSpine1    = hex("#9b2226") // Burgundy Book
+	ColorBookSpine2    = hex("#005f73") // Deep Teal Book
+	ColorBookSpine3    = hex("#bb3e03") // Rust Orange Book
+	ColorBookSpine4    = hex("#588157") // Sage Green Book
+	ColorMugCeramic    = hex("#e76f51") // Warm Ceramic Terracotta Mug
+	ColorMugSteam      = hex("#e2eafc") // Soft Drifting Steam
+	ColorNotebookPaper = hex("#fdf0d5") // Cream Journal Pages
+	ColorCatCushion    = hex("#3d348b") // Velvet Indigo Cushion
 
 	// Zen Japanese Porch & Tea Garden
-	ColorTatamiBase     = hex("#c2b280") // Warm Golden Straw Tatami
-	ColorTatamiBorder   = hex("#1c1917") // Dark Brocade Tatami Border
-	ColorShojiPaper     = hex("#f7f4ea") // Translucent Rice Paper
-	ColorShojiLattice   = hex("#44281d") // Dark Cedar Shoji Grid
-	ColorPondDeep       = hex("#14213d") // Deep Tranquil Koi Pond
-	ColorPondShallow    = hex("#2a4365") // Pond Water Horizon
-	ColorKoiGold        = hex("#ff9f1c") // Golden Koi Fish
-	ColorKoiWhite       = hex("#fdf0ed") // Pearl White Koi
-	ColorSakuraPink     = hex("#ffb7b2") // Falling Cherry Blossom Petal
-	ColorSakuraSoft     = hex("#ffe5ec") // Soft Petal Highlight
-	ColorStoneLantern   = hex("#5c677d") // Garden Stone Lantern
-	ColorMatchaGreen    = hex("#588157") // Rich Whisked Matcha Tea
+	ColorTatamiBase   = hex("#c2b280") // Warm Golden Straw Tatami
+	ColorTatamiBorder = hex("#1c1917") // Dark Brocade Tatami Border
+	ColorShojiPaper   = hex("#f7f4ea") // Translucent Rice Paper
+	ColorShojiLattice = hex("#44281d") // Dark Cedar Shoji Grid
+	ColorPondDeep     = hex("#14213d") // Deep Tranquil Koi Pond
+	ColorPondShallow  = hex("#2a4365") // Pond Water Horizon
+	ColorKoiGold      = hex("#ff9f1c") // Golden Koi Fish
+	ColorKoiWhite     = hex("#fdf0ed") // Pearl White Koi
+	ColorSakuraPink   = hex("#ffb7b2") // Falling Cherry Blossom Petal
+	ColorSakuraSoft   = hex("#ffe5ec") // Soft Petal Highlight
+	ColorStoneLantern = hex("#5c677d") // Garden Stone Lantern
+	ColorMatchaGreen  = hex("#588157") // Rich Whisked Matcha Tea
 
 	// Alpine Campfire & Lake
 	ColorLakeDeep       = hex("#0b132b") // Alpine Night Lake
@@ -116,20 +116,20 @@ var (
 	ColorCampSmoke      = hex("#94a3b8") // Drifting Campfire Smoke
 
 	// Artist Atelier & Winter Hearth
-	ColorCanvasEasel    = hex("#7f5539") // Studio Pine Easel
-	ColorCanvasCloth    = hex("#ede0d4") // Stretched Canvas Fabric
-	ColorLavenderDried  = hex("#7b6d8d") // Hanging Dried Lavender
-	ColorEucalyptus     = hex("#84a98c") // Dried Eucalyptus Leaves
-	ColorCocoaHot       = hex("#3b1f14") // Rich Hot Chocolate
-	ColorMarshmallow    = hex("#fffdfa") // Fluffy Marshmallow
-	ColorFrostIce       = hex("#e0f2fe") // Window Frost Crystals
+	ColorCanvasEasel   = hex("#7f5539") // Studio Pine Easel
+	ColorCanvasCloth   = hex("#ede0d4") // Stretched Canvas Fabric
+	ColorLavenderDried = hex("#7b6d8d") // Hanging Dried Lavender
+	ColorEucalyptus    = hex("#84a98c") // Dried Eucalyptus Leaves
+	ColorCocoaHot      = hex("#3b1f14") // Rich Hot Chocolate
+	ColorMarshmallow   = hex("#fffdfa") // Fluffy Marshmallow
+	ColorFrostIce      = hex("#e0f2fe") // Window Frost Crystals
 
 	// Greenhouse & Glass Solarium
-	ColorGreenhouseFrame= hex("#1f2d16") // Dark Forest Green Iron Ribs
-	ColorMonsteraDark   = hex("#0f2411") // Deep Emerald Monstera Leaf
-	ColorFernGreen      = hex("#38b000") // Lush Trailing Fern
-	ColorHangingPotClay = hex("#cb6843") // Terracotta Hanging Planter
-	ColorCopperWaterCan = hex("#b87333") // Polished Copper Watering Can
+	ColorGreenhouseFrame = hex("#1f2d16") // Dark Forest Green Iron Ribs
+	ColorMonsteraDark    = hex("#0f2411") // Deep Emerald Monstera Leaf
+	ColorFernGreen       = hex("#38b000") // Lush Trailing Fern
+	ColorHangingPotClay  = hex("#cb6843") // Terracotta Hanging Planter
+	ColorCopperWaterCan  = hex("#b87333") // Polished Copper Watering Can
 
 	// Midnight Stained Glass Library
 	ColorStainedGlassBlue = hex("#1d3557") // Sapphire Stained Glass
@@ -142,14 +142,14 @@ var (
 	ColorBankerGreen      = hex("#2d6a4f") // Emerald Banker's Lamp Glass
 
 	// Coastal Ocean Lighthouse Study
-	ColorOceanDeepBlue  = hex("#09111e") // Midnight Abyssal Ocean
-	ColorOceanWaveMid   = hex("#1b2838") // Rolling Swell Water
-	ColorOceanWaveCrest = hex("#e2eafc") // Frothing Whitecap Foam
-	ColorLighthouseWhite= hex("#edf2f4") // Whitewashed Lighthouse Tower
-	ColorLighthouseRed  = hex("#d90429") // Classic Red Spiral Band
-	ColorLighthouseBeam = hex("#fff3b0") // Sweeping Amber Searchlight Beam
-	ColorNauticalChart  = hex("#f4ebd9") // Antique Maritime Map
-	ColorStoveCastIron  = hex("#1e2124") // Potbelly Cast Iron Stove
+	ColorOceanDeepBlue   = hex("#09111e") // Midnight Abyssal Ocean
+	ColorOceanWaveMid    = hex("#1b2838") // Rolling Swell Water
+	ColorOceanWaveCrest  = hex("#e2eafc") // Frothing Whitecap Foam
+	ColorLighthouseWhite = hex("#edf2f4") // Whitewashed Lighthouse Tower
+	ColorLighthouseRed   = hex("#d90429") // Classic Red Spiral Band
+	ColorLighthouseBeam  = hex("#fff3b0") // Sweeping Amber Searchlight Beam
+	ColorNauticalChart   = hex("#f4ebd9") // Antique Maritime Map
+	ColorStoveCastIron   = hex("#1e2124") // Potbelly Cast Iron Stove
 
 	// Hearthside Autumn Bakery
 	ColorBreadCrustGold = hex("#c67d3b") // Artisan Sourdough Crust
@@ -168,19 +168,19 @@ var (
 	ColorCassetteReel    = hex("#edf2f4") // Spinning Tape Reels
 
 	// Moonlit Mountain Hot Spring Onsen
-	ColorHinokiWood      = hex("#d4a373") // Fragrant Hinoki Cedar Tub
-	ColorHinokiDark      = hex("#8c5835") // Hinoki Plank Seam
-	ColorOnsenSteam      = hex("#f0f3f4") // Rising Geothermal Vapor
-	ColorOnsenWaterMid   = hex("#2a9d8f") // Mineral Hot Spring Water
-	ColorOnsenWaterDeep  = hex("#1d3557") // Deep Pool Shading
-	ColorMossGreen       = hex("#40916c") // River Stone Moss
+	ColorHinokiWood     = hex("#d4a373") // Fragrant Hinoki Cedar Tub
+	ColorHinokiDark     = hex("#8c5835") // Hinoki Plank Seam
+	ColorOnsenSteam     = hex("#f0f3f4") // Rising Geothermal Vapor
+	ColorOnsenWaterMid  = hex("#2a9d8f") // Mineral Hot Spring Water
+	ColorOnsenWaterDeep = hex("#1d3557") // Deep Pool Shading
+	ColorMossGreen      = hex("#40916c") // River Stone Moss
 
 	// Rainy Midnight Vinyl Lounge
-	ColorTurntableWood   = hex("#4a2810") // Walnut Hi-Fi Credenza
-	ColorVinylBlack      = hex("#111111") // Grooved Vinyl LP Record
-	ColorVinylLabelGold  = hex("#ffb703") // Spinning Record Center Label
-	ColorVacuumTubeGlow  = hex("#ff9e00") // Glowing Tube Amp Cathode
-	ColorGuitarWood      = hex("#b07d4b") // Acoustic Guitar Spruce Body
+	ColorTurntableWood  = hex("#4a2810") // Walnut Hi-Fi Credenza
+	ColorVinylBlack     = hex("#111111") // Grooved Vinyl LP Record
+	ColorVinylLabelGold = hex("#ffb703") // Spinning Record Center Label
+	ColorVacuumTubeGlow = hex("#ff9e00") // Glowing Tube Amp Cathode
+	ColorGuitarWood     = hex("#b07d4b") // Acoustic Guitar Spruce Body
 
 	// Sunken Hearth Blanket Fort
 	ColorBlanketGold     = hex("#e09f3e") // Knitted Mustard Throw Blanket
@@ -190,15 +190,15 @@ var (
 	ColorSunkenPitStone  = hex("#495057") // Sunken Hearth Pit Flagstones
 
 	// Midnight Tokyo Ramen Bar & Izakaya
-	ColorRamenBowl       = hex("#f8f9fa") // Ceramic White Ramen Bowl
-	ColorRamenBroth      = hex("#d4a373") // Golden Tonkotsu Miso Broth
-	ColorRamenNori       = hex("#141e1b") // Crisp Roasted Nori Seaweed
-	ColorRamenEgg        = hex("#ffd166") // Soft-Boiled Ajitsuke Egg Yolk
-	ColorRamenNaruto     = hex("#ff758f") // Pink Swirl Narutomaki Fishcake
-	ColorLanternRed      = hex("#e63946") // Glowing Crimson Chochin Paper Lantern
-	ColorLanternGlow     = hex("#ff4d6d") // Chochin Radial Ambient Glow
-	ColorNorenIndigo     = hex("#1d3557") // Indigo Noren Fabric Drape
-	ColorMenuWoodPlank   = hex("#c29a6a") // Hanging Wooden Menu Slats
+	ColorRamenBowl     = hex("#f8f9fa") // Ceramic White Ramen Bowl
+	ColorRamenBroth    = hex("#d4a373") // Golden Tonkotsu Miso Broth
+	ColorRamenNori     = hex("#141e1b") // Crisp Roasted Nori Seaweed
+	ColorRamenEgg      = hex("#ffd166") // Soft-Boiled Ajitsuke Egg Yolk
+	ColorRamenNaruto   = hex("#ff758f") // Pink Swirl Narutomaki Fishcake
+	ColorLanternRed    = hex("#e63946") // Glowing Crimson Chochin Paper Lantern
+	ColorLanternGlow   = hex("#ff4d6d") // Chochin Radial Ambient Glow
+	ColorNorenIndigo   = hex("#1d3557") // Indigo Noren Fabric Drape
+	ColorMenuWoodPlank = hex("#c29a6a") // Hanging Wooden Menu Slats
 
 	// Witch's Botanical Herbal Apothecary
 	ColorPotionAmethyst  = hex("#9d4edd") // Bioluminescent Amethyst Elixir
@@ -218,12 +218,12 @@ var (
 	ColorDockPlanks      = hex("#4a4e69") // Snow-Dusted Pier Planks
 
 	// Starlit Urban Rooftop Study
-	ColorPergolaWood     = hex("#3e2723") // Dark Timber Pergola Beams
-	ColorTelescopeBrass  = hex("#e0a96d") // Polished Brass Refractor Telescope
-	ColorCityBokehGold   = hex("#ffd166") // Distant Skyline Window Light
-	ColorCityBokehCyan   = hex("#4cc9f0") // Distant Skyline Neon Glow
-	ColorThermosSteel    = hex("#457b9d") // Insulated Midnight Thermos
-	ColorBohoRug         = hex("#e76f51") // Patterned Bohemian Floor Rug
+	ColorPergolaWood    = hex("#3e2723") // Dark Timber Pergola Beams
+	ColorTelescopeBrass = hex("#e0a96d") // Polished Brass Refractor Telescope
+	ColorCityBokehGold  = hex("#ffd166") // Distant Skyline Window Light
+	ColorCityBokehCyan  = hex("#4cc9f0") // Distant Skyline Neon Glow
+	ColorThermosSteel   = hex("#457b9d") // Insulated Midnight Thermos
+	ColorBohoRug        = hex("#e76f51") // Patterned Bohemian Floor Rug
 
 	// Antique Bookshop & Reading Nook
 	ColorLeatherBurgundy = hex("#6a040f") // Antique Burgundy Leather Book Binding
@@ -235,17 +235,17 @@ var (
 	ColorLadderBrassRail = hex("#d4af37") // Polished Brass Rolling Ladder Rail
 
 	// Botanical Greenhouse & Potting Shed
-	ColorTerrariumMoss   = hex("#55a630") // Vivid Forest Moss Terrarium
-	ColorMacrameHanger   = hex("#fdf0d5") // Braided Natural Macrame Cord
-	ColorPottingSoil     = hex("#38220f") // Rich Dark Potting Soil
-	ColorGlassCondense   = hex("#748cab") // Glass Condensation Droplets
+	ColorTerrariumMoss = hex("#55a630") // Vivid Forest Moss Terrarium
+	ColorMacrameHanger = hex("#fdf0d5") // Braided Natural Macrame Cord
+	ColorPottingSoil   = hex("#38220f") // Rich Dark Potting Soil
+	ColorGlassCondense = hex("#748cab") // Glass Condensation Droplets
 
 	// Riverside Moonlit Camp
-	ColorTentAmberGlow   = hex("#e07a5f") // Glowing Canvas Tent Fabric
-	ColorRiverWaterDeep  = hex("#0d1b2a") // Deep Mountain River Current
-	ColorRiverFoamRipples= hex("#778da9") // River Shimmer & Foam Ripple
-	ColorCampLogBench    = hex("#5c3d2e") // Hand-Hewn Pine Log Bench
-	ColorRiverPebbles    = hex("#415a77") // Riverbed Smooth River Stones
+	ColorTentAmberGlow    = hex("#e07a5f") // Glowing Canvas Tent Fabric
+	ColorRiverWaterDeep   = hex("#0d1b2a") // Deep Mountain River Current
+	ColorRiverFoamRipples = hex("#778da9") // River Shimmer & Foam Ripple
+	ColorCampLogBench     = hex("#5c3d2e") // Hand-Hewn Pine Log Bench
+	ColorRiverPebbles     = hex("#415a77") // Riverbed Smooth River Stones
 
 	// Seaside Cliffside Balcony & Lighthouse
 	ColorOceanWaveDeep   = hex("#03071e") // Deep Atlantic Ocean Blue
@@ -253,19 +253,19 @@ var (
 	ColorCoastalLavender = hex("#7b2cbf") // Potted French Coastal Lavender
 
 	// Lofi Study Desk & Rainy Window
-	ColorCorkboard       = hex("#c9a26b") // Natural Cork Bulletin Board
-	ColorStickyNotePink  = hex("#ff7597") // Pastel Pink Sticky Note
-	ColorStickyNoteYellow= hex("#fef08a") // Sunny Yellow Sticky Note
-	ColorStickyNoteCyan  = hex("#7dd3fc") // Sky Cyan Sticky Note
-	ColorHeadphonesNavy  = hex("#1e293b") // Over-Ear Studio Headphones
-	ColorRaindropWindow  = hex("#93c5fd") // Raindrop Beads on Window Pane
-	ColorPenPotWood      = hex("#854d0e") // Turned Oak Pen Cup
+	ColorCorkboard        = hex("#c9a26b") // Natural Cork Bulletin Board
+	ColorStickyNotePink   = hex("#ff7597") // Pastel Pink Sticky Note
+	ColorStickyNoteYellow = hex("#fef08a") // Sunny Yellow Sticky Note
+	ColorStickyNoteCyan   = hex("#7dd3fc") // Sky Cyan Sticky Note
+	ColorHeadphonesNavy   = hex("#1e293b") // Over-Ear Studio Headphones
+	ColorRaindropWindow   = hex("#93c5fd") // Raindrop Beads on Window Pane
+	ColorPenPotWood       = hex("#854d0e") // Turned Oak Pen Cup
 
 	// Zen Rain Garden & Bamboo Water Clacker (Shishi-Odoshi)
-	ColorBambooGreen     = hex("#4d7c0f") // Fresh Forest Green Bamboo Culm
-	ColorBambooDry       = hex("#a38560") // Weathered Bamboo Rocker Arm
-	ColorTsukubaiBasin   = hex("#475569") // Carved Granite Tsukubai Basin
-	ColorChasenBamboo    = hex("#eab308") // Split Bamboo Matcha Whisk
+	ColorBambooGreen   = hex("#4d7c0f") // Fresh Forest Green Bamboo Culm
+	ColorBambooDry     = hex("#a38560") // Weathered Bamboo Rocker Arm
+	ColorTsukubaiBasin = hex("#475569") // Carved Granite Tsukubai Basin
+	ColorChasenBamboo  = hex("#eab308") // Split Bamboo Matcha Whisk
 
 	// Cozy Cat Cafe & Espresso Nook
 	ColorEspressoChrome  = hex("#cbd5e1") // Mirror-Polished Chrome Espresso Machine
@@ -293,12 +293,12 @@ var (
 	ColorSeedCake        = hex("#d4a373") // Spiced Seed Cake with Golden Crust
 
 	// Rainy Japanese Jazz Kissa & Siphon Coffee Bar
-	ColorSiphonGlass     = hex("#94d2bd") // Heat-Resistant Siphon Glass Bulb
-	ColorSiphonBoil      = hex("#78350f") // Bubbling Rich Dark Roast Coffee
-	ColorHalogenGlow     = hex("#f59e0b") // Halogen Beam Heater Amber Glow
-	ColorVUMeterBlue     = hex("#0284c7") // McIntosh Backlit Cyan-Blue VU Meter
-	ColorVUNeedleRed     = hex("#ef4444") // Twitching Mechanical Meter Needle
-	ColorJazzVinylBlue   = hex("#1e3a8a") // Classic Blue Note Record Jacket Art
+	ColorSiphonGlass   = hex("#94d2bd") // Heat-Resistant Siphon Glass Bulb
+	ColorSiphonBoil    = hex("#78350f") // Bubbling Rich Dark Roast Coffee
+	ColorHalogenGlow   = hex("#f59e0b") // Halogen Beam Heater Amber Glow
+	ColorVUMeterBlue   = hex("#0284c7") // McIntosh Backlit Cyan-Blue VU Meter
+	ColorVUNeedleRed   = hex("#ef4444") // Twitching Mechanical Meter Needle
+	ColorJazzVinylBlue = hex("#1e3a8a") // Classic Blue Note Record Jacket Art
 
 	// Starlit A-Frame Loft Bed & Skylight Constellations
 	ColorLoftRafterBeam  = hex("#451a03") // Dark Cedar Loft Rafter Timber
@@ -308,20 +308,20 @@ var (
 	ColorShootingStar    = hex("#fef08a") // Brilliant Silver-Gold Meteor Trail
 
 	// Alchemist's Starlit Tower & Celestial Astrolabe
-	ColorGothicArchStone = hex("#475569") // Carved Gothic Cathedral Granite
-	ColorAstrolabeBrass  = hex("#fbbf24") // Rotating Brass Armillary Ring
-	ColorCrystalPrismCyan= hex("#38bdf8") // Suspended Cyan Crystal Prism
-	ColorCrystalPrismPink= hex("#f472b6") // Refracted Magenta Light Flare
-	ColorCrucibleFire    = hex("#06b6d4") // Mystical Azure Alchemical Flame
+	ColorGothicArchStone  = hex("#475569") // Carved Gothic Cathedral Granite
+	ColorAstrolabeBrass   = hex("#fbbf24") // Rotating Brass Armillary Ring
+	ColorCrystalPrismCyan = hex("#38bdf8") // Suspended Cyan Crystal Prism
+	ColorCrystalPrismPink = hex("#f472b6") // Refracted Magenta Light Flare
+	ColorCrucibleFire     = hex("#06b6d4") // Mystical Azure Alchemical Flame
 
 	// Kyoto Machiya Courtyard Garden & Rain Chains
-	ColorMachiyaCedar    = hex("#2b1810") // Dark aged Japanese cedar timbers
-	ColorMachiyaLattice  = hex("#ddb892") // Cedar shoji lattice grid
-	ColorKusariDoiCopper = hex("#b87333") // Copper rain chain links
-	ColorKusariWaterGlint= hex("#90e0ef") // Glistening water droplet glint
-	ColorKyotoClayTile   = hex("#343a40") // Traditional grey clay roof tiles
-	ColorTsuboniwaMoss   = hex("#386641") // Deep velvet courtyard moss
-	ColorHibachiCharcoal = hex("#ff4800") // Glowing binchotan charcoal in hibachi
+	ColorMachiyaCedar     = hex("#2b1810") // Dark aged Japanese cedar timbers
+	ColorMachiyaLattice   = hex("#ddb892") // Cedar shoji lattice grid
+	ColorKusariDoiCopper  = hex("#b87333") // Copper rain chain links
+	ColorKusariWaterGlint = hex("#90e0ef") // Glistening water droplet glint
+	ColorKyotoClayTile    = hex("#343a40") // Traditional grey clay roof tiles
+	ColorTsuboniwaMoss    = hex("#386641") // Deep velvet courtyard moss
+	ColorHibachiCharcoal  = hex("#ff4800") // Glowing binchotan charcoal in hibachi
 
 	// Rainy Midnight Cyber Lofi Diner & Neon Window Booth
 	ColorDinerVinylRed   = hex("#b91c1c") // Padded red vinyl diner booth
@@ -341,18 +341,15 @@ var (
 	ColorFairyLightFrost = hex("#ffeedd") // Twinkling frosted window fairy lights
 
 	// Forest Canopy Treehouse & Starlit Rope Bridge
-	ColorTreehouseTimber     = hex("#452c1e") // Hand-hewn cedar treehouse planks
-	ColorRopeBridgeFiber     = hex("#c29a6a") // Braided hemp rope bridge lashing
-	ColorTreeCanopyFoliage   = hex("#134e4a") // Deep emerald forest canopy leaves
-	ColorStormLanternBrass   = hex("#f59e0b") // Hanging brass storm lantern
-	ColorFireflyBiolum       = hex("#a7f3d0") // Floating bioluminescent firefly glow
-	ColorHammockCanvas       = hex("#e7cba9") // Natural unbleached cotton hammock canvas
+	ColorTreehouseTimber   = hex("#452c1e") // Hand-hewn cedar treehouse planks
+	ColorRopeBridgeFiber   = hex("#c29a6a") // Braided hemp rope bridge lashing
+	ColorTreeCanopyFoliage = hex("#134e4a") // Deep emerald forest canopy leaves
+	ColorStormLanternBrass = hex("#f59e0b") // Hanging brass storm lantern
+	ColorFireflyBiolum     = hex("#a7f3d0") // Floating bioluminescent firefly glow
+	ColorHammockCanvas     = hex("#e7cba9") // Natural unbleached cotton hammock canvas
 )
 
 func hex(s string) colorful.Color {
 	c, _ := colorful.Hex(s)
 	return c
 }
-
-
-

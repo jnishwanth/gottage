@@ -33,9 +33,9 @@
    `make check` fails on `fmt-check`; `vet` and `tidy-check` pass individually.
    `test` does **not**: `TestVerifyDownloadedGifs`
    (`pkg/art/gif_loader_test.go:41`) reads `../../assets/animations`, which the
-   §1.8 purge removed, so the suite is red at this commit. §1.7 (`gofmt -w`, last
-   commit of the phase) is what clears `fmt-check`. The pre-commit hook gates
-   **staged** files only, so it will not block your deletion commits.
+   §1.8 purge removed, so the suite is red at this commit. §1.7 (`gofmt -w`) is
+   what clears `fmt-check`. The pre-commit hook gates **staged** files only, so
+   it will not block your deletion commits.
 7. **Lint is not blocking.** `golangci-lint` is not installed and `make lint`
    degrades gracefully; `check` does not depend on it. `.golangci.yml` excludes
    `errcheck` on `pkg/audio/`, `pkg/features/presets.go` and `pkg/(ui|art)/` with
@@ -219,9 +219,9 @@ Add alongside:
 - `TestEverySceneHasAsset` — every registered `gifPath` exists on disk (catches curation mistakes).
 - Fix `TestVerifyDownloadedGifs` (`pkg/art/gif_loader_test.go:41`): it decodes **all** GIFs at 160×90 into the unbounded global cache (~3.6GB resident) and asserts `gifCount < 356`, a hardcoded count that breaks the instant anyone prunes an asset — which this phase does. Assert against the registration count instead, and add a `testing.Short()` guard.
 
-### 1.7 — `gofmt -w` as the final commit
+### 1.7 — `gofmt -w` as its own commit
 
-16 of 34 files are unformatted (1,745 diff lines). Run it **last**, as its own commit, after all deletions — reformatting lines you then delete is wasted diff and guarantees conflicts with every other edit in this phase.
+16 of 34 files are unformatted (1,745 diff lines). This was planned as the phase's *last* commit, to avoid reformatting lines curation was about to delete. It ran as the phase's **first** commit instead — `AGENTS.md` §1 owns that reversal and the reasoning behind it.
 
 ### 1.8 — One history purge, covering the binary *and* the dropped assets
 

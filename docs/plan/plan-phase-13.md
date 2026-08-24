@@ -89,7 +89,9 @@ Handlers move to named functions — testable in isolation, unlike a `case` body
 
 ### 13.4 — Generate help and the palette from the table
 
-Delete the 63-line literal at `view.go:623-686`. Render help by grouping the table by `Category`, filtered by `Scope`.
+Delete the 63-line literal at `view.go:623-686` (re-derive the anchor; Phase 1 moved it). Render help by grouping the table by `Category`, filtered by `Scope`.
+
+One thing the literal now carries that generated help must keep: its two scene-count lines interpolate `len(art.SceneOrder)`, and `TestSceneCountStringsTrackRegistry` (`pkg/ui/scene_count_test.go`) asserts the rendered help shows the live registry count. Regenerate the count, do not drop it.
 
 `GetCommandList()` returns the table filtered by scope. This also fixes a real inefficiency: today `GetCommandList(&m)` is called **on every keystroke** (`model.go:393`) *and* **on every render** (`view.go:1047`), each rebuilding ~46 items with fresh closures — including a closure per preset across all 34 presets (`command_palette.go:26-37`). Nothing is memoized. A static table with a scope filter removes the churn.
 

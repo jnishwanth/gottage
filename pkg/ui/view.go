@@ -438,7 +438,7 @@ func (m Model) renderAmbianceView() string {
 	sb.WriteString(m.Styles.Header.Render("🌿 AMBIANCE, ENVIRONMENT & MUSIC CONTROL") + "\n\n")
 
 	sb.WriteString(m.Styles.Title.Render("🎨 Visual Environment Settings") + "\n")
-	favScopeStr := "All 370+ Scenes 🎨"
+	favScopeStr := fmt.Sprintf("All %d Scenes 🎨", len(art.SceneOrder))
 	if m.Scene.AutoCycleFavsOnly {
 		favScopeStr = "Favorites Only ⭐"
 	}
@@ -463,7 +463,6 @@ func (m Model) renderAmbianceView() string {
 		m.Styles.KeyCap.Render("[l]"), onOffStr(m.Scene.LampOn),
 		m.Styles.KeyCap.Render("[f]"), onOffStr(m.Scene.FireOn),
 		m.Styles.KeyCap.Render("[s]"), onOffStr(m.Scene.FairyLightsOn)))
-
 
 	sb.WriteString(m.Styles.Title.Render("🌧️ 5-Channel Procedural Ambient Sound Console") + "  " + m.Styles.MutedText.Render("(Press [Shift+X] for Equalizer Mixer)") + "\n")
 	sb.WriteString(fmt.Sprintf("  %s Rain: %s (%.0f%%)    %s Fireplace: %s (%.0f%%)    %s Wind Breeze: %s (%.0f%%)\n",
@@ -620,7 +619,7 @@ func (m Model) renderSidebar() string {
 }
 
 func (m Model) renderHelpModal(bg string) string {
-	helpText := `
+	helpText := fmt.Sprintf(`
   🏡 GOTTAGE — KEYBOARD SHORTCUTS & HELP
   ---------------------------------------
   [1]      Switch to Cottage Art View
@@ -633,12 +632,12 @@ func (m Model) renderHelpModal(bg string) string {
   [Shift+S] Open Preset Studio & Custom Manager Modal
   [Shift+X] Open 5-Channel Soundscape Equalizer & Mixer Modal
   [H]      Cycle Canvas Animation Shader (Rain-on-Glass, Fireflies, Aurora, Waveform)
-  [V]      Open Categorized Scene Catalog Modal (370+ Scenes)
+  [V]      Open Categorized Scene Catalog Modal (%d Scenes)
   [/]      Search / Filter Scenes by Keyword (in Catalog)
   [*]      Bookmark / Toggle Favorite Scene Preset
   [R]      Jump to Random Scene Preset (Surprise Me)
   [Y]      Cycle Auto-Cycle Scene Rotation Mode (1m, 3m, 5m, 10m, Timer-Linked)
-  [U]      Toggle Auto-Cycle Scope (Favorites Only / All 370+ Scenes)
+  [U]      Toggle Auto-Cycle Scope (Favorites Only / All %d Scenes)
   [v/b]    Cycle Next / Previous Scene Preset
 
   COZY BEVERAGE & COMPANION:
@@ -683,7 +682,8 @@ func (m Model) renderHelpModal(bg string) string {
 
   [?]      Close Help Overlay
   [q]      Quit Gottage
-`
+`, len(art.SceneOrder), len(art.SceneOrder))
+
 	modal := m.Styles.Box.
 		BorderForeground(m.Styles.Theme.Accent).
 		Render(helpText)
@@ -756,8 +756,8 @@ func (m Model) renderPresetModal(bg string) string {
 			"%s\n\n%s\n\n%s  %s",
 			m.Styles.BoldAccent.Render("Save Current Ambiance as Custom Preset:"),
 			m.PresetInputText.View(),
-			m.Styles.KeyCap.Render(" Enter ") + " Save Preset",
-			m.Styles.KeyCap.Render(" Esc ") + " Cancel",
+			m.Styles.KeyCap.Render(" Enter ")+" Save Preset",
+			m.Styles.KeyCap.Render(" Esc ")+" Cancel",
 		)
 	} else {
 		var presetRows []string
@@ -1248,5 +1248,3 @@ func (m Model) renderSpectrumModal(bg string) string {
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, dialogBox)
 }
-
-

@@ -235,17 +235,16 @@ func GetCommandList(m *Model) []CommandItem {
 		Title:       "⭐ Auto-Cycle: Toggle Favorites Scope",
 		Category:    "Aesthetics",
 		Shortcut:    "[ U ]",
-		Description: "Toggle whether auto-cycling selects only bookmarked favorite scenes or all 370+ scenes",
+		Description: fmt.Sprintf("Toggle whether auto-cycling selects only bookmarked favorite scenes or all %d scenes", len(art.SceneOrder)),
 		Action: func(m *Model) {
 			favOnly := m.Scene.ToggleAutoCycleFavs()
 			if favOnly {
 				m.SetStatusMsg("🎬 Auto-Cycle Scope: Favorites Only ⭐")
 			} else {
-				m.SetStatusMsg("🎬 Auto-Cycle Scope: All 370+ Scenes 🎨")
+				m.SetStatusMsg(fmt.Sprintf("🎬 Auto-Cycle Scope: All %d Scenes 🎨", len(art.SceneOrder)))
 			}
 		},
 	})
-
 
 	// Views & Navigation
 	items = append(items,
@@ -290,7 +289,7 @@ func GetCommandList(m *Model) []CommandItem {
 			Title:       "🖼️ Catalog: Scene Browser Modal",
 			Category:    "Dialogs",
 			Shortcut:    "[ Shift+V ]",
-			Description: "Open categorized scene catalog with 370+ pixel-art presets",
+			Description: fmt.Sprintf("Open categorized scene catalog with %d pixel-art presets", len(art.SceneOrder)),
 			Action: func(m *Model) {
 				m.ShowScenePicker = true
 				m.PickerSceneIdx = 0

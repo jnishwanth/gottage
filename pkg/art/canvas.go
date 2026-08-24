@@ -99,14 +99,6 @@ func (c *Canvas) SetPixel(x, y int, color colorful.Color) {
 	c.Pixels[y][x] = color
 }
 
-// SetPixelHex sets a pixel using a hex string like "#ff5588".
-func (c *Canvas) SetPixelHex(x, y int, hex string) {
-	col, err := colorful.Hex(hex)
-	if err == nil {
-		c.SetPixel(x, y, col)
-	}
-}
-
 // BlendPixel alpha-blends a new color over existing pixel at (x, y).
 func (c *Canvas) BlendPixel(x, y int, color colorful.Color, alpha float64) {
 	if x < 0 || x >= c.Width || y < 0 || y >= c.Height {
@@ -317,7 +309,6 @@ func (c *Canvas) DrawArc(cx, cy, r int, startAngle, endAngle float64, color colo
 		c.SetPixel(px, py, color)
 	}
 }
-
 
 // ApplyRadialLight applies a warm radial light source centered at (cx, cy) in pixel coords.
 func (c *Canvas) ApplyRadialLight(cx, cy int, radius float64, lightColor colorful.Color, maxIntensity float64) {
@@ -747,5 +738,3 @@ func (c *Canvas) ApplyCRTScanlines(depth float64) {
 		}
 	}
 }
-
-

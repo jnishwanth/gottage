@@ -11,11 +11,10 @@ var SceneCategories = []string{
 	"⚡ Cyberpunk & Neon",
 	"🌿 Zen & Nature",
 	"🌌 Sci-Fi & Cosmic",
-	"⚙️ Steampunk & Fantasy",
 	"🌅 Synthwave & Retro",
 }
 
-// CategorizeScene determines category index (1..6) for a given SceneType.
+// CategorizeScene determines category index (1..5) for a given SceneType.
 func CategorizeScene(st SceneType) int {
 	name := strings.ToLower(st.String())
 	switch {
@@ -25,10 +24,8 @@ func CategorizeScene(st SceneType) int {
 		return 3
 	case strings.Contains(name, "observatory") || strings.Contains(name, "space") || strings.Contains(name, "nebula") || strings.Contains(name, "astral") || strings.Contains(name, "zodiac") || strings.Contains(name, "alien") || strings.Contains(name, "stargate") || strings.Contains(name, "cosmos") || strings.Contains(name, "stargazing") || strings.Contains(name, "abyssal") || strings.Contains(name, "deep sea"):
 		return 4
-	case strings.Contains(name, "steampunk") || strings.Contains(name, "clockwork") || strings.Contains(name, "citadel") || strings.Contains(name, "airship") || strings.Contains(name, "castle") || strings.Contains(name, "magic") || strings.Contains(name, "wizard") || strings.Contains(name, "haunted") || strings.Contains(name, "volcano") || strings.Contains(name, "forge") || strings.Contains(name, "pirate"):
-		return 5
 	case strings.Contains(name, "synthwave") || strings.Contains(name, "highway") || strings.Contains(name, "arcade") || strings.Contains(name, "retro") || strings.Contains(name, "grid") || strings.Contains(name, "racer") || strings.Contains(name, "coastal"):
-		return 6
+		return 5
 	default:
 		return 1 // Cozy & Cottage
 	}
@@ -84,8 +81,6 @@ func GetSceneMeta(st SceneType) SceneMeta {
 	case 4:
 		return SceneMeta{MoodTag: "🌌 Cosmic & Mystical", RecommendedWeather: "⭐ Starlight Night", Atmosphere: "Stargazing celestial observatory and deep space bioluminescent vistas"}
 	case 5:
-		return SceneMeta{MoodTag: "⚙️ Clockwork & Magic", RecommendedWeather: "☁️ Fog / Storm", Atmosphere: "Industrial brass clockwork gears and fantasy alchemy sanctum"}
-	case 6:
 		return SceneMeta{MoodTag: "🌅 Synthwave & Drive", RecommendedWeather: "🌆 Sunset", Atmosphere: "80s retro grid horizon with glowing neon sunsets and skyline drives"}
 	default:
 		return SceneMeta{MoodTag: "🌿 Focus Ambience", RecommendedWeather: "🌧️ Any Weather", Atmosphere: "Relaxing 8-bit atmospheric scene"}

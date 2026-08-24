@@ -18,7 +18,7 @@ Colors are the vocabulary components are written in. The vocabulary comes first.
 
 ## The problems
 
-> All counts below are **pre-Phase-1** baselines. Phase 1 deleted roughly half of `scenes_modular.go` — **re-derive before starting.**
+> All counts below are **pre-Phase-1** baselines. Phase 1 took `scenes_modular.go` from 7,909 to 6,035 lines and reformatted `palette.go` — **re-derive before starting.**
 
 **1. It is a name dump, not a system.** `pkg/art/palette.go` is one 342-line `var (...)` block: 16 PICO-8 colors, then ~36 comment-delimited blocks each named after a single scene (`// Shire Hill Hobbit Burrow & Round Hearth`, `// Rainy Midnight Cyber Lofi Diner & Neon Window Booth`). It grows by one block per scene shipped. Names are object names — `ColorHobbitBrassKnob`, `ColorCherryPie`, `ColorSeedCake` — so **nothing is reusable across scenes**, which is a direct cause of the duplication Phase 8 exists to remove.
 

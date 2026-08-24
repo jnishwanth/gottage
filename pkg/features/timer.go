@@ -29,13 +29,13 @@ func (m TimerMode) String() string {
 
 // FocusTimer manages pomodoro timer state.
 type FocusTimer struct {
-	Mode               TimerMode
-	Duration           time.Duration
-	Remaining          time.Duration
-	Running            bool
-	CompletedSessions  int
-	CurrentTask        string
-	lastTick           time.Time
+	Mode              TimerMode
+	Duration          time.Duration
+	Remaining         time.Duration
+	Running           bool
+	CompletedSessions int
+	CurrentTask       string
+	lastTick          time.Time
 }
 
 // NewFocusTimer creates a new timer with default 25-minute focus session.

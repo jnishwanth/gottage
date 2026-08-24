@@ -81,63 +81,15 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneSunsetCity,
-		name:      "Sunset City Skyline 🌇",
-		gifPath:   "assets/animations/sunset_city.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneSnowCabin,
 		name:      "Winter Cabin Snowfall ❄️",
 		gifPath:   "assets/animations/snow_cabin.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberpunkCity,
-		name:      "Cyberpunk Alley 🌆",
-		gifPath:   "assets/animations/cyberpunk_city.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        ScenePixelTrain,
-		name:      "Retro Pixel Train 🚂",
-		gifPath:   "assets/animations/pixel_train.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneOceanWaves,
-		name:      "Pixel Ocean Waves 🌊",
-		gifPath:   "assets/animations/ocean_waves.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneStargazing,
-		name:      "Stargazing Hill 🌌",
-		gifPath:   "assets/animations/stargazing.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCoffeeShop,
-		name:      "Pixel Coffee Shop ☕",
-		gifPath:   "assets/animations/coffee_shop.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAutumnPark,
-		name:      "Autumn Amber Park 🍂",
-		gifPath:   "assets/animations/autumn_park.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneMidnightOwl,
 		name:      "Midnight Owl Vista 🦉",
 		gifPath:   "assets/animations/midnight_owl.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRiverBridge,
-		name:      "River Bridge Railway 🌉",
-		gifPath:   "assets/animations/river_bridge.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
@@ -152,1962 +104,6 @@ func init() {
 		gifPath:   "assets/animations/cyber_bot.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSakuraShrine,
-		name:      "Sakura Shrine Garden 🌸",
-		gifPath:   "assets/animations/sakura_shrine.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCozyCampfire,
-		name:      "Cozy Hearth Campfire 🔥",
-		gifPath:   "assets/animations/cozy_campfire.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSpaceStation,
-		name:      "Orbital Space Station 🚀",
-		gifPath:   "assets/animations/space_station.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneDeepSea,
-		name:      "Deep Sea Aquarium 🪼",
-		gifPath:   "assets/animations/deep_sea.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberArcade,
-		name:      "Isometric Cyber Arcade 🕹️",
-		gifPath:   "assets/animations/cyber_arcade.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneNeonBistro,
-		name:      "Neon Cyber Bistro 🏮",
-		gifPath:   "assets/animations/neon_bistro.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSunsetStation,
-		name:      "Sunset Train Platform 🚉",
-		gifPath:   "assets/animations/sunset_station.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneMountainView,
-		name:      "Cozy Mountain Peak 🏔️",
-		gifPath:   "assets/animations/mountain_view.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneEnchantedForest,
-		name:      "Enchanted Forest Waterfall 🌿",
-		gifPath:   "assets/animations/enchanted_forest.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSkyIsland,
-		name:      "Floating Sky Island ☁️",
-		gifPath:   "assets/animations/sky_island.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBambooGrove,
-		name:      "Zen Bamboo Grove 🎋",
-		gifPath:   "assets/animations/bamboo_grove.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneVolcanoForge,
-		name:      "Volcano Smithy Forge 🌋",
-		gifPath:   "assets/animations/volcano_forge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCrystalCave,
-		name:      "Glowing Crystal Cave 💎",
-		gifPath:   "assets/animations/crystal_cave.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneDesertOasis,
-		name:      "Moonlit Desert Oasis 🌙",
-		gifPath:   "assets/animations/desert_oasis.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkLab,
-		name:      "Steampunk Clockwork Lab ⚙️",
-		gifPath:   "assets/animations/steampunk_lab.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAlienPlanet,
-		name:      "Alien Planet Outpost 🛸",
-		gifPath:   "assets/animations/alien_planet.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneHauntedManor,
-		name:      "Haunted Pixel Manor 👻",
-		gifPath:   "assets/animations/haunted_manor.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCoralReef,
-		name:      "Submerged Coral Reef 🐠",
-		gifPath:   "assets/animations/coral_reef.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneFrostPeak,
-		name:      "Glacial Frost Peak 🏔️",
-		gifPath:   "assets/animations/frost_peak.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberDojo,
-		name:      "Cyberpunk Martial Dojo 🥋",
-		gifPath:   "assets/animations/cyber_dojo.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneMushroomForest,
-		name:      "Bioluminescent Mushroom Forest 🍄",
-		gifPath:   "assets/animations/mushroom_forest.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroArcade,
-		name:      "8-Bit Retro Pinball Arcade 🕹️",
-		gifPath:   "assets/animations/retro_arcade_neon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        ScenePirateCove,
-		name:      "Moonlight Pirate Ship Cove 🏴‍☠️",
-		gifPath:   "assets/animations/pirate_cove.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCosmicObservatory,
-		name:      "Deep Space Celestial Observatory 🔭",
-		gifPath:   "assets/animations/cosmic_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberRooftop,
-		name:      "Cyberpunk Neon Rooftop 🌆",
-		gifPath:   "assets/animations/cyber_rooftop.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCozyIgloo,
-		name:      "Cozy Northern Igloo ❄️",
-		gifPath:   "assets/animations/cozy_igloo.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAtlantisTemple,
-		name:      "Atlantis Ocean Ruins 🔱",
-		gifPath:   "assets/animations/atlantis_temple.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberMatrix,
-		name:      "Cyber Matrix Terminal 💻",
-		gifPath:   "assets/animations/cyber_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSunsetBeach,
-		name:      "Sunset Beach Boardwalk 🏖️",
-		gifPath:   "assets/animations/sunset_beach.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberExpress,
-		name:      "Neon Cyberpunk Express Train 🚄",
-		gifPath:   "assets/animations/cyber_express.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumSwamp,
-		name:      "Bioluminescent Willow Swamp 🐊",
-		gifPath:   "assets/animations/biolum_swamp.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneClockworkTower,
-		name:      "Clockwork Citadel Spire 🕰️",
-		gifPath:   "assets/animations/clockwork_tower.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneStarlightCamp,
-		name:      "Starlight Mountain Camp ⛺",
-		gifPath:   "assets/animations/starlight_camp.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSpaceNebula,
-		name:      "Deep Space Cosmic Nebula 🌌",
-		gifPath:   "assets/animations/space_nebula.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberMarket,
-		name:      "Pixel Cyber Market Alley 🏮",
-		gifPath:   "assets/animations/cyber_market.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberDiner,
-		name:      "Cyberpunk Neon Diner 🍔",
-		gifPath:   "assets/animations/cyber_diner.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneVolcanoView,
-		name:      "Pixel Volcanic Caldera 🌋",
-		gifPath:   "assets/animations/volcano_view.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCrystalLagoon,
-		name:      "Bioluminescent Crystal Lagoon 💎",
-		gifPath:   "assets/animations/crystal_lagoon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkAirship,
-		name:      "Steampunk Sky Airship Fleet ⚙️",
-		gifPath:   "assets/animations/steampunk_airship.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCozyAttic,
-		name:      "Cozy Rain-Slicked Attic Nook 🕯️",
-		gifPath:   "assets/animations/cozy_attic.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroArcadeHall,
-		name:      "Pixel Retro Neon Arcade Hall 🕹️",
-		gifPath:   "assets/animations/retro_arcade_hall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberSubway,
-		name:      "Cyberpunk Underground Subway 🚇",
-		gifPath:   "assets/animations/cyber_subway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneFantasyCastle,
-		name:      "Fantasy Castle Courtyard 🏰",
-		gifPath:   "assets/animations/fantasy_castle.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumAbyss,
-		name:      "Bioluminescent Deep Abyss 🪼",
-		gifPath:   "assets/animations/biolum_abyss.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveHighway,
-		name:      "Retro Synthwave Highway 🏎️",
-		gifPath:   "assets/animations/synthwave_highway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneWinterCafe,
-		name:      "Cozy Winter Cafe ☕",
-		gifPath:   "assets/animations/winter_cafe.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        ScenePixelLab,
-		name:      "Isometric Pixel Laboratory 🧪",
-		gifPath:   "assets/animations/pixel_lab.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberMatrixDeck,
-		name:      "Cyberpunk Matrix Netrunner Deck 💾",
-		gifPath:   "assets/animations/cyber_matrix_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneFairyMushroomHollow,
-		name:      "Bioluminescent Fairy Mushroom Hollow 🍄",
-		gifPath:   "assets/animations/fairy_mushroom_hollow.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroSpaceArcade,
-		name:      "8-Bit Retro Space Arcade 👾",
-		gifPath:   "assets/animations/retro_space_arcade.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyPort,
-		name:      "Steampunk Celestial Sky Port ⚓",
-		gifPath:   "assets/animations/steampunk_sky_port.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenRockGarden,
-		name:      "Zen Moss Rock Garden 🪨",
-		gifPath:   "assets/animations/zen_rock_garden.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberBridge,
-		name:      "Neon Cyberpunk Suspension Bridge 🌉",
-		gifPath:   "assets/animations/cyber_bridge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCavern,
-		name:      "Bioluminescent Underground Cavern 🪨",
-		gifPath:   "assets/animations/biolum_cavern.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberRacer,
-		name:      "8-Bit Retro Neon Grid Racer 🏎️",
-		gifPath:   "assets/animations/cyber_racer.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkClock,
-		name:      "Steampunk Clockwork Cathedral 🕰️",
-		gifPath:   "assets/animations/steampunk_clock.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenTeahouse,
-		name:      "Zen Bamboo Water Teahouse 🍵",
-		gifPath:   "assets/animations/zen_teahouse.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberObservatory,
-		name:      "Neon Cyberpunk Astronomical Observatory 🔭",
-		gifPath:   "assets/animations/cyber_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumJungle,
-		name:      "Bioluminescent Pixel Rainforest 🌴",
-		gifPath:   "assets/animations/biolum_jungle.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveSunset,
-		name:      "Retro Synthwave Sun & Grid Horizon 🌅",
-		gifPath:   "assets/animations/synthwave_sunset.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneStarlightOasis,
-		name:      "Starlight Desert Pyramid & Oasis 🐪",
-		gifPath:   "assets/animations/starlight_oasis.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkWorkshop,
-		name:      "Steampunk Automaton Workshop ⚙️",
-		gifPath:   "assets/animations/steampunk_workshop.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenCherryTemple,
-		name:      "Zen Cherry Blossom Temple Courtyard 🌸",
-		gifPath:   "assets/animations/zen_cherry_temple.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberDragon,
-		name:      "Neon Cyber Dragon 🐉",
-		gifPath:   "assets/animations/cyber_dragon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumRift,
-		name:      "Bioluminescent Abyssal Rift 🌊",
-		gifPath:   "assets/animations/biolum_rift.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkPlanetarium,
-		name:      "Steampunk Celestial Planetarium 🪐",
-		gifPath:   "assets/animations/steampunk_planetarium.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroLofiTrain,
-		name:      "8-Bit Lofi Sunset Train 🚆",
-		gifPath:   "assets/animations/retro_lofi_train.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBonsai,
-		name:      "Zen Bonsai & Koi Pond 🪨",
-		gifPath:   "assets/animations/zen_bonsai.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberDock,
-		name:      "Neon Cyber Dock & Sky Traffic 🛸",
-		gifPath:   "assets/animations/cyber_dock.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumReefGate,
-		name:      "Bioluminescent Reef Gate 🪸",
-		gifPath:   "assets/animations/biolum_reef_gate.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkLocomotive,
-		name:      "Steampunk Flying Locomotive 🚂",
-		gifPath:   "assets/animations/steampunk_locomotive.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        ScenePixelWinterCabin,
-		name:      "Cozy Winter Forest Cabin 🌨️",
-		gifPath:   "assets/animations/pixel_winter_cabin.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenWaterfallShrine,
-		name:      "Zen Waterfall Torii Shrine ⛩️",
-		gifPath:   "assets/animations/zen_waterfall_shrine.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralStargate,
-		name:      "Astral Celestial Stargate 🌌",
-		gifPath:   "assets/animations/astral_stargate.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberCloudCity,
-		name:      "Neon Cyber Cloud City ☁️",
-		gifPath:   "assets/animations/cyber_cloud_city.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCrystalDragon,
-		name:      "Crystal Dragon Sanctuary 🐉",
-		gifPath:   "assets/animations/crystal_dragon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSunset,
-		name:      "Steampunk Airship Sunset 🌅",
-		gifPath:   "assets/animations/steampunk_sunset.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveBeach,
-		name:      "Synthwave Neon Beach 🏖️",
-		gifPath:   "assets/animations/synthwave_beach.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenMoonShrine,
-		name:      "Zen Moonlit Shrine 🌙",
-		gifPath:   "assets/animations/zen_moon_shrine.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralClockwork,
-		name:      "Astral Clockwork Universe 🌌",
-		gifPath:   "assets/animations/astral_clockwork.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberPenthouse,
-		name:      "Neon Cyber Penthouse 🌃",
-		gifPath:   "assets/animations/cyber_penthouse.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumUnderwaterCity,
-		name:      "Bioluminescent Sunken City 🧜",
-		gifPath:   "assets/animations/biolum_underwater_city.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyDock,
-		name:      "Steampunk Sky Harbor Dock ⚓",
-		gifPath:   "assets/animations/steampunk_sky_dock.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroSynthwaveCity,
-		name:      "Synthwave Cyber City Sunset 🌇",
-		gifPath:   "assets/animations/retro_synthwave_city.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenAutumnTorii,
-		name:      "Zen Autumn Torii Pathway 🍁",
-		gifPath:   "assets/animations/zen_autumn_torii.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralNebulaGate,
-		name:      "Astral Cosmic Nebula Portal 🔮",
-		gifPath:   "assets/animations/astral_nebula_gate.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberGarage,
-		name:      "Neon Cyber Hoverbike Garage 🏍️",
-		gifPath:   "assets/animations/cyber_garage.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumEmeraldStream,
-		name:      "Bioluminescent Emerald Crystal Stream 💎",
-		gifPath:   "assets/animations/biolum_emerald_stream.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkAirshipDock,
-		name:      "Steampunk Sky Airship Terminal ⚓",
-		gifPath:   "assets/animations/steampunk_airship_dock.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveRooftopPool,
-		name:      "Retro Synthwave Rooftop Pool 🌴",
-		gifPath:   "assets/animations/synthwave_rooftop_pool.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooWater,
-		name:      "Zen Moonlit Bamboo Water Spout 🎋",
-		gifPath:   "assets/animations/zen_bamboo_water.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralPrismPortal,
-		name:      "Astral Celestial Prism Portal 🔮",
-		gifPath:   "assets/animations/astral_prism_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberArcadeNeonBar,
-		name:      "Neon Cyberpunk Synth Arcade Bar 🕹️",
-		gifPath:   "assets/animations/cyber_arcade_neon_bar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalGrotto,
-		name:      "Bioluminescent Crystal Grotto 💎",
-		gifPath:   "assets/animations/biolum_crystal_grotto.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyStation,
-		name:      "Steampunk Sky Airship Station ⚓",
-		gifPath:   "assets/animations/steampunk_sky_station.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroSynthwaveHighwayNight,
-		name:      "Retro Synthwave Highway Night Drive 🏎️",
-		gifPath:   "assets/animations/retro_synthwave_highway_night.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooWaterfall,
-		name:      "Zen Bamboo Waterfall Sanctum 🎋",
-		gifPath:   "assets/animations/zen_bamboo_waterfall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacObservatory,
-		name:      "Astral Celestial Zodiac Observatory 🔮",
-		gifPath:   "assets/animations/astral_zodiac_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberRamenAlley,
-		name:      "Neon Cyberpunk Ramen Alley 🍜",
-		gifPath:   "assets/animations/cyber_ramen_alley.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalWaterfall,
-		name:      "Bioluminescent Crystal Waterfall 💎",
-		gifPath:   "assets/animations/biolum_crystal_waterfall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkClockworkCitadel,
-		name:      "Steampunk Floating Citadel 🏰",
-		gifPath:   "assets/animations/steampunk_clockwork_citadel.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroSynthwaveArcade,
-		name:      "Retro Synthwave Arcade Night 🕹️",
-		gifPath:   "assets/animations/retro_synthwave_arcade.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooToriiGarden,
-		name:      "Zen Moonlit Bamboo Torii ⛩️",
-		gifPath:   "assets/animations/zen_bamboo_torii_garden.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralPrismObservatory,
-		name:      "Astral Celestial Prism Tower 🔮",
-		gifPath:   "assets/animations/astral_prism_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberSpaceportLounge,
-		name:      "Neon Cyberpunk Spaceport Lounge 🚀",
-		gifPath:   "assets/animations/cyber_spaceport.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalCitadel,
-		name:      "Bioluminescent Crystal Citadel 🏰",
-		gifPath:   "assets/animations/biolum_citadel.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkFlyingGondola,
-		name:      "Steampunk Airship Sky Gondola 🎈",
-		gifPath:   "assets/animations/steampunk_gondola.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroSynthwaveArcadeBar,
-		name:      "8-Bit Retro Synthwave Arcade Bar 🍸",
-		gifPath:   "assets/animations/synthwave_arcade_bar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonPagoda,
-		name:      "Zen Moonlit Bamboo Pagoda ⛩️",
-		gifPath:   "assets/animations/zen_bamboo_pagoda.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacPortalSpire,
-		name:      "Astral Celestial Zodiac Portal Spire 🔮",
-		gifPath:   "assets/animations/astral_zodiac_spire.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberDockLounge,
-		name:      "Neon Cyberpunk Dockside Lounge 🍹",
-		gifPath:   "assets/animations/cyber_dock_lounge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalSanctuary,
-		name:      "Bioluminescent Crystal Sanctuary 🔮",
-		gifPath:   "assets/animations/biolum_crystal_sanctuary.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyDockBar,
-		name:      "Steampunk Sky Dock Tavern 🍺",
-		gifPath:   "assets/animations/steampunk_sky_dock_bar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridArcade,
-		name:      "8-Bit Retro Synthwave Cyber Arcade 🎮",
-		gifPath:   "assets/animations/synthwave_grid_arcade.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonTemple,
-		name:      "Zen Moonlit Bamboo Temple Shrine ⛩️",
-		gifPath:   "assets/animations/zen_bamboo_moon_temple.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacPortalRing,
-		name:      "Astral Celestial Zodiac Ring Portal 🌌",
-		gifPath:   "assets/animations/astral_zodiac_portal_ring.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonSkyLounge,
-		name:      "Neon Cyberpunk Sky Lounge 🏙️",
-		gifPath:   "assets/animations/cyber_neon_sky_lounge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalLagoonSpire,
-		name:      "Bioluminescent Crystal Lagoon Spire 💎",
-		gifPath:   "assets/animations/biolum_crystal_lagoon_spire.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkAirshipPortBar,
-		name:      "Steampunk Airship Port Bar ⚙️",
-		gifPath:   "assets/animations/steampunk_airship_port_bar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveNeonHighwayNight,
-		name:      "8-Bit Retro Synthwave Neon Highway Night 🏎️",
-		gifPath:   "assets/animations/synthwave_neon_highway_night.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonRiver,
-		name:      "Zen Moonlit Bamboo River 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_river.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChamber,
-		name:      "Astral Celestial Zodiac Chamber 🌌",
-		gifPath:   "assets/animations/astral_zodiac_chamber.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberArcadeMatrixLounge,
-		name:      "Neon Cyberpunk Matrix Arcade Lounge 👾",
-		gifPath:   "assets/animations/cyber_arcade_matrix_lounge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumFairyGrotto,
-		name:      "Bioluminescent Fairy Grotto 🧚",
-		gifPath:   "assets/animations/biolum_fairy_grotto.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyDockHaven,
-		name:      "Steampunk Sky Dock Haven ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_dock_haven.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridSunset,
-		name:      "8-Bit Retro Synthwave Grid Sunset 🌅",
-		gifPath:   "assets/animations/synthwave_grid_sunset.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrine,
-		name:      "Zen Moonlit Bamboo Shrine 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacPortalChamber,
-		name:      "Astral Celestial Zodiac Portal Chamber 🌌",
-		gifPath:   "assets/animations/astral_zodiac_portal_chamber.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberRainRooftop,
-		name:      "Neon Cyber Rain Rooftop 🌧️",
-		gifPath:   "assets/animations/cyber_rain_rooftop.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumUnderwaterTrench,
-		name:      "Bioluminescent Trench Abyss 🪼",
-		gifPath:   "assets/animations/biolum_underwater_trench.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyAstronomy,
-		name:      "Steampunk Sky Planetarium 🌌",
-		gifPath:   "assets/animations/steampunk_sky_astronomy.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonHighway,
-		name:      "Synthwave Grid Sunset Drive 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_highway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonBridge,
-		name:      "Zen Moonlit Bamboo Bridge 🌉",
-		gifPath:   "assets/animations/zen_bamboo_moon_bridge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacStarPortal,
-		name:      "Astral Zodiac Star Portal 🔮",
-		gifPath:   "assets/animations/astral_zodiac_star_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberRooftopBar,
-		name:      "Neon Cyberpunk Skyline Rooftop Bar 🍸",
-		gifPath:   "assets/animations/cyber_rooftop_bar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCoralGrotto,
-		name:      "Bioluminescent Sunken Coral Grotto 🪸",
-		gifPath:   "assets/animations/biolum_coral_grotto.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyDockLounge,
-		name:      "Steampunk Sky Port Panorama ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_dock_lounge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonBeach,
-		name:      "8-Bit Retro Synthwave Neon Coastline 🌅",
-		gifPath:   "assets/animations/synthwave_grid_neon_beach.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonFountain,
-		name:      "Zen Moonlit Bamboo Water Cascade 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_fountain.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacStarChamber,
-		name:      "Astral Celestial Zodiac Observatory Spire 🔮",
-		gifPath:   "assets/animations/astral_zodiac_star_chamber.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonBistroAlley,
-		name:      "Neon Cyberpunk Alley Bistro 🍸",
-		gifPath:   "assets/animations/cyber_neon_bistro_alley.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalLagoonGrotto,
-		name:      "Bioluminescent Crystal Lagoon Grotto 💎",
-		gifPath:   "assets/animations/biolum_crystal_lagoon_grotto.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyObservatory,
-		name:      "Steampunk Sky Harbor Observatory ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridSunsetHighway,
-		name:      "8-Bit Retro Synthwave Sunset Highway 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_sunset_highway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonSpring,
-		name:      "Zen Moonlit Bamboo Thermal Spring ♨️",
-		gifPath:   "assets/animations/zen_bamboo_moon_spring.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacNexus,
-		name:      "Astral Celestial Zodiac Nexus 🔮",
-		gifPath:   "assets/animations/astral_zodiac_nexus.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonNoodleBar,
-		name:      "Neon Cyberpunk Noodle Bar 🍜",
-		gifPath:   "assets/animations/cyber_neon_noodle_bar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumAbyssalCavernSpire,
-		name:      "Bioluminescent Abyssal Cavern Spire 🪼",
-		gifPath:   "assets/animations/biolum_abyssal_cavern_spire.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyFortress,
-		name:      "Steampunk Sky Fortress Observatory ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_fortress.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveCyberCityDrive,
-		name:      "8-Bit Retro Synthwave Cyber City Drive 🏎️",
-		gifPath:   "assets/animations/synthwave_cyber_city_drive.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMountainSanctuary,
-		name:      "Zen Moonlit Bamboo Mountain Sanctuary 🎋",
-		gifPath:   "assets/animations/zen_bamboo_mountain_sanctuary.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacPrismMatrix,
-		name:      "Astral Celestial Zodiac Prism Matrix 🔮",
-		gifPath:   "assets/animations/astral_zodiac_prism_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonArcadeAlley,
-		name:      "Neon Cyberpunk Arcade Alley 🕹️",
-		gifPath:   "assets/animations/cyber_neon_arcade_alley.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumDeepSeaTrench,
-		name:      "Bioluminescent Deep Sea Abyss 🐋",
-		gifPath:   "assets/animations/biolum_deep_sea_trench.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkClockworkFortress,
-		name:      "Steampunk Sky Clockwork Fortress ⚙️",
-		gifPath:   "assets/animations/steampunk_clockwork_fortress.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridCosmoDrive,
-		name:      "8-Bit Retro Synthwave Cosmo Drive 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_cosmo_drive.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonWaterfall,
-		name:      "Zen Moonlit Bamboo Water Spout 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_waterfall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChamberMatrix,
-		name:      "Astral Celestial Zodiac Chamber Matrix 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chamber_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixDiner,
-		name:      "Neon Cyberpunk Matrix Diner 🍜",
-		gifPath:   "assets/animations/cyber_neon_matrix_diner.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCoralAbyssGate,
-		name:      "Bioluminescent Coral Abyss Gate 🪸",
-		gifPath:   "assets/animations/biolum_coral_abyss_gate.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyDockCitadel,
-		name:      "Steampunk Sky Dock Citadel ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_dock_citadel.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonSkyline,
-		name:      "8-Bit Retro Synthwave Neon Skyline 🌇",
-		gifPath:   "assets/animations/synthwave_grid_neon_skyline.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooToriiWaterfall,
-		name:      "Zen Moonlit Torii Waterfall ⛩️",
-		gifPath:   "assets/animations/zen_bamboo_torii_waterfall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacPrismPortal,
-		name:      "Astral Celestial Zodiac Prism Portal 🔮",
-		gifPath:   "assets/animations/astral_zodiac_prism_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonCyberCasino,
-		name:      "Neon Cyberpunk Cyber Casino 🎰",
-		gifPath:   "assets/animations/cyber_neon_cyber_casino.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumAbyssalTideTrench,
-		name:      "Bioluminescent Abyssal Tide Trench 🌊",
-		gifPath:   "assets/animations/biolum_abyssal_tide_trench.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkClockworkAirship,
-		name:      "Steampunk Clockwork Airship Dock ⚙️",
-		gifPath:   "assets/animations/steampunk_clockwork_airship.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridSpaceStation,
-		name:      "8-Bit Retro Synthwave Space Station 🌌",
-		gifPath:   "assets/animations/synthwave_grid_space_station.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooPagodaSpring,
-		name:      "Zen Moonlit Pagoda Hot Spring ⛩️",
-		gifPath:   "assets/animations/zen_bamboo_pagoda_spring.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosVault,
-		name:      "Astral Celestial Zodiac Chronos Vault 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_vault.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonHoloArcade,
-		name:      "Neon Cyberpunk Holo Arcade Lounge 🕹️",
-		gifPath:   "assets/animations/cyber_neon_holo_arcade.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalLeviathanReef,
-		name:      "Bioluminescent Crystal Leviathan Reef 🐋",
-		gifPath:   "assets/animations/biolum_crystal_leviathan_reef.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkObservatory,
-		name:      "Steampunk Sky Clockwork Observatory ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCyberHighway,
-		name:      "8-Bit Retro Synthwave Neon Cyber Highway 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_cyber_highway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooLotusPond,
-		name:      "Zen Moonlit Bamboo Lotus Pond 🎋",
-		gifPath:   "assets/animations/zen_bamboo_lotus_pond.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacAetherVault,
-		name:      "Astral Celestial Zodiac Aether Vault 🔮",
-		gifPath:   "assets/animations/astral_zodiac_aether_vault.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixClub,
-		name:      "Neon Cyberpunk Matrix Nightclub 🍸",
-		gifPath:   "assets/animations/cyber_neon_matrix_club.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCoralCrystalTrench,
-		name:      "Bioluminescent Coral Crystal Trench 🪸",
-		gifPath:   "assets/animations/biolum_coral_crystal_trench.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyDockWorkshop,
-		name:      "Steampunk Sky Dock Workshop ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_dock_workshop.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonShallows,
-		name:      "8-Bit Retro Synthwave Neon Shallows 🌅",
-		gifPath:   "assets/animations/synthwave_grid_neon_shallows.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonLanternPond,
-		name:      "Zen Moonlit Bamboo Lantern Pond 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_lantern_pond.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacSolarisVault,
-		name:      "Astral Celestial Zodiac Solaris Vault 🔮",
-		gifPath:   "assets/animations/astral_zodiac_solaris_vault.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonHackerDen,
-		name:      "Neon Cyberpunk Netrunner Den 💻",
-		gifPath:   "assets/animations/cyber_neon_hacker_den.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalGlacierTrench,
-		name:      "Bioluminescent Crystal Glacier Trench 🧊",
-		gifPath:   "assets/animations/biolum_crystal_glacier_trench.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyPortHangar,
-		name:      "Steampunk Sky Port Hangar ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_port_hangar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCanyon,
-		name:      "8-Bit Retro Synthwave Neon Canyon 🌄",
-		gifPath:   "assets/animations/synthwave_grid_neon_canyon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrinePond,
-		name:      "Zen Moonlit Bamboo Shrine Pond 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_pond.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacLunarisVault,
-		name:      "Astral Celestial Zodiac Lunaris Vault 🔮",
-		gifPath:   "assets/animations/astral_zodiac_lunaris_vault.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonSkyDockPlaza,
-		name:      "Cyberpunk Neon Sky Dock Plaza 🏙️",
-		gifPath:   "assets/animations/cyber_neon_sky_dock_plaza.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumAbyssalTrenchSpire,
-		name:      "Bioluminescent Abyssal Trench Spire 🌊",
-		gifPath:   "assets/animations/biolum_abyssal_trench_spire.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyPortObservatory,
-		name:      "Steampunk Sky Port Observatory ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_port_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonMetropolis,
-		name:      "8-Bit Retro Synthwave Neon Metropolis 🌄",
-		gifPath:   "assets/animations/synthwave_grid_neon_metropolis.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineWaterfall,
-		name:      "Zen Moonlit Bamboo Shrine Waterfall 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_waterfall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosPortal,
-		name:      "Astral Celestial Zodiac Chronos Portal 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixTower,
-		name:      "Cyberpunk Neon Matrix Tower 🏙️",
-		gifPath:   "assets/animations/cyber_neon_matrix_tower.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumAbyssalTrenchHaven,
-		name:      "Bioluminescent Abyssal Trench Haven 🌊",
-		gifPath:   "assets/animations/biolum_abyssal_trench_haven.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyPortFactory,
-		name:      "Steampunk Sky Port Factory ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_port_factory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonHighwayDrive,
-		name:      "8-Bit Retro Synthwave Neon Highway Drive 🌄",
-		gifPath:   "assets/animations/synthwave_grid_neon_highway_drive.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineGarden,
-		name:      "Zen Moonlit Bamboo Shrine Garden 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_garden.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacLunarisPortal,
-		name:      "Astral Celestial Zodiac Lunaris Portal 🔮",
-		gifPath:   "assets/animations/astral_zodiac_lunaris_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonSkyTerminal,
-		name:      "Neon Cyberpunk Sky Terminal 🏙️",
-		gifPath:   "assets/animations/cyber_neon_sky_terminal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumAbyssalCrystalRift,
-		name:      "Bioluminescent Abyssal Crystal Rift 💎",
-		gifPath:   "assets/animations/biolum_abyssal_crystal_rift.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyDockFactory,
-		name:      "Steampunk Sky Dock Factory ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_dock_factory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonExpressway,
-		name:      "8-Bit Retro Synthwave Neon Expressway 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_expressway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonPavilion,
-		name:      "Zen Moonlit Bamboo Pavilion 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_pavilion.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacAetherPortal,
-		name:      "Astral Celestial Zodiac Aether Portal 🔮",
-		gifPath:   "assets/animations/astral_zodiac_aether_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonSkyStation,
-		name:      "Neon Cyberpunk Sky Station 🏙️",
-		gifPath:   "assets/animations/cyber_neon_sky_station.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalSanctuaryGrotto,
-		name:      "Bioluminescent Crystal Sanctuary Grotto 💎",
-		gifPath:   "assets/animations/biolum_crystal_sanctuary_grotto.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyDockObservatory,
-		name:      "Steampunk Sky Port Observatory ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_dock_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridCyberHighway,
-		name:      "8-Bit Retro Synthwave Cyber Highway 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_cyber_highway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineFountain,
-		name:      "Zen Moonlit Bamboo Shrine Fountain 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_fountain.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacSolarisPortal,
-		name:      "Astral Celestial Zodiac Solaris Portal 🔮",
-		gifPath:   "assets/animations/astral_zodiac_solaris_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonSkyBalcony,
-		name:      "Neon Cyberpunk Sky Balcony 🌇",
-		gifPath:   "assets/animations/cyber_neon_sky_balcony.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalCoralLagoon,
-		name:      "Bioluminescent Coral Lagoon 🪸",
-		gifPath:   "assets/animations/biolum_crystal_coral_lagoon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyPortTerminal,
-		name:      "Steampunk Sky Port Terminal ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_port_terminal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridSkylineDrive,
-		name:      "8-Bit Retro Synthwave Skyline Drive 🌅",
-		gifPath:   "assets/animations/synthwave_grid_skyline_drive.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValley,
-		name:      "Zen Moonlit Bamboo Shrine Valley 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacLunarisMatrix,
-		name:      "Astral Celestial Zodiac Lunaris Matrix 🔮",
-		gifPath:   "assets/animations/astral_zodiac_lunaris_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixSkyline,
-		name:      "Neon Cyberpunk Matrix Skyline 🌇",
-		gifPath:   "assets/animations/cyber_neon_matrix_skyline.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalReef,
-		name:      "Bioluminescent Abyssal Reef 🪸",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_reef.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyPortObservatoryDeck,
-		name:      "Steampunk Sky Port Observatory Deck ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_port_observatory_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalDrive,
-		name:      "8-Bit Retro Synthwave Coastal Drive 🌅",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_drive.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineWaterGarden,
-		name:      "Zen Moonlit Bamboo Water Garden 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_water_garden.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosMatrix,
-		name:      "Astral Celestial Zodiac Chronos Matrix 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixSanctuary,
-		name:      "Neon Cyberpunk Matrix Sanctuary 🌆",
-		gifPath:   "assets/animations/cyber_neon_matrix_sanctuary.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTrenchGrotto,
-		name:      "Bioluminescent Abyssal Trench Grotto 🌌",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_trench_grotto.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyPortClockworkDock,
-		name:      "Steampunk Sky Port Clockwork Dock ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_port_clockwork_dock.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonSunsetExpressway,
-		name:      "8-Bit Retro Synthwave Sunset Expressway 🌅",
-		gifPath:   "assets/animations/synthwave_grid_neon_sunset_expressway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineRockGarden,
-		name:      "Zen Moonlit Bamboo Shrine Rock Garden 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_rock_garden.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacAetherMatrix,
-		name:      "Astral Celestial Zodiac Aether Matrix 🔮",
-		gifPath:   "assets/animations/astral_zodiac_aether_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixPortal,
-		name:      "Neon Cyberpunk Matrix Portal 🏙️",
-		gifPath:   "assets/animations/cyber_neon_matrix_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalDeepTrench,
-		name:      "Bioluminescent Crystal Deep Trench 🌊",
-		gifPath:   "assets/animations/biolum_crystal_deep_trench.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkFortress,
-		name:      "Steampunk Sky Port Clockwork Fortress ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_fortress.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonExpress,
-		name:      "Synthwave Grid Neon Cyber Express 🌴",
-		gifPath:   "assets/animations/synthwave_grid_neon_express.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonValleyStream,
-		name:      "Zen Moonlit Bamboo Valley Stream 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_valley_stream.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosNexus,
-		name:      "Astral Celestial Zodiac Chronos Nexus 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_nexus.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixTowerLounge,
-		name:      "Neon Cyberpunk Matrix Tower Lounge 🏙️",
-		gifPath:   "assets/animations/cyber_neon_matrix_tower_lounge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideGrotto,
-		name:      "Bioluminescent Crystal Abyssal Tide Grotto 🌊",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_grotto.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkHarbor,
-		name:      "Steampunk Sky Port Clockwork Harbor ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_harbor.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalHighway,
-		name:      "Synthwave Grid Neon Coastal Highway 🌴",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_highway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonValleyWaterfall,
-		name:      "Zen Moonlit Bamboo Valley Waterfall 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_valley_waterfall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosVaultMatrix,
-		name:      "Astral Celestial Zodiac Chronos Vault Matrix 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_vault_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixNexusDeck,
-		name:      "Neon Cyberpunk Matrix Nexus Deck 🏙️",
-		gifPath:   "assets/animations/cyber_neon_matrix_nexus_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalReefVault,
-		name:      "Bioluminescent Crystal Abyssal Reef Vault 🌊",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_reef_vault.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkSkyport,
-		name:      "Steampunk Sky Port Clockwork Skyport ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_skyport.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalExpressway,
-		name:      "Synthwave Grid Neon Coastal Expressway 🌴",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_expressway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineStream,
-		name:      "Zen Moonlit Bamboo Shrine Stream 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_stream.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherMatrix,
-		name:      "Astral Celestial Zodiac Chronos Aether Matrix 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixAetherDeck,
-		name:      "Neon Cyberpunk Matrix Aether Deck 🏙️",
-		gifPath:   "assets/animations/cyber_neon_matrix_aether_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideVault,
-		name:      "Bioluminescent Crystal Abyssal Tide Vault 🌊",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_vault.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelDock,
-		name:      "Steampunk Sky Port Citadel Dock ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_dock.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalExpress,
-		name:      "Synthwave Grid Neon Coastal Express 🌴",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_express.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineCascade,
-		name:      "Zen Moonlit Bamboo Shrine Cascade 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_cascade.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherVault,
-		name:      "Astral Celestial Zodiac Chronos Aether Vault 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_vault.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixSanctuaryDeck,
-		name:      "Neon Cyberpunk Matrix Sanctuary Deck 🏙️",
-		gifPath:   "assets/animations/cyber_neon_matrix_sanctuary_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideNexus,
-		name:      "Bioluminescent Crystal Abyssal Tide Nexus 🌊",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_nexus.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelSkyport,
-		name:      "Steampunk Sky Port Citadel Skyport ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_skyport.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalHighwayExpress,
-		name:      "Synthwave Grid Neon Coastal Highway Express 🌴",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_highway_express.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineCascadeFall,
-		name:      "Zen Moonlit Bamboo Shrine Cascade Fall 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_cascade_fall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherVaultMatrix,
-		name:      "Astral Celestial Zodiac Chronos Aether Vault Matrix 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_vault_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixOrbitDeck,
-		name:      "Neon Cyberpunk Matrix Orbit Deck 🏙️",
-		gifPath:   "assets/animations/cyber_neon_matrix_orbit_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideSanctuary,
-		name:      "Bioluminescent Crystal Abyssal Tide Sanctuary 🌊",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_sanctuary.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelHaven,
-		name:      "Steampunk Sky Port Citadel Haven ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_haven.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalBoulevard,
-		name:      "Synthwave Grid Neon Coastal Boulevard 🌴",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_boulevard.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyWaterfall,
-		name:      "Zen Moonlit Bamboo Shrine Valley Waterfall 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_waterfall.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortal,
-		name:      "Astral Celestial Zodiac Chronos Aether Portal 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixSkyDeck,
-		name:      "Neon Cyberpunk Matrix Sky Deck 🏙️",
-		gifPath:   "assets/animations/cyber_neon_matrix_sky_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTidePortal,
-		name:      "Bioluminescent Crystal Abyssal Tide Portal 🌊",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_portal.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelPlaza,
-		name:      "Steampunk Sky Port Citadel Plaza ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_plaza.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalAvenue,
-		name:      "Synthwave Grid Neon Coastal Avenue 🌴",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_avenue.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyStream,
-		name:      "Zen Moonlit Bamboo Shrine Valley Stream 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_stream.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherNexus,
-		name:      "Astral Celestial Zodiac Chronos Aether Nexus 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_nexus.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixStarlightDeck,
-		name:      "Cyberpunk Neon Matrix Starlight Deck 🌃",
-		gifPath:   "assets/animations/cyber_neon_matrix_starlight_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideCitadel,
-		name:      "Bioluminescent Abyssal Tide Citadel 🪼",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_citadel.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelObservatory,
-		name:      "Steampunk Sky Port Citadel Observatory ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_observatory.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalExpressDrive,
-		name:      "Synthwave Grid Neon Coastal Drive 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_express_drive.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyCascade,
-		name:      "Zen Moonlit Bamboo Shrine Valley Cascade 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_cascade.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalMatrix,
-		name:      "Astral Celestial Zodiac Chronos Aether Portal 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_matrix.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixStellarDeck,
-		name:      "Cyberpunk Neon Matrix Stellar Deck 🚀",
-		gifPath:   "assets/animations/cyber_neon_matrix_stellar_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideHaven,
-		name:      "Bioluminescent Abyssal Tide Haven 🐚",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_haven.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelWorkshop,
-		name:      "Steampunk Sky Port Citadel Workshop ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_workshop.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalCruiser,
-		name:      "Synthwave Grid Neon Coastal Cruiser 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_cruiser.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyPool,
-		name:      "Zen Moonlit Bamboo Shrine Valley Pool 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_pool.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalNexus,
-		name:      "Astral Celestial Zodiac Chronos Aether Nexus 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_nexus.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixGalaxyDeck,
-		name:      "Neon Cyberpunk Matrix Galaxy Deck 🌌",
-		gifPath:   "assets/animations/cyber_neon_matrix_galaxy_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideSanctum,
-		name:      "Bioluminescent Abyssal Tide Sanctum 💎",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_sanctum.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelAirport,
-		name:      "Steampunk Sky Port Citadel Airport ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_airport.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalRacer,
-		name:      "Synthwave Grid Neon Coastal Racer 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_racer.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyFountain,
-		name:      "Zen Moonlit Bamboo Shrine Valley Fountain 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_fountain.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalSanctum,
-		name:      "Astral Celestial Zodiac Chronos Aether Sanctum 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_sanctum.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixCosmosDeck,
-		name:      "Neon Cyberpunk Matrix Cosmos Deck 🌌",
-		gifPath:   "assets/animations/cyber_neon_matrix_cosmos_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideTemple,
-		name:      "Bioluminescent Abyssal Tide Temple 🛕",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_temple.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelStation,
-		name:      "Steampunk Sky Port Citadel Station ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_station.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalFlier,
-		name:      "Synthwave Grid Neon Coastal Flier 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_flier.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyGarden,
-		name:      "Zen Moonlit Bamboo Shrine Valley Garden 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_garden.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalRealm,
-		name:      "Astral Celestial Zodiac Chronos Aether Realm 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_realm.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixHorizonDeck,
-		name:      "Neon Cyberpunk Matrix Horizon Deck 🌃",
-		gifPath:   "assets/animations/cyber_neon_matrix_horizon_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideShrine,
-		name:      "Bioluminescent Abyssal Tide Shrine ⛩️",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_shrine.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelDeck,
-		name:      "Steampunk Sky Port Citadel Deck ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalGlide,
-		name:      "Synthwave Grid Neon Coastal Glide 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_glide.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleySanctuary,
-		name:      "Zen Moonlit Bamboo Shrine Valley Sanctuary 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_sanctuary.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalHaven,
-		name:      "Astral Celestial Zodiac Chronos Aether Haven 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_haven.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixZenithDeck,
-		name:      "Neon Cyberpunk Matrix Zenith Deck 🌃",
-		gifPath:   "assets/animations/cyber_neon_matrix_zenith_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideCanyon,
-		name:      "Bioluminescent Abyssal Tide Canyon 🪸",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_canyon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelBastion,
-		name:      "Steampunk Sky Clockwork Citadel Bastion ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_bastion.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalSprint,
-		name:      "Synthwave Grid Neon Coastal Sprint 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_sprint.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyMeadow,
-		name:      "Zen Moonlit Bamboo Shrine Valley Meadow 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_meadow.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalCelestial,
-		name:      "Astral Celestial Zodiac Chronos Aether Portal Celestial 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_celestial.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixApexDeck,
-		name:      "Neon Cyberpunk Matrix Apex Deck 🌃",
-		gifPath:   "assets/animations/cyber_neon_matrix_apex_deck.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideAbyss,
-		name:      "Bioluminescent Abyssal Tide Abyss 🪸",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_abyss.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelSpire,
-		name:      "Steampunk Sky Clockwork Citadel Spire ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_spire.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalPulse,
-		name:      "Synthwave Grid Neon Coastal Pulse 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_pulse.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyGrove,
-		name:      "Zen Moonlit Bamboo Shrine Valley Grove 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_grove.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalApex,
-		name:      "Astral Celestial Zodiac Chronos Aether Portal Apex 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_apex.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixZenithHorizon,
-		name:      "Neon Cyberpunk Matrix Zenith Horizon 🌃",
-		gifPath:   "assets/animations/cyber_neon_matrix_zenith_horizon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideDepths,
-		name:      "Bioluminescent Abyssal Tide Depths 🪸",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_depths.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelTower,
-		name:      "Steampunk Sky Clockwork Citadel Tower ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_tower.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalDrift,
-		name:      "Synthwave Grid Neon Coastal Drift 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_drift.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleySanctum,
-		name:      "Zen Moonlit Bamboo Shrine Valley Sanctum 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_sanctum.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalZenith,
-		name:      "Astral Celestial Zodiac Chronos Aether Portal Zenith 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_zenith.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberNeonMatrixStellarHorizon,
-		name:      "Neon Cyberpunk Matrix Stellar Horizon 🌃",
-		gifPath:   "assets/animations/cyber_neon_matrix_stellar_horizon.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBiolumCrystalAbyssalTideChasm,
-		name:      "Bioluminescent Abyssal Tide Chasm 🪸",
-		gifPath:   "assets/animations/biolum_crystal_abyssal_tide_chasm.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSteampunkSkyClockworkCitadelBridge,
-		name:      "Steampunk Sky Clockwork Citadel Bridge ⚙️",
-		gifPath:   "assets/animations/steampunk_sky_clockwork_citadel_bridge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSynthwaveGridNeonCoastalSurge,
-		name:      "Synthwave Grid Neon Coastal Surge 🏎️",
-		gifPath:   "assets/animations/synthwave_grid_neon_coastal_surge.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBambooMoonShrineValleyHaven,
-		name:      "Zen Moonlit Bamboo Shrine Valley Haven 🎋",
-		gifPath:   "assets/animations/zen_bamboo_moon_shrine_valley_haven.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAstralZodiacChronosAetherPortalStellar,
-		name:      "Astral Celestial Zodiac Chronos Aether Portal Stellar 🔮",
-		gifPath:   "assets/animations/astral_zodiac_chronos_aether_portal_stellar.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
 }
 
 // ---------------------------------------------------------
@@ -2118,16 +114,24 @@ type AnimatedGifScene struct {
 	name      string
 	gifPath   string
 	winBounds Rect
+	// showBuddy/buddyX/buddyY are read in RenderForeground but set true by none of
+	// the GIF scene literals, so no GIF scene contains the companion character at
+	// all. That is a product gap, not dead code -- a cozy scene with nobody in it is
+	// a large part of "not quite what i want".
+	// TODO(phase-8): decide whether the companion belongs in GIF scenes, and where.
 	showBuddy bool
 	buddyX    int
 	buddyY    int
 }
 
-func (s *AnimatedGifScene) ID() SceneType       { return s.id }
-func (s *AnimatedGifScene) Name() string     { return s.name }
+func (s *AnimatedGifScene) ID() SceneType      { return s.id }
+func (s *AnimatedGifScene) Name() string       { return s.name }
 func (s *AnimatedGifScene) WindowBounds() Rect { return s.winBounds }
 
-func (s *AnimatedGifScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *AnimatedGifScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	anim, err := LoadAnimatedGif(s.gifPath, c.Width, c.Height)
 	if err == nil && anim != nil {
 		anim.DrawFrame(c, frameCount)
@@ -2153,11 +157,14 @@ func (s *AnimatedGifScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type CityCafeScene struct{}
 
-func (s *CityCafeScene) ID() SceneType       { return SceneRainyCity }
-func (s *CityCafeScene) Name() string     { return "Rainy City Lofi Cafe 🏙️" }
+func (s *CityCafeScene) ID() SceneType      { return SceneRainyCity }
+func (s *CityCafeScene) Name() string       { return "Rainy City Lofi Cafe 🏙️" }
 func (s *CityCafeScene) WindowBounds() Rect { return Rect{X: 8, Y: 4, W: 58, H: 30} }
 
-func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2185,7 +192,7 @@ func (s *CityCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, fram
 	for b := 0; b < 8; b++ {
 		bx := wx + b*7 + 1
 		bw := 6
-		bh := 12 + ((b*13+5)%15)
+		bh := 12 + ((b*13 + 5) % 15)
 		c.FillRect(bx, wy+wh-bh, bw, bh, bldgColors[b%3])
 
 		// Warm illuminated apartment windows
@@ -2280,11 +287,14 @@ func (s *CityCafeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool)
 // ---------------------------------------------------------
 type ForestCabinScene struct{}
 
-func (s *ForestCabinScene) ID() SceneType       { return SceneForestCabin }
-func (s *ForestCabinScene) Name() string     { return "Forest Sanctuary Cabin 🌲" }
+func (s *ForestCabinScene) ID() SceneType      { return SceneForestCabin }
+func (s *ForestCabinScene) Name() string       { return "Forest Sanctuary Cabin 🌲" }
 func (s *ForestCabinScene) WindowBounds() Rect { return Rect{X: 12, Y: 4, W: 50, H: 28} }
 
-func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2312,8 +322,8 @@ func (s *ForestCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 			treeCol = hex("#10281b") // distant dark green
 		}
 		for i := 0; i < 7; i++ {
-			tx := wx + i*8 + (layer*4)
-			th := 14 + ((i*7+layer*5)%11)
+			tx := wx + i*8 + (layer * 4)
+			th := 14 + ((i*7 + layer*5) % 11)
 			// Trunk
 			c.FillRect(tx+2, wy+wh-th, 2, th, ColorWoodDark)
 			// Layered needle tiers
@@ -2395,11 +405,14 @@ func (s *ForestCabinScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type ClassicCottageScene struct{}
 
-func (s *ClassicCottageScene) ID() SceneType       { return SceneCottageClassic }
-func (s *ClassicCottageScene) Name() string     { return "Classic Cozy Cottage 🏡" }
+func (s *ClassicCottageScene) ID() SceneType      { return SceneCottageClassic }
+func (s *ClassicCottageScene) Name() string       { return "Classic Cozy Cottage 🏡" }
 func (s *ClassicCottageScene) WindowBounds() Rect { return Rect{X: 18, Y: 4, W: 34, H: 26} }
 
-func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ClassicCottageScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2523,11 +536,14 @@ func (s *ClassicCottageScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type ObservatoryScene struct{}
 
-func (s *ObservatoryScene) ID() SceneType       { return SceneObservatory }
-func (s *ObservatoryScene) Name() string     { return "Celestial Observatory 🌌" }
+func (s *ObservatoryScene) ID() SceneType      { return SceneObservatory }
+func (s *ObservatoryScene) Name() string       { return "Celestial Observatory 🌌" }
 func (s *ObservatoryScene) WindowBounds() Rect { return Rect{X: 10, Y: 3, W: 54, H: 29} }
 
-func (s *ObservatoryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ObservatoryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2579,9 +595,9 @@ func (s *ObservatoryScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 
 	// Large Brass Telescope on heavy wooden tripod facing skylight
 	telX, telY := 46, 16
-	c.FillRect(telX, telY, 16, 4, ColorLampBrass)        // brass tube
-	c.FillRect(telX+14, telY-1, 4, 6, ColorLampBrass)    // objective lens
-	c.FillRect(telX-2, telY+1, 3, 2, hex("#212529"))     // eyepiece
+	c.FillRect(telX, telY, 16, 4, ColorLampBrass)     // brass tube
+	c.FillRect(telX+14, telY-1, 4, 6, ColorLampBrass) // objective lens
+	c.FillRect(telX-2, telY+1, 3, 2, hex("#212529"))  // eyepiece
 	// Tripod legs
 	c.FillRect(telX+6, telY+4, 2, 18, ColorWoodDark)
 	c.FillRect(telX+2, telY+4, 2, 18, ColorWoodDark)
@@ -2637,7 +653,7 @@ func renderBookshelfHelper(c *Canvas, bx, by, bw, bh int) {
 		// Stacked and standing books on each shelf
 		for b := 0; b < 4; b++ {
 			bX := bx + 2 + b*3
-			bH := 4 + ((b*3+s*5)%4)
+			bH := 4 + ((b*3 + s*5) % 4)
 			bCol := bookColors[(b+s)%len(bookColors)]
 			c.FillRect(bX, sy-bH, 2, bH, bCol)
 		}
@@ -2848,11 +864,14 @@ func renderCatHelper(c *Canvas, cx, cy int, breed CatBreed, frameCount uint64) {
 // ---------------------------------------------------------
 type ZenTeahouseScene struct{}
 
-func (s *ZenTeahouseScene) ID() SceneType       { return SceneZenTeahouse }
-func (s *ZenTeahouseScene) Name() string     { return "Zen Engawa Tea Sanctuary 🍵" }
+func (s *ZenTeahouseScene) ID() SceneType      { return SceneZenTeahouse }
+func (s *ZenTeahouseScene) Name() string       { return "Zen Engawa Tea Sanctuary 🍵" }
 func (s *ZenTeahouseScene) WindowBounds() Rect { return Rect{X: 12, Y: 4, W: 50, H: 28} }
 
-func (s *ZenTeahouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ZenTeahouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -2935,7 +954,7 @@ func (s *ZenTeahouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 	// Bamboo Grove stalks on left side of garden
 	for b := 0; b < 3; b++ {
 		bx := wx + 2 + b*3
-		sway := int(math.Sin(float64(frameCount)*0.05 + float64(b))*0.8)
+		sway := int(math.Sin(float64(frameCount)*0.05+float64(b)) * 0.8)
 		c.FillRect(bx+sway, wy+3, 2, wh-6, ColorLeafDark)
 		for ny := wy + 6; ny < wy+wh-5; ny += 5 {
 			c.SetPixel(bx+sway, ny, ColorLeafLight)
@@ -2986,7 +1005,7 @@ func (s *ZenTeahouseScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 
 	// Hanging bronze wind chime (Furin) with swaying paper slip
 	furinX := wx + 10
-	furinSway := int(math.Sin(float64(frameCount)*0.08)*1.2)
+	furinSway := int(math.Sin(float64(frameCount)*0.08) * 1.2)
 	c.FillRect(furinX, wy, 1, 2, ColorLampBrass)
 	c.FillRect(furinX-1, wy+2, 3, 2, ColorLampBrass)
 	c.FillRect(furinX+furinSway, wy+4, 1, 4, ColorShojiPaper)
@@ -3042,11 +1061,14 @@ func (s *ZenTeahouseScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type CozyCampfireScene struct{}
 
-func (s *CozyCampfireScene) ID() SceneType       { return SceneCozyCampfire }
-func (s *CozyCampfireScene) Name() string     { return "Starlit Alpine Campfire 🏕️" }
+func (s *CozyCampfireScene) ID() SceneType      { return SceneCozyCampfire }
+func (s *CozyCampfireScene) Name() string       { return "Starlit Alpine Campfire 🏕️" }
 func (s *CozyCampfireScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 34} }
 
-func (s *CozyCampfireScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CozyCampfireScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3092,7 +1114,7 @@ func (s *CozyCampfireScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, 
 	// Pine tree shoreline silhouettes
 	for i := 0; i < 9; i++ {
 		px := wx + i*7 + 1
-		ph := 8 + ((i*11)%6)
+		ph := 8 + ((i * 11) % 6)
 		c.FillRect(px+1, wy+wh-10-ph, 2, ph, ColorPineSilhouette)
 		for t := 0; t < 3; t++ {
 			c.FillRect(px+2-t, wy+wh-10-ph+t*2, 1+t*2, 2, ColorPineSilhouette)
@@ -3218,11 +1240,14 @@ func (s *CozyCampfireScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning b
 // ---------------------------------------------------------
 type CozyAtticScene struct{}
 
-func (s *CozyAtticScene) ID() SceneType       { return SceneCozyAttic }
-func (s *CozyAtticScene) Name() string     { return "Sunlit Attic Artist Atelier 🎨" }
+func (s *CozyAtticScene) ID() SceneType      { return SceneCozyAttic }
+func (s *CozyAtticScene) Name() string       { return "Sunlit Attic Artist Atelier 🎨" }
 func (s *CozyAtticScene) WindowBounds() Rect { return Rect{X: 18, Y: 4, W: 36, H: 24} }
 
-func (s *CozyAtticScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CozyAtticScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3339,11 +1364,14 @@ func (s *CozyAtticScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool
 // ---------------------------------------------------------
 type WinterCabinScene struct{}
 
-func (s *WinterCabinScene) ID() SceneType       { return ScenePixelWinterCabin }
-func (s *WinterCabinScene) Name() string     { return "Winter Snowfall Hearth Cabin ❄️" }
+func (s *WinterCabinScene) ID() SceneType      { return ScenePixelWinterCabin }
+func (s *WinterCabinScene) Name() string       { return "Winter Snowfall Hearth Cabin ❄️" }
 func (s *WinterCabinScene) WindowBounds() Rect { return Rect{X: 16, Y: 4, W: 34, H: 26} }
 
-func (s *WinterCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *WinterCabinScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3448,11 +1476,14 @@ func (s *WinterCabinScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type CozyGreenhouseScene struct{}
 
-func (s *CozyGreenhouseScene) ID() SceneType       { return SceneCozyGreenhouse }
-func (s *CozyGreenhouseScene) Name() string     { return "Glasshouse Solarium Sanctuary 🌿" }
+func (s *CozyGreenhouseScene) ID() SceneType      { return SceneCozyGreenhouse }
+func (s *CozyGreenhouseScene) Name() string       { return "Glasshouse Solarium Sanctuary 🌿" }
 func (s *CozyGreenhouseScene) WindowBounds() Rect { return Rect{X: 6, Y: 2, W: 62, H: 32} }
 
-func (s *CozyGreenhouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CozyGreenhouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3611,11 +1642,14 @@ func (s *CozyGreenhouseScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type MidnightLibraryScene struct{}
 
-func (s *MidnightLibraryScene) ID() SceneType       { return SceneCozyLibrary }
-func (s *MidnightLibraryScene) Name() string     { return "Midnight Stained Glass Library 📚" }
+func (s *MidnightLibraryScene) ID() SceneType      { return SceneCozyLibrary }
+func (s *MidnightLibraryScene) Name() string       { return "Midnight Stained Glass Library 📚" }
 func (s *MidnightLibraryScene) WindowBounds() Rect { return Rect{X: 20, Y: 3, W: 34, H: 26} }
 
-func (s *MidnightLibraryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *MidnightLibraryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3703,7 +1737,7 @@ func (s *MidnightLibraryScene) RenderForeground(c *Canvas, frameCount uint64, bu
 		c.FillRect(57, shelfY+8, 15, 2, ColorWoodMedium)
 		for b := 0; b < 5; b++ {
 			bx := 58 + b*3
-			bh := 5 + ((b*2)%4)
+			bh := 5 + ((b * 2) % 4)
 			col := bookCols[(b+tier*2+2)%len(bookCols)]
 			c.FillRect(bx, shelfY+8-bh, 2, bh, col)
 			c.SetPixel(bx+1, shelfY+8-bh+2, ColorGoldFoilSpine)
@@ -3774,11 +1808,14 @@ func (s *MidnightLibraryScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 // ---------------------------------------------------------
 type LighthouseStudyScene struct{}
 
-func (s *LighthouseStudyScene) ID() SceneType       { return SceneLighthouseCliff }
-func (s *LighthouseStudyScene) Name() string     { return "Coastal Ocean Lighthouse Study 🌊" }
+func (s *LighthouseStudyScene) ID() SceneType      { return SceneLighthouseCliff }
+func (s *LighthouseStudyScene) Name() string       { return "Coastal Ocean Lighthouse Study 🌊" }
 func (s *LighthouseStudyScene) WindowBounds() Rect { return Rect{X: 8, Y: 3, W: 58, H: 28} }
 
-func (s *LighthouseStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *LighthouseStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -3815,7 +1852,7 @@ func (s *LighthouseStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning boo
 	for w := 0; w < 4; w++ {
 		waveY := oceanY + 2 + w*3
 		for x := wx; x < wx+ww; x++ {
-			waveOffset := int(math.Sin(float64(x)*0.2 + float64(frameCount)*0.08 + float64(w)*1.5)*1.2)
+			waveOffset := int(math.Sin(float64(x)*0.2+float64(frameCount)*0.08+float64(w)*1.5) * 1.2)
 			py := waveY + waveOffset
 			if py >= oceanY && py < wy+wh {
 				if (x+int(frameCount/4))%6 == 0 {
@@ -3922,11 +1959,14 @@ func (s *LighthouseStudyScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 // ---------------------------------------------------------
 type PixelBakeryScene struct{}
 
-func (s *PixelBakeryScene) ID() SceneType       { return ScenePixelBakery }
-func (s *PixelBakeryScene) Name() string     { return "Hearthside Autumn Village Bakery 🥐" }
+func (s *PixelBakeryScene) ID() SceneType      { return ScenePixelBakery }
+func (s *PixelBakeryScene) Name() string       { return "Hearthside Autumn Village Bakery 🥐" }
 func (s *PixelBakeryScene) WindowBounds() Rect { return Rect{X: 16, Y: 4, W: 36, H: 24} }
 
-func (s *PixelBakeryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *PixelBakeryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4055,11 +2095,14 @@ func (s *PixelBakeryScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type RetroLofiTrainScene struct{}
 
-func (s *RetroLofiTrainScene) ID() SceneType       { return SceneRetroLofiTrain }
-func (s *RetroLofiTrainScene) Name() string     { return "Vintage Lofi Train Carriage 🚂" }
+func (s *RetroLofiTrainScene) ID() SceneType      { return SceneRetroLofiTrain }
+func (s *RetroLofiTrainScene) Name() string       { return "Vintage Lofi Train Carriage 🚂" }
 func (s *RetroLofiTrainScene) WindowBounds() Rect { return Rect{X: 12, Y: 4, W: 50, H: 26} }
 
-func (s *RetroLofiTrainScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *RetroLofiTrainScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4232,11 +2275,14 @@ func (s *RetroLofiTrainScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type ZenOnsenScene struct{}
 
-func (s *ZenOnsenScene) ID() SceneType       { return SceneZenWaterfallShrine }
-func (s *ZenOnsenScene) Name() string     { return "Moonlit Mountain Hot Spring Onsen ♨️" }
+func (s *ZenOnsenScene) ID() SceneType      { return SceneZenWaterfallShrine }
+func (s *ZenOnsenScene) Name() string       { return "Moonlit Mountain Hot Spring Onsen ♨️" }
 func (s *ZenOnsenScene) WindowBounds() Rect { return Rect{X: 6, Y: 2, W: 62, H: 30} }
 
-func (s *ZenOnsenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ZenOnsenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4282,7 +2328,7 @@ func (s *ZenOnsenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, fram
 	// Layered Pine & Bamboo silhouettes in mountain breeze
 	for b := 0; b < 6; b++ {
 		bx := wx + b*10 + 2
-		bSway := int(math.Sin(float64(frameCount)*0.05+float64(b))*1.2)
+		bSway := int(math.Sin(float64(frameCount)*0.05+float64(b)) * 1.2)
 		c.FillCircle(bx+bSway, wy+wh/2+2, 5, hex("#0f2411"))
 	}
 }
@@ -4303,7 +2349,7 @@ func (s *ZenOnsenScene) RenderForeground(c *Canvas, frameCount uint64, buddy *Fo
 	for w := 0; w < 3; w++ {
 		waveY := 30 + w*5
 		for x := 10; x < 42; x++ {
-			wOffset := int(math.Sin(float64(x)*0.25+float64(frameCount)*0.08+float64(w))*1.0)
+			wOffset := int(math.Sin(float64(x)*0.25+float64(frameCount)*0.08+float64(w)) * 1.0)
 			py := waveY + wOffset
 			if py >= 28 && py < 46 {
 				c.SetPixel(x, py, ColorOnsenWaterMid)
@@ -4385,11 +2431,14 @@ func (s *ZenOnsenScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bool)
 // ---------------------------------------------------------
 type VinylLoungeScene struct{}
 
-func (s *VinylLoungeScene) ID() SceneType       { return SceneNeonBistro }
-func (s *VinylLoungeScene) Name() string     { return "Rainy Midnight Vinyl Lounge 📻" }
+func (s *VinylLoungeScene) ID() SceneType      { return SceneNeonBistro }
+func (s *VinylLoungeScene) Name() string       { return "Rainy Midnight Vinyl Lounge 📻" }
 func (s *VinylLoungeScene) WindowBounds() Rect { return Rect{X: 18, Y: 4, W: 36, H: 24} }
 
-func (s *VinylLoungeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *VinylLoungeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4497,7 +2546,7 @@ func (s *VinylLoungeScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 
 	// 4. Acoustic Guitar leaning against wall on far right (Columns 54 to 62)
 	c.FillEllipse(58, 28, 3, 5, ColorGuitarWood)
-	c.FillCircle(58, 28, 1, PicoBlack) // soundhole
+	c.FillCircle(58, 28, 1, PicoBlack)       // soundhole
 	c.FillRect(57, 16, 2, 10, ColorWoodDark) // neck
 	c.FillRect(56, 14, 4, 3, ColorWoodDark)  // headstock
 
@@ -4537,11 +2586,14 @@ func (s *VinylLoungeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type SunkenHearthScene struct{}
 
-func (s *SunkenHearthScene) ID() SceneType       { return SceneStarlightCamp }
-func (s *SunkenHearthScene) Name() string     { return "Sunken Hearth & Blanket Fort 🏕️" }
+func (s *SunkenHearthScene) ID() SceneType      { return SceneStarlightCamp }
+func (s *SunkenHearthScene) Name() string       { return "Sunken Hearth & Blanket Fort 🏕️" }
 func (s *SunkenHearthScene) WindowBounds() Rect { return Rect{X: 14, Y: 3, W: 46, H: 23} }
 
-func (s *SunkenHearthScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *SunkenHearthScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4687,11 +2739,14 @@ func (s *SunkenHearthScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning b
 // ---------------------------------------------------------
 type MidnightRamenBarScene struct{}
 
-func (s *MidnightRamenBarScene) ID() SceneType       { return SceneRamenShop }
-func (s *MidnightRamenBarScene) Name() string     { return "Midnight Tokyo Ramen Bar 🍜" }
+func (s *MidnightRamenBarScene) ID() SceneType      { return SceneRamenShop }
+func (s *MidnightRamenBarScene) Name() string       { return "Midnight Tokyo Ramen Bar 🍜" }
 func (s *MidnightRamenBarScene) WindowBounds() Rect { return Rect{X: 8, Y: 3, W: 58, H: 27} }
 
-func (s *MidnightRamenBarScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *MidnightRamenBarScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4800,7 +2855,7 @@ func (s *MidnightRamenBarScene) RenderForeground(c *Canvas, frameCount uint64, b
 	potY := 26
 	c.FillRect(potX, potY, 10, 7, ColorStoveCastIron)
 	c.FillRect(potX+1, potY+1, 8, 5, ColorRamenBroth)
-	c.SetPixel(potX-1, potY+2, ColorLampBrass) // left handle
+	c.SetPixel(potX-1, potY+2, ColorLampBrass)  // left handle
 	c.SetPixel(potX+10, potY+2, ColorLampBrass) // right handle
 
 	// Animated Rising Steam Trails from Boiling Stock Pot
@@ -4826,9 +2881,9 @@ func (s *MidnightRamenBarScene) RenderForeground(c *Canvas, frameCount uint64, b
 	c.DrawLine(bowlX+1, bowlY+4, bowlX+8, bowlY+4, ColorWoodHighlight)
 
 	// Condiment Ceramic Shaker & Soy Sauce Cruet
-	c.FillRect(44, 28, 2, 4, ColorPotClay)       // Shichimi shaker
-	c.FillRect(48, 27, 3, 5, ColorNorenIndigo)   // Soy sauce cruet
-	c.SetPixel(49, 26, ColorMugCeramic)          // cork stopper
+	c.FillRect(44, 28, 2, 4, ColorPotClay)     // Shichimi shaker
+	c.FillRect(48, 27, 3, 5, ColorNorenIndigo) // Soy sauce cruet
+	c.SetPixel(49, 26, ColorMugCeramic)        // cork stopper
 
 	// FocusBuddy seated at ramen counter
 	if buddy != nil {
@@ -4864,11 +2919,14 @@ func (s *MidnightRamenBarScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightni
 // ---------------------------------------------------------
 type BotanicalApothecaryScene struct{}
 
-func (s *BotanicalApothecaryScene) ID() SceneType       { return SceneMagicSanctuary }
-func (s *BotanicalApothecaryScene) Name() string     { return "Botanical Herbal Apothecary 🌿🔮" }
+func (s *BotanicalApothecaryScene) ID() SceneType      { return SceneMagicSanctuary }
+func (s *BotanicalApothecaryScene) Name() string       { return "Botanical Herbal Apothecary 🌿🔮" }
 func (s *BotanicalApothecaryScene) WindowBounds() Rect { return Rect{X: 16, Y: 3, W: 42, H: 24} }
 
-func (s *BotanicalApothecaryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *BotanicalApothecaryScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -4937,7 +2995,7 @@ func (s *BotanicalApothecaryScene) RenderForeground(c *Canvas, frameCount uint64
 	}
 	for _, b := range herbBundles {
 		c.DrawLine(b.x, 3, b.x, 7, ColorWoodHighlight) // twine string
-		c.FillEllipse(b.x, 9, 2, 3, b.col)              // herb bundle
+		c.FillEllipse(b.x, 9, 2, 3, b.col)             // herb bundle
 	}
 
 	// Arched Stone Window Frame
@@ -4997,10 +3055,10 @@ func (s *BotanicalApothecaryScene) RenderForeground(c *Canvas, frameCount uint64
 	c.FillRect(20, 28, 9, 4, ColorNotebookPaper)
 	c.DrawRectOutline(20, 28, 9, 4, ColorGrimoireLeather)
 	c.FillRect(24, 28, 1, 4, ColorGrimoireLeather) // book spine
-	c.SetPixel(22, 29, ColorHerbSage)             // pressed flower illustration
-	c.SetPixel(26, 29, ColorWoodDark)             // ink script
+	c.SetPixel(22, 29, ColorHerbSage)              // pressed flower illustration
+	c.SetPixel(26, 29, ColorWoodDark)              // ink script
 	c.SetPixel(26, 30, ColorWoodDark)
-	c.SetPixel(30, 28, ColorLampBrass)            // brass quill pen
+	c.SetPixel(30, 28, ColorLampBrass) // brass quill pen
 
 	// Mortar and Pestle with Fresh Ground Herbs
 	c.FillRect(34, 29, 3, 2, hex("#adb5bd"))
@@ -5038,11 +3096,14 @@ func (s *BotanicalApothecaryScene) ApplyLighting(c *Canvas, lampOn, fireOn, ligh
 // ---------------------------------------------------------
 type NordicAuroraPierScene struct{}
 
-func (s *NordicAuroraPierScene) ID() SceneType       { return SceneMountainAuroraShack }
-func (s *NordicAuroraPierScene) Name() string     { return "Nordic Fjord Pier & Aurora Sauna 🌌❄️" }
+func (s *NordicAuroraPierScene) ID() SceneType      { return SceneMountainAuroraShack }
+func (s *NordicAuroraPierScene) Name() string       { return "Nordic Fjord Pier & Aurora Sauna 🌌❄️" }
 func (s *NordicAuroraPierScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 34} }
 
-func (s *NordicAuroraPierScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *NordicAuroraPierScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5194,11 +3255,16 @@ func (s *NordicAuroraPierScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightni
 // ---------------------------------------------------------
 type StarlitRooftopStudyScene struct{}
 
-func (s *StarlitRooftopStudyScene) ID() SceneType       { return SceneStarlightTreehouse }
-func (s *StarlitRooftopStudyScene) Name() string     { return "Starlit Urban Rooftop Sanctuary 🌟🏙️" }
+func (s *StarlitRooftopStudyScene) ID() SceneType { return SceneStarlightTreehouse }
+func (s *StarlitRooftopStudyScene) Name() string {
+	return "Starlit Urban Rooftop Sanctuary 🌟🏙️"
+}
 func (s *StarlitRooftopStudyScene) WindowBounds() Rect { return Rect{X: 6, Y: 2, W: 62, H: 28} }
 
-func (s *StarlitRooftopStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *StarlitRooftopStudyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5358,11 +3424,14 @@ func (s *StarlitRooftopStudyScene) ApplyLighting(c *Canvas, lampOn, fireOn, ligh
 // ---------------------------------------------------------
 type AntiqueBookshopScene struct{}
 
-func (s *AntiqueBookshopScene) ID() SceneType       { return SceneCoffeeShop }
-func (s *AntiqueBookshopScene) Name() string     { return "Antique Corner Bookshop & Reading Nook 📚☕" }
+func (s *AntiqueBookshopScene) ID() SceneType      { return SceneCoffeeShop }
+func (s *AntiqueBookshopScene) Name() string       { return "Antique Corner Bookshop & Reading Nook 📚☕" }
 func (s *AntiqueBookshopScene) WindowBounds() Rect { return Rect{X: 18, Y: 3, W: 38, H: 26} }
 
-func (s *AntiqueBookshopScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *AntiqueBookshopScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5516,11 +3585,16 @@ func (s *AntiqueBookshopScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 // ---------------------------------------------------------
 type GlasshouseBotanicalScene struct{}
 
-func (s *GlasshouseBotanicalScene) ID() SceneType       { return SceneEnchantedForest }
-func (s *GlasshouseBotanicalScene) Name() string     { return "Misty Botanical Greenhouse & Potting Shed 🌿🪴" }
+func (s *GlasshouseBotanicalScene) ID() SceneType { return SceneEnchantedForest }
+func (s *GlasshouseBotanicalScene) Name() string {
+	return "Misty Botanical Greenhouse & Potting Shed 🌿🪴"
+}
 func (s *GlasshouseBotanicalScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 28} }
 
-func (s *GlasshouseBotanicalScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *GlasshouseBotanicalScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5578,7 +3652,7 @@ func (s *GlasshouseBotanicalScene) RenderForeground(c *Canvas, frameCount uint64
 		c.DrawLine(h.x, 0, h.x, h.y+4, ColorMacrameHanger)
 		c.FillRect(h.x-2, h.y+4, 4, 3, ColorPotClay)
 		// Cascading String-of-Pearls & Boston Fern Leaves swaying
-		sway := int(math.Sin(float64(frameCount)*0.08+float64(h.x))*1.5)
+		sway := int(math.Sin(float64(frameCount)*0.08+float64(h.x)) * 1.5)
 		c.FillCircle(h.x+sway, h.y+3, 3, ColorLeafLight)
 		c.FillCircle(h.x-1+sway, h.y+2, 2, ColorLeafMedium)
 		c.DrawLine(h.x+sway, h.y+6, h.x-1+sway, h.y+12, ColorLeafLight)
@@ -5591,8 +3665,8 @@ func (s *GlasshouseBotanicalScene) RenderForeground(c *Canvas, frameCount uint64
 	benchW := 52
 	c.FillRect(benchX, benchY, benchW, 4, ColorWoodMedium)
 	c.FillRect(benchX, benchY, benchW, 1, ColorWoodHighlight)
-	c.FillRect(benchX+2, benchY+4, 3, 10, ColorWoodDark)  // left leg
-	c.FillRect(benchX+benchW-5, benchY+4, 3, 10, ColorWoodDark) // right leg
+	c.FillRect(benchX+2, benchY+4, 3, 10, ColorWoodDark)          // left leg
+	c.FillRect(benchX+benchW-5, benchY+4, 3, 10, ColorWoodDark)   // right leg
 	c.FillRect(benchX+benchW/2-1, benchY+4, 3, 10, ColorWoodDark) // center leg
 
 	// Terracotta Pots on Potting Bench
@@ -5663,11 +3737,16 @@ func (s *GlasshouseBotanicalScene) ApplyLighting(c *Canvas, lampOn, fireOn, ligh
 // ---------------------------------------------------------
 type RiversideCampScene struct{}
 
-func (s *RiversideCampScene) ID() SceneType       { return SceneRiverBridge }
-func (s *RiversideCampScene) Name() string     { return "Midnight Riverside Camp & Starlit River 🏕️🌌" }
+func (s *RiversideCampScene) ID() SceneType { return SceneRiverBridge }
+func (s *RiversideCampScene) Name() string {
+	return "Midnight Riverside Camp & Starlit River 🏕️🌌"
+}
 func (s *RiversideCampScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 34} }
 
-func (s *RiversideCampScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *RiversideCampScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5765,7 +3844,7 @@ func (s *RiversideCampScene) RenderForeground(c *Canvas, frameCount uint64, budd
 
 	if fireOn {
 		// Multi-tier animated fire physics
-		flicker := int(frameCount%4)
+		flicker := int(frameCount % 4)
 		c.FillEllipse(fireCenterX, fireCenterY-1, 4, 3+flicker, ColorFireRed)
 		c.FillEllipse(fireCenterX, fireCenterY-2, 3, 2+flicker, ColorFireOrange)
 		c.FillEllipse(fireCenterX, fireCenterY-3, 2, 2, ColorFireYellow)
@@ -5827,11 +3906,16 @@ func (s *RiversideCampScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning 
 // ---------------------------------------------------------
 type CoastalBalconyScene struct{}
 
-func (s *CoastalBalconyScene) ID() SceneType       { return SceneOceanWaves }
-func (s *CoastalBalconyScene) Name() string     { return "Seaside Cliffside Balcony & Lighthouse 🌊🏖️" }
+func (s *CoastalBalconyScene) ID() SceneType { return SceneOceanWaves }
+func (s *CoastalBalconyScene) Name() string {
+	return "Seaside Cliffside Balcony & Lighthouse 🌊🏖️"
+}
 func (s *CoastalBalconyScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 32} }
 
-func (s *CoastalBalconyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CoastalBalconyScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -5918,7 +4002,7 @@ func (s *CoastalBalconyScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	c.DrawLine(teleX, teleY+2, teleX, teleY+10, ColorWoodDark)
 
 	// Adirondack Coastal Lounge Chair draped with Striped Knitted Throw (Columns 12 to 26, Rows 24 to 36)
-	c.FillRect(14, 26, 12, 8, hex("#e2e8f0")) // painted white adirondack slats
+	c.FillRect(14, 26, 12, 8, hex("#e2e8f0"))   // painted white adirondack slats
 	c.FillRect(14, 28, 12, 4, ColorBlanketTeal) // throw blanket
 	c.SetPixel(16, 29, ColorPlaidRed)
 	c.SetPixel(20, 29, ColorPlaidRed)
@@ -5948,7 +4032,7 @@ func (s *CoastalBalconyScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	c.FillCircle(8, 20, 2, ColorCoastalLavender)
 
 	// Hanging Bamboo & Seashell Wind Chimes (Top Left, Columns 8 to 14)
-	sway := int(math.Sin(float64(frameCount)*0.09)*1.5)
+	sway := int(math.Sin(float64(frameCount)*0.09) * 1.5)
 	c.DrawLine(10, 0, 10+sway, 6, ColorWoodMedium)
 	c.DrawLine(9+sway, 6, 9+sway, 12, ColorMacrameHanger)
 	c.DrawLine(11+sway, 6, 11+sway, 10, ColorMacrameHanger)
@@ -5980,11 +4064,14 @@ func (s *CoastalBalconyScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type LofiStudyDeskScene struct{}
 
-func (s *LofiStudyDeskScene) ID() SceneType       { return SceneSunsetStation }
-func (s *LofiStudyDeskScene) Name() string     { return "Lofi Study Desk & Rainy Window 🎧🌧️" }
+func (s *LofiStudyDeskScene) ID() SceneType      { return SceneSunsetStation }
+func (s *LofiStudyDeskScene) Name() string       { return "Lofi Study Desk & Rainy Window 🎧🌧️" }
 func (s *LofiStudyDeskScene) WindowBounds() Rect { return Rect{X: 6, Y: 4, W: 38, H: 26} }
 
-func (s *LofiStudyDeskScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *LofiStudyDeskScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6009,7 +4096,7 @@ func (s *LofiStudyDeskScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool,
 	for b := 0; b < 6; b++ {
 		bx := wx + b*6 + 1
 		bw := 5
-		bh := 8 + ((b*11+3)%12)
+		bh := 8 + ((b*11 + 3) % 12)
 		c.FillRect(bx, wy+wh-bh, bw, bh, bldgCols[b%3])
 
 		// Warm illuminated windows
@@ -6157,11 +4244,16 @@ func (s *LofiStudyDeskScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning 
 // ---------------------------------------------------------
 type ZenRainGardenScene struct{}
 
-func (s *ZenRainGardenScene) ID() SceneType       { return SceneBambooGrove }
-func (s *ZenRainGardenScene) Name() string     { return "Zen Rain Garden & Bamboo Water Clacker 🎋🌧️" }
+func (s *ZenRainGardenScene) ID() SceneType { return SceneBambooGrove }
+func (s *ZenRainGardenScene) Name() string {
+	return "Zen Rain Garden & Bamboo Water Clacker 🎋🌧️"
+}
 func (s *ZenRainGardenScene) WindowBounds() Rect { return Rect{X: 8, Y: 3, W: 58, H: 26} }
 
-func (s *ZenRainGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ZenRainGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6184,7 +4276,7 @@ func (s *ZenRainGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool,
 	// Swaying Lush Bamboo Grove in Background Garden
 	for b := 0; b < 10; b++ {
 		bx := wx + b*6 + 2
-		bSway := int(math.Sin(float64(frameCount)*0.06+float64(b))*1.5)
+		bSway := int(math.Sin(float64(frameCount)*0.06+float64(b)) * 1.5)
 		c.DrawLine(bx, wy+wh-2, bx+bSway, wy+2, ColorBambooGreen)
 		c.DrawLine(bx+1, wy+wh-2, bx+1+bSway, wy+2, ColorBambooGreen)
 
@@ -6237,7 +4329,7 @@ func (s *ZenRainGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool,
 	basinY := fountainY + 3
 	c.FillRect(basinX, basinY, 10, 5, ColorTsukubaiBasin)
 	c.FillRect(basinX+2, basinY+1, 6, 2, ColorPondDeep) // water pool
-	c.SetPixel(basinX+4, basinY+1, hex("#38bdf8"))       // water shimmer
+	c.SetPixel(basinX+4, basinY+1, hex("#38bdf8"))      // water shimmer
 
 	// Japanese Stone Toro Garden Lantern (Columns wx+40 to wx+48)
 	lanternX := wx + 42
@@ -6326,11 +4418,14 @@ func (s *ZenRainGardenScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning 
 // ---------------------------------------------------------
 type CozyCatCafeScene struct{}
 
-func (s *CozyCatCafeScene) ID() SceneType       { return SceneWinterCafe }
-func (s *CozyCatCafeScene) Name() string     { return "Cozy Cat Cafe & Espresso Nook 🐈☕" }
+func (s *CozyCatCafeScene) ID() SceneType      { return SceneWinterCafe }
+func (s *CozyCatCafeScene) Name() string       { return "Cozy Cat Cafe & Espresso Nook 🐈☕" }
 func (s *CozyCatCafeScene) WindowBounds() Rect { return Rect{X: 6, Y: 4, W: 30, H: 24} }
 
-func (s *CozyCatCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CozyCatCafeScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6417,7 +4512,7 @@ func (s *CozyCatCafeScene) RenderForeground(c *Canvas, frameCount uint64, buddy 
 	machX := 10
 	machY := 18
 	c.FillRect(machX, machY, 16, 10, ColorEspressoChrome)
-	c.FillRect(machX+2, machY+2, 12, 2, ColorLampBrass) // cup warmer tray
+	c.FillRect(machX+2, machY+2, 12, 2, ColorLampBrass)    // cup warmer tray
 	c.FillRect(machX+3, machY+5, 2, 3, ColorStoveCastIron) // portafilter 1
 	c.FillRect(machX+9, machY+5, 2, 3, ColorStoveCastIron) // portafilter 2
 	c.SetPixel(machX+14, machY+4, PicoRed)                 // power light
@@ -6460,11 +4555,14 @@ func (s *CozyCatCafeScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning bo
 // ---------------------------------------------------------
 type AutumnLakeDockScene struct{}
 
-func (s *AutumnLakeDockScene) ID() SceneType       { return SceneAutumnPark }
-func (s *AutumnLakeDockScene) Name() string     { return "Autumn Lake Dock & Sunrise Mist 🍂🌅" }
+func (s *AutumnLakeDockScene) ID() SceneType      { return SceneAutumnPark }
+func (s *AutumnLakeDockScene) Name() string       { return "Autumn Lake Dock & Sunrise Mist 🍂🌅" }
 func (s *AutumnLakeDockScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 32} }
 
-func (s *AutumnLakeDockScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *AutumnLakeDockScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6546,7 +4644,7 @@ func (s *AutumnLakeDockScene) RenderForeground(c *Canvas, frameCount uint64, bud
 	// Adirondack Wooden Lounge Chair draped with Buffalo Plaid Blanket (Columns 14 to 28, Rows 22 to 34)
 	chairX := 14
 	chairY := 22
-	c.FillRect(chairX, chairY, 14, 10, hex("#f1f5f9")) // white painted slats
+	c.FillRect(chairX, chairY, 14, 10, hex("#f1f5f9"))   // white painted slats
 	c.FillRect(chairX+1, chairY+2, 12, 6, ColorPlaidRed) // red plaid throw
 	c.SetPixel(chairX+3, chairY+3, ColorPlaidNavy)
 	c.SetPixel(chairX+7, chairY+3, ColorPlaidNavy)
@@ -6599,11 +4697,14 @@ func (s *AutumnLakeDockScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type HobbitBurrowScene struct{}
 
-func (s *HobbitBurrowScene) ID() SceneType       { return SceneFairytaleWindmill }
-func (s *HobbitBurrowScene) Name() string     { return "Shire Hill Hobbit Burrow & Hearth 🌿🚪" }
+func (s *HobbitBurrowScene) ID() SceneType      { return SceneFairytaleWindmill }
+func (s *HobbitBurrowScene) Name() string       { return "Shire Hill Hobbit Burrow & Hearth 🌿🚪" }
 func (s *HobbitBurrowScene) WindowBounds() Rect { return Rect{X: 18, Y: 2, W: 38, H: 26} }
 
-func (s *HobbitBurrowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *HobbitBurrowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6704,7 +4805,7 @@ func (s *HobbitBurrowScene) RenderForeground(c *Canvas, frameCount uint64, buddy
 	c.FillRect(60, 8, 3, 4, ColorJamBerry)
 	c.FillRect(64, 8, 3, 4, ColorJamHoney)
 	c.FillRect(68, 8, 3, 4, ColorMatchaGreen)
-	c.FillRect(60, 16, 4, 4, ColorPotClay)    // stoneware crock
+	c.FillRect(60, 16, 4, 4, ColorPotClay) // stoneware crock
 	c.FillRect(66, 16, 3, 4, ColorJamBerry)
 	c.FillRect(60, 24, 4, 4, ColorJamHoney)
 	c.FillRect(66, 24, 4, 4, ColorCopperWaterCan)
@@ -6713,7 +4814,7 @@ func (s *HobbitBurrowScene) RenderForeground(c *Canvas, frameCount uint64, buddy
 	tableX, tableY := 26, 26
 	c.FillRect(tableX, tableY, 22, 10, ColorWoodMedium)
 	c.FillRect(tableX, tableY, 22, 1, ColorWoodHighlight)
-	c.FillRect(tableX+2, tableY+10, 3, 4, ColorWoodDark) // leg
+	c.FillRect(tableX+2, tableY+10, 3, 4, ColorWoodDark)  // leg
 	c.FillRect(tableX+17, tableY+10, 3, 4, ColorWoodDark) // leg
 
 	// On Table: Spiced Seed Cake with sliced crumbs
@@ -6772,11 +4873,16 @@ func (s *HobbitBurrowScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning b
 // ---------------------------------------------------------
 type JapaneseJazzKissaScene struct{}
 
-func (s *JapaneseJazzKissaScene) ID() SceneType       { return SceneCyberBar }
-func (s *JapaneseJazzKissaScene) Name() string     { return "Rainy Japanese Jazz Kissa & Siphon Bar 🎷☕" }
+func (s *JapaneseJazzKissaScene) ID() SceneType { return SceneCyberBar }
+func (s *JapaneseJazzKissaScene) Name() string {
+	return "Rainy Japanese Jazz Kissa & Siphon Bar 🎷☕"
+}
 func (s *JapaneseJazzKissaScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 32, H: 20} }
 
-func (s *JapaneseJazzKissaScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *JapaneseJazzKissaScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -6793,8 +4899,8 @@ func (s *JapaneseJazzKissaScene) RenderSky(c *Canvas, tod TimeOfDay, lightning b
 
 	// Rain streaks running down the window pane
 	for i := 0; i < 14; i++ {
-		rx := wx + ((i * 7 + int(frameCount)) % ww)
-		ry := wy + ((i * 11 + int(frameCount*2)) % wh)
+		rx := wx + ((i*7 + int(frameCount)) % ww)
+		ry := wy + ((i*11 + int(frameCount*2)) % wh)
 		c.SetPixel(rx, ry, ColorRainDrop)
 		if ry+1 < wy+wh {
 			c.SetPixel(rx, ry+1, ColorRainSplash)
@@ -6816,11 +4922,11 @@ func (s *JapaneseJazzKissaScene) RenderForeground(c *Canvas, frameCount uint64, 
 	// Wall Shelves with Classic Jazz Vinyl Sleeves
 	shelfY := 4
 	c.FillRect(38, shelfY+7, 34, 2, ColorWoodMedium)
-	c.FillRect(40, shelfY, 8, 7, ColorJazzVinylBlue)     // Blue album cover
+	c.FillRect(40, shelfY, 8, 7, ColorJazzVinylBlue) // Blue album cover
 	c.FillRect(41, shelfY+1, 6, 5, PicoWhite)
-	c.FillRect(50, shelfY, 8, 7, ColorTrainVelvet)      // Red album cover
+	c.FillRect(50, shelfY, 8, 7, ColorTrainVelvet) // Red album cover
 	c.FillRect(51, shelfY+1, 6, 5, ColorParchmentPage)
-	c.FillRect(60, shelfY, 8, 7, ColorStoveCastIron)    // Black/Gold album cover
+	c.FillRect(60, shelfY, 8, 7, ColorStoveCastIron) // Black/Gold album cover
 	c.FillRect(61, shelfY+1, 6, 5, ColorVinylLabelGold)
 
 	// Polished Dark Walnut Bar Counter (Rows 24 to Height)
@@ -6907,11 +5013,14 @@ func (s *JapaneseJazzKissaScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightn
 // ---------------------------------------------------------
 type StarlitLoftBedScene struct{}
 
-func (s *StarlitLoftBedScene) ID() SceneType       { return SceneCloudTemple }
-func (s *StarlitLoftBedScene) Name() string     { return "Starlit A-Frame Loft Bed & Skylight 🌌🛏️" }
+func (s *StarlitLoftBedScene) ID() SceneType      { return SceneCloudTemple }
+func (s *StarlitLoftBedScene) Name() string       { return "Starlit A-Frame Loft Bed & Skylight 🌌🛏️" }
 func (s *StarlitLoftBedScene) WindowBounds() Rect { return Rect{X: 12, Y: 0, W: 50, H: 22} }
 
-func (s *StarlitLoftBedScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *StarlitLoftBedScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7059,11 +5168,14 @@ func (s *StarlitLoftBedScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type AlchemistTowerScene struct{}
 
-func (s *AlchemistTowerScene) ID() SceneType       { return SceneWizardTower }
-func (s *AlchemistTowerScene) Name() string     { return "Alchemist's Starlit Tower & Astrolabe 🔮✨" }
+func (s *AlchemistTowerScene) ID() SceneType      { return SceneWizardTower }
+func (s *AlchemistTowerScene) Name() string       { return "Alchemist's Starlit Tower & Astrolabe 🔮✨" }
 func (s *AlchemistTowerScene) WindowBounds() Rect { return Rect{X: 18, Y: 2, W: 38, H: 20} }
 
-func (s *AlchemistTowerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *AlchemistTowerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7206,11 +5318,16 @@ func (s *AlchemistTowerScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type MachiyaGardenScene struct{}
 
-func (s *MachiyaGardenScene) ID() SceneType       { return SceneZenBonsai }
-func (s *MachiyaGardenScene) Name() string     { return "Kyoto Machiya Courtyard Garden & Rain Chains 🎋🌧️" }
+func (s *MachiyaGardenScene) ID() SceneType { return SceneZenBonsai }
+func (s *MachiyaGardenScene) Name() string {
+	return "Kyoto Machiya Courtyard Garden & Rain Chains 🎋🌧️"
+}
 func (s *MachiyaGardenScene) WindowBounds() Rect { return Rect{X: 14, Y: 3, W: 46, H: 27} }
 
-func (s *MachiyaGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *MachiyaGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7242,7 +5359,7 @@ func (s *MachiyaGardenScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool,
 	// Slender bamboo stalks rising behind the clay wall
 	for b := 0; b < 7; b++ {
 		bx := wx + 4 + b*6
-		bSway := int(math.Sin(float64(frameCount)*0.07+float64(b))*1.2)
+		bSway := int(math.Sin(float64(frameCount)*0.07+float64(b)) * 1.2)
 		c.DrawLine(bx, wallY, bx+bSway, wy+1, ColorBambooGreen)
 		c.FillCircle(bx+bSway, wy+2, 2, ColorLeafLight)
 	}
@@ -7380,11 +5497,16 @@ func (s *MachiyaGardenScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning 
 // ---------------------------------------------------------
 type CyberLofiDinerScene struct{}
 
-func (s *CyberLofiDinerScene) ID() SceneType       { return SceneCyberDiner }
-func (s *CyberLofiDinerScene) Name() string     { return "Rainy Midnight Cyber Lofi Diner & Neon Booth 🍔☕" }
+func (s *CyberLofiDinerScene) ID() SceneType { return SceneCyberDiner }
+func (s *CyberLofiDinerScene) Name() string {
+	return "Rainy Midnight Cyber Lofi Diner & Neon Booth 🍔☕"
+}
 func (s *CyberLofiDinerScene) WindowBounds() Rect { return Rect{X: 6, Y: 3, W: 44, H: 24} }
 
-func (s *CyberLofiDinerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *CyberLofiDinerScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7479,8 +5601,8 @@ func (s *CyberLofiDinerScene) RenderForeground(c *Canvas, frameCount uint64, bud
 
 	// Polished Formica & Chrome Edged Diner Table (Columns 14 to 48, Rows 26 to 36)
 	tblX, tblY := 14, 26
-	c.FillRect(tblX, tblY, 34, 4, hex("#38bdf8"))        // Teal Formica top
-	c.FillRect(tblX, tblY+4, 34, 2, ColorDinerChromeTrim) // Chrome trim
+	c.FillRect(tblX, tblY, 34, 4, hex("#38bdf8"))            // Teal Formica top
+	c.FillRect(tblX, tblY+4, 34, 2, ColorDinerChromeTrim)    // Chrome trim
 	c.FillRect(tblX+16, tblY+6, 4, 10, ColorDinerChromeTrim) // Center chrome pillar leg
 
 	// Diner Items on Table:
@@ -7572,11 +5694,16 @@ func (s *CyberLofiDinerScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightning
 // ---------------------------------------------------------
 type NordicBayWindowScene struct{}
 
-func (s *NordicBayWindowScene) ID() SceneType       { return SceneCozyIgloo }
-func (s *NordicBayWindowScene) Name() string     { return "Nordic Hygge Bay Window & Snowflake Pines 🌲🕯️" }
+func (s *NordicBayWindowScene) ID() SceneType { return SceneCozyIgloo }
+func (s *NordicBayWindowScene) Name() string {
+	return "Nordic Hygge Bay Window & Snowflake Pines 🌲🕯️"
+}
 func (s *NordicBayWindowScene) WindowBounds() Rect { return Rect{X: 10, Y: 2, W: 54, H: 26} }
 
-func (s *NordicBayWindowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *NordicBayWindowScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7734,11 +5861,16 @@ func (s *NordicBayWindowScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 // ---------------------------------------------------------
 type ForestTreehouseScene struct{}
 
-func (s *ForestTreehouseScene) ID() SceneType       { return SceneSkyIsland }
-func (s *ForestTreehouseScene) Name() string     { return "Forest Canopy Treehouse & Starlit Rope Bridge 🌲🌉" }
+func (s *ForestTreehouseScene) ID() SceneType { return SceneSkyIsland }
+func (s *ForestTreehouseScene) Name() string {
+	return "Forest Canopy Treehouse & Starlit Rope Bridge 🌲🌉"
+}
 func (s *ForestTreehouseScene) WindowBounds() Rect { return Rect{X: 4, Y: 2, W: 66, H: 30} }
 
-func (s *ForestTreehouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct{ X, Y int; Phase float64 }) {
+func (s *ForestTreehouseScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, frameCount uint64, stars []struct {
+	X, Y  int
+	Phase float64
+}) {
 	r := s.WindowBounds()
 	wx, wy, ww, wh := r.X, r.Y, r.W, r.H
 
@@ -7841,9 +5973,9 @@ func (s *ForestTreehouseScene) RenderForeground(c *Canvas, frameCount uint64, bu
 	// Hanging Brass Storm Lantern swinging gently from overhead branch (Left: Column 14, Rows 4 to 14)
 	sway := int(math.Sin(float64(frameCount)*0.07) * 2.0)
 	lanX := 14 + sway
-	c.DrawLine(14, 0, lanX, 8, ColorBrassPendulum) // hanging chain
-	c.FillRect(lanX-2, 8, 5, 2, ColorStormLanternBrass) // top cap
-	c.FillRect(lanX-1, 10, 3, 4, ColorGlassTint)       // glass cage
+	c.DrawLine(14, 0, lanX, 8, ColorBrassPendulum)       // hanging chain
+	c.FillRect(lanX-2, 8, 5, 2, ColorStormLanternBrass)  // top cap
+	c.FillRect(lanX-1, 10, 3, 4, ColorGlassTint)         // glass cage
 	c.FillRect(lanX-2, 14, 5, 2, ColorStormLanternBrass) // base
 	if lampOn {
 		c.FillRect(lanX-1, 11, 3, 2, ColorFireYellow)
@@ -7901,9 +6033,3 @@ func (s *ForestTreehouseScene) ApplyLighting(c *Canvas, lampOn, fireOn, lightnin
 		c.BlendRect(0, 0, c.Width, c.Height, PicoWhite, 0.70)
 	}
 }
-
-
-
-
-
-

@@ -34,23 +34,32 @@ func TestAnimatedGifLoader(t *testing.T) {
 	// Draw second frame at tick 1
 	anim.DrawFrame(canvas, 1)
 
-	// Test DrawFrameAt
-	anim.DrawFrameAt(canvas, 10, 10, 80, 45, 2)
 }
 
+// TestVerifyDownloadedGifs decodes every GIF in assets/animations and checks each
+// one is a real, non-empty animation.
+//
+// It deliberately asserts nothing about registry/asset agreement: TestEverySceneHasAsset
+// already asserts that in both directions at path granularity, which is strictly
+// stronger than any count comparison here could be.
+//
+// Guarded by testing.Short(): it decodes every GIF at 160x90 into the unbounded
+// package-level loader cache and is the single slowest test in the repo.
 func TestVerifyDownloadedGifs(t *testing.T) {
+	if testing.Short() {
+		t.Skip("decodes every GIF in assets/; skipped under -short")
+	}
+
 	animDir := filepath.Join("..", "..", "assets", "animations")
 	files, err := os.ReadDir(animDir)
 	if err != nil {
 		t.Fatalf("Failed to read animations directory: %v", err)
 	}
 
-	gifCount := 0
 	for _, f := range files {
 		if filepath.Ext(f.Name()) != ".gif" {
 			continue
 		}
-		gifCount++
 		path := filepath.Join(animDir, f.Name())
 		anim, err := LoadAnimatedGif(path, 160, 90)
 		if err != nil {
@@ -59,13 +68,6 @@ func TestVerifyDownloadedGifs(t *testing.T) {
 		}
 		if anim.FrameCount == 0 {
 			t.Errorf("GIF %s has 0 frames", f.Name())
-			continue
 		}
-		t.Logf("✓ Verified GIF %-24s | Frames: %3d | Scaled: %dx%d", f.Name(), anim.FrameCount, anim.Width, anim.Height)
-	}
-
-	if gifCount < 356 {
-		t.Errorf("Expected at least 356 GIF animations, found %d", gifCount)
 	}
 }
-
