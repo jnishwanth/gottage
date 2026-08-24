@@ -388,8 +388,8 @@ func (pm *PresetManager) loadBuiltinPresets() {
 		},
 		{
 			Name:            "⚡ Cyberpunk Hackathon Deck",
-			Description:     "Cyber matrix artwork + cool synth filter + matrix code rain + waveform shader",
-			Scene:           art.SceneCyberMatrix,
+			Description:     "Cyber lofi diner artwork + cool synth filter + matrix code rain + waveform shader",
+			Scene:           art.SceneCyberDiner,
 			Theme:           "Cyberpunk Neon",
 			ColorFilter:     art.FilterCoolSynth,
 			ParticleOverlay: art.OverlayMatrix,
@@ -410,8 +410,8 @@ func (pm *PresetManager) loadBuiltinPresets() {
 		},
 		{
 			Name:            "🌌 Stargazing Observatory",
-			Description:     "Cosmic observatory artwork + fireplace crackle + midnight filter + aurora waves",
-			Scene:           art.SceneCosmicObservatory,
+			Description:     "Observatory artwork + fireplace crackle + midnight filter + aurora waves",
+			Scene:           art.SceneObservatory,
 			Theme:           "Tokyo Night",
 			ColorFilter:     art.FilterMidnight,
 			ParticleOverlay: art.OverlayStars,
