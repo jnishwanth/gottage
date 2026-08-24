@@ -1,0 +1,15 @@
+# no-mistakes repository configuration.
+#
+# Read from the trusted default branch, so a pull request cannot supply its own
+# gating rules.
+
+ci:
+  # This repository deliberately has no CI. It is a personal tool built and
+  # gated locally: `make check` (gofmt, go vet, go mod tidy -diff, go test) plus
+  # the committed pre-commit hook in hooks/ are the gate. See the "Confirmed
+  # decisions" section of docs/plan/plan-phases.md.
+  #
+  # Without this declaration no-mistakes never reports checks-passed, because a
+  # repository reporting zero checks is indistinguishable from one whose checks
+  # failed to register.
+  no_ci: true
