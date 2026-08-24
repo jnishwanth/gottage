@@ -105,39 +105,15 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneOceanWaves,
-		name:      "Pixel Ocean Waves 🌊",
-		gifPath:   "assets/animations/ocean_waves.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneStargazing,
 		name:      "Stargazing Hill 🌌",
 		gifPath:   "assets/animations/stargazing.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneCoffeeShop,
-		name:      "Pixel Coffee Shop ☕",
-		gifPath:   "assets/animations/coffee_shop.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneAutumnPark,
-		name:      "Autumn Amber Park 🍂",
-		gifPath:   "assets/animations/autumn_park.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneMidnightOwl,
 		name:      "Midnight Owl Vista 🦉",
 		gifPath:   "assets/animations/midnight_owl.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneRiverBridge,
-		name:      "River Bridge Railway 🌉",
-		gifPath:   "assets/animations/river_bridge.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
@@ -159,12 +135,6 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneCozyCampfire,
-		name:      "Cozy Hearth Campfire 🔥",
-		gifPath:   "assets/animations/cozy_campfire.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneSpaceStation,
 		name:      "Orbital Space Station 🚀",
 		gifPath:   "assets/animations/space_station.gif",
@@ -183,39 +153,9 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneNeonBistro,
-		name:      "Neon Cyber Bistro 🏮",
-		gifPath:   "assets/animations/neon_bistro.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSunsetStation,
-		name:      "Sunset Train Platform 🚉",
-		gifPath:   "assets/animations/sunset_station.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneMountainView,
 		name:      "Cozy Mountain Peak 🏔️",
 		gifPath:   "assets/animations/mountain_view.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneEnchantedForest,
-		name:      "Enchanted Forest Waterfall 🌿",
-		gifPath:   "assets/animations/enchanted_forest.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneSkyIsland,
-		name:      "Floating Sky Island ☁️",
-		gifPath:   "assets/animations/sky_island.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneBambooGrove,
-		name:      "Zen Bamboo Grove 🎋",
-		gifPath:   "assets/animations/bamboo_grove.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
@@ -303,12 +243,6 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneCozyIgloo,
-		name:      "Cozy Northern Igloo ❄️",
-		gifPath:   "assets/animations/cozy_igloo.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneAtlantisTemple,
 		name:      "Atlantis Ocean Ruins 🔱",
 		gifPath:   "assets/animations/atlantis_temple.gif",
@@ -345,12 +279,6 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneStarlightCamp,
-		name:      "Starlight Mountain Camp ⛺",
-		gifPath:   "assets/animations/starlight_camp.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneSpaceNebula,
 		name:      "Deep Space Cosmic Nebula 🌌",
 		gifPath:   "assets/animations/space_nebula.gif",
@@ -360,12 +288,6 @@ func init() {
 		id:        SceneCyberMarket,
 		name:      "Pixel Cyber Market Alley 🏮",
 		gifPath:   "assets/animations/cyber_market.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCyberDiner,
-		name:      "Cyberpunk Neon Diner 🍔",
-		gifPath:   "assets/animations/cyber_diner.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
@@ -384,12 +306,6 @@ func init() {
 		id:        SceneSteampunkAirship,
 		name:      "Steampunk Sky Airship Fleet ⚙️",
 		gifPath:   "assets/animations/steampunk_airship.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneCozyAttic,
-		name:      "Cozy Rain-Slicked Attic Nook 🕯️",
-		gifPath:   "assets/animations/cozy_attic.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
@@ -420,12 +336,6 @@ func init() {
 		id:        SceneSynthwaveHighway,
 		name:      "Retro Synthwave Highway 🏎️",
 		gifPath:   "assets/animations/synthwave_highway.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneWinterCafe,
-		name:      "Cozy Winter Cafe ☕",
-		gifPath:   "assets/animations/winter_cafe.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
@@ -489,12 +399,6 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenTeahouse,
-		name:      "Zen Bamboo Water Teahouse 🍵",
-		gifPath:   "assets/animations/zen_teahouse.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneCyberObservatory,
 		name:      "Neon Cyberpunk Astronomical Observatory 🔭",
 		gifPath:   "assets/animations/cyber_observatory.gif",
@@ -549,18 +453,6 @@ func init() {
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
-		id:        SceneRetroLofiTrain,
-		name:      "8-Bit Lofi Sunset Train 🚆",
-		gifPath:   "assets/animations/retro_lofi_train.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenBonsai,
-		name:      "Zen Bonsai & Koi Pond 🪨",
-		gifPath:   "assets/animations/zen_bonsai.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
 		id:        SceneCyberDock,
 		name:      "Neon Cyber Dock & Sky Traffic 🛸",
 		gifPath:   "assets/animations/cyber_dock.gif",
@@ -576,18 +468,6 @@ func init() {
 		id:        SceneSteampunkLocomotive,
 		name:      "Steampunk Flying Locomotive 🚂",
 		gifPath:   "assets/animations/steampunk_locomotive.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        ScenePixelWinterCabin,
-		name:      "Cozy Winter Forest Cabin 🌨️",
-		gifPath:   "assets/animations/pixel_winter_cabin.gif",
-		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
-	})
-	RegisterScene(&AnimatedGifScene{
-		id:        SceneZenWaterfallShrine,
-		name:      "Zen Waterfall Torii Shrine ⛩️",
-		gifPath:   "assets/animations/zen_waterfall_shrine.gif",
 		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
 	})
 	RegisterScene(&AnimatedGifScene{
