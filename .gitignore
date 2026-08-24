@@ -1,0 +1,35 @@
+# ---- Build artifacts ----
+# The 6.6MB `gottage` binary was tracked and touched by 39 commits, which is why
+# .git is 88MB for a 17k-line project. Root-anchored so it can never shadow a
+# future pkg/gottage/. History purge of the old blobs is Phase 1 §1.8.
+/gottage
+/dist/
+*.test
+*.prof
+coverage.out
+coverage.html
+
+# ---- Agent harness scratch ----
+# 113 files / 2.3MB. Was protected only by .git/info/exclude, which is neither
+# tracked nor shared — any reclone picked it back up.
+.gnhf/
+
+# ---- Runtime state written relative to CWD ----
+# pkg/ui/model.go:145 passes a bare "user_presets.json" to NewPresetManager, so
+# it lands wherever the shell happens to be. Phase 3 relocates it to a config dir.
+user_presets.json
+
+# pkg/features/presets_test.go:11 writes into the package source directory
+# instead of t.TempDir(), and only cleans up on a non-panicking exit.
+test_presets.json
+
+# pkg/audio/ambient.go:55 discards the os.MkdirTemp error; on failure am.tempDir
+# is "" and all five ambient WAVs are written relative to CWD.
+*.wav
+
+# ---- Editor / OS ----
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
