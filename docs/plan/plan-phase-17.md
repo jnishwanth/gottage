@@ -26,7 +26,7 @@ Nearly every specific claim in it is false:
 | Keybinding table | Missing ~25 bindings that exist |
 | "Go 1.20+" | `go.mod` says `go 1.26.5` |
 | "MIT License © 2026" + MIT badge | No LICENSE file existed (Phase 0) |
-| Badge `img.shields.golang.org` | Not a real host. Renders broken everywhere |
+| Badge `img.shields.golang.org` | Was not a real host; corrected to `img.shields.io` (Phase 0) |
 | `https://github.com/cliamp` | Bare user URL, not a repo |
 | `go build -o gottage main.go` | The documented command that regenerated the committed 7MB binary in place |
 
@@ -50,7 +50,7 @@ Accurate, and structured so drift is detectable:
 - Architecture reflecting the post-Phase-10 layout
 - Config file location and schema (Phase 3)
 - Known limitations — explicitly, including anything Phase 16 deferred
-- Fix the badge host and the cliamp link
+- Fix the cliamp link
 
 ### 17.2 — Make docs self-checking
 

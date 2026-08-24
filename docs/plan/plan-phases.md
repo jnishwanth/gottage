@@ -49,9 +49,9 @@ Phases 9 and 10 split further if a session runs long — per-scene work cuts cle
 
 - **Procedural first, curate GIFs** — handcrafted wins every collision; ~36 + ~40 curated.
 - **Ambient audio rewritten on a real Go audio library** — in-process PCM, not subprocesses.
-- **History purged in one `git-filter-repo` pass at the end of Phase 1** — binary *and* dropped assets together, since curation must decide the asset list first. `.git` 88MB → ~8MB. No remote, so it is nearly free. **Back up before Phase 0.**
+- **History purged in one `git-filter-repo` pass at the end of Phase 1** — binary *and* dropped assets together, since curation must decide the asset list first. `.git` 88MB → ~8MB. **Back up before Phase 0.**
 - **Personal tool, done well** — module path stays `gottage`; no CI/goreleaser; local `Makefile`; assets embedded.
-- **No Git LFS.** With no remote it stores the same bytes on the same disk, the curated set is only 1-3MB, and an LFS pointer file would be silently embedded by `//go:embed` in place of the GIF — build green, every scene garbage. `.gitattributes` marks binaries instead. Revisit conditions in `plan-phase-0.md` §0.2b.
+- **No Git LFS.** The curated set is only 1-3MB, and an LFS pointer file would be silently embedded by `//go:embed` in place of the GIF — build green, every scene garbage. `.gitattributes` marks binaries instead. Full reasoning and revisit conditions in `AGENTS.md` §5.
 
 ## What this is actually fixing
 
