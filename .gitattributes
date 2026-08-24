@@ -1,0 +1,22 @@
+# Mark binary assets so git never attempts diffs, merges, or CRLF translation
+# on them. 367 asset files were tracked when this rule was written; Phase 1
+# §1.8's `git filter-repo` purge stripped them from every commit in this range,
+# so none are tracked at this commit.
+*.gif  binary
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.wav  binary
+
+# Normalize line endings on text.
+*.go       text eol=lf
+*.md       text eol=lf
+*.yml      text eol=lf
+*.sh       text eol=lf
+Makefile   text eol=lf
+.gitignore text eol=lf
+
+# NOTE: these are deliberately NOT Git LFS objects. See AGENTS.md
+# ("Do not introduce Git LFS") — an LFS pointer would be silently embedded by
+# Phase 2's //go:embed in place of the GIF, and every scene would render flat
+# navy. Phase 2 has not landed; there is no //go:embed in the tree yet.

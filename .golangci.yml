@@ -1,0 +1,79 @@
+# Deliberately narrow. See docs/plan/plan-phase-0.md §0.6.
+#
+# funlen and gocyclo are NOT enabled, and must not be added yet: they would fail
+# immediately against Update() (794 lines, pkg/ui/model.go:236) and init()
+# (2,117 lines, pkg/art/scenes_modular.go:9), neither of which is fixable until
+# Phases 13 and 1 respectively. A lint config that cannot pass gets disabled and
+# then ignored. Phase 16 §16.4 widens this to funlen, gocyclo, gocritic, revive,
+# unparam and unused, once both functions are gone.
+#
+# Written against the golangci-lint v2 schema (gofmt lives under `formatters`,
+# not `linters`). The tool is not installed on the dev machine and `make lint`
+# degrades gracefully; whoever installs it first should confirm this parses.
+
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+
+  settings:
+    errcheck:
+      # Without these, errcheck is dominated by strings.Builder /
+      # bytes.Buffer writes, whose error is documented as always nil. The
+      # finding counts that used to be recorded here did not reconcile with
+      # each other and are removed rather than guessed; golangci-lint is not
+      # installed on this machine, so whoever installs it first should
+      # re-measure and record what the tool actually reports.
+      exclude-functions:
+        - (*strings.Builder).Write
+        - (*strings.Builder).WriteByte
+        - (*strings.Builder).WriteRune
+        - (*strings.Builder).WriteString
+        - (*bytes.Buffer).Write
+        - (*bytes.Buffer).WriteByte
+        - (*bytes.Buffer).WriteRune
+        - (*bytes.Buffer).WriteString
+
+  exclusions:
+    # Covers the stock Close() / fmt.Print* / os.Remove* exclusions.
+    presets:
+      - std-error-handling
+
+    rules:
+      # TODO(phase-11): ignored errors throughout pkg/audio. The load-bearing
+      # one is `tmpDir, _ := os.MkdirTemp(...)` at ambient.go:55.
+      # On failure am.tempDir is "", generateAmbientFiles returns at its guard
+      # (:89-92) so no WAV is written at all, and runLoop hands the player a
+      # bare "rain.wav" (:201) — silent no-audio, no error anywhere. See
+      # plan-phase-11.md. Phase 11 rewrites this package onto a real Go audio
+      # library; fix them there.
+      - path: 'pkg/audio/'
+        linters: [errcheck]
+
+      # TODO(phase-3): `_ = pm.SaveToFile()` at presets.go:438 and :447, and a
+      # dropped LoadFromFile error at :37, make preset persistence fail
+      # silently. Phase 3 owns config/persistence and fixes them there.
+      - path: 'pkg/features/presets\.go'
+        linters: [errcheck]
+
+      # TODO(phase-16): remaining sites in pkg/ui and pkg/art. Phase 16 builds
+      # the error-surfacing channel and must end with zero unreasoned
+      # suppressions, at which point this block and the two above come out.
+      - path: 'pkg/(ui|art)/'
+        linters: [errcheck]
+
+      # Tests: 10 unchecked os.Setenv in terminal_adapter_test.go. Phase 16
+      # §16.5 converts them to t.Setenv.
+      - path: '_test\.go'
+        linters: [errcheck]
+
+formatters:
+  enable:
+    - gofmt

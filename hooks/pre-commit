@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# gottage pre-commit gate. Activate with `make hooks` (sets core.hooksPath=hooks).
+#
+# This is the FAST subset (~0.2s), not the full gate. It deliberately does not
+# run the test suite: pkg/art alone takes ~17s, and a hook slow enough to be
+# annoying is a hook that gets bypassed with --no-verify.
+#
+# The full gate is `make check` (adds gofmt over all tracked .go files, plus
+# go test).
+#
+# gofmt is checked against STAGED .go files only, for two reasons:
+#   1. It is what this commit is responsible for.
+#   2. `make check`'s all-tracked-files gofmt is expected to fail until Phase 1
+#      §1.7 runs `gofmt -w`. A hook with that same scope would block every
+#      Phase 0 and Phase 1 commit, which just trains the --no-verify habit.
+#
+# Caveat: gofmt reads the working tree, not the index, so a partially-staged
+# file is judged by its on-disk contents.
+
+set -eu
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR | grep '\.go$' || true)
+
+if [ -n "$staged" ]; then
+	# shellcheck disable=SC2086  # word splitting is intended: $staged is a list
+	if ! unformatted=$(gofmt -l $staged); then
+		echo "pre-commit: gofmt could not parse a staged file" >&2
+		exit 1
+	fi
+	if [ -n "$unformatted" ]; then
+		echo "pre-commit: unformatted Go files are staged:" >&2
+		printf '  %s\n' $unformatted >&2
+		echo >&2
+		echo "  fix with: gofmt -w $unformatted" >&2
+		exit 1
+	fi
+fi
+
+if ! go vet ./...; then
+	echo "pre-commit: go vet failed" >&2
+	exit 1
+fi
+
+if ! go mod tidy -diff >/dev/null 2>&1; then
+	echo "pre-commit: go.mod / go.sum are not tidy" >&2
+	echo "  fix with: go mod tidy" >&2
+	exit 1
+fi
