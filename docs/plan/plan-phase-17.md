@@ -20,7 +20,7 @@ Nearly every specific claim in it is false:
 
 | README claims | Reality |
 |---|---|
-| **"4 Science-Backed Research Scenes"** cycled with `v` | **46 registered scenes** since Phase 1's curation — 36 handcrafted + 10 GIFs. (All 360 `SceneType` constants remain, deliberately unpruned; 314 are simply unregistered.) The README *understates* by ~11×, while the app's own strings *overstate* by ~8×: eight surviving `370+` literals across `model.go`, `command_palette.go` and `view.go` (`"Type keyword to filter 370+ scenes..."`, `"All 370+ Scenes 🎨"`, …). Fix both against `len(art.SceneOrder)`, not against each other |
+| **"4 Science-Backed Research Scenes"** cycled with `v` | **46 registered scenes** since Phase 1's curation — 36 handcrafted + 10 GIFs. (All 360 `SceneType` constants remain, deliberately unpruned; 314 are simply unregistered.) The README *understates* by ~11× and is the only side still wrong: the eight in-app `370+` literals that *overstated* by ~8× were fixed in Phase 1 and now interpolate `len(art.SceneOrder)`, with `TestSceneCountStringsTrackRegistry` (`pkg/ui/scene_count_test.go`) failing if any of them stops tracking the registry. Fix the README against `len(art.SceneOrder)` too, never against the app strings |
 | Architecture diagram lists 10 files | 34 Go files. **Omits `scenes_modular.go` — 45% of all code** — plus `scenes.go`, `palette.go`, `gif_loader.go`, `command_palette.go`, `presets.go`, and more |
 | Ambient sounds: "Rain, Fireplace Crackle, Wind" | Five channels — and **none of them made sound** (Phase 11) |
 | Keybinding table | Missing ~25 bindings that exist |

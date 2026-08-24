@@ -438,7 +438,7 @@ func (m Model) renderAmbianceView() string {
 	sb.WriteString(m.Styles.Header.Render("🌿 AMBIANCE, ENVIRONMENT & MUSIC CONTROL") + "\n\n")
 
 	sb.WriteString(m.Styles.Title.Render("🎨 Visual Environment Settings") + "\n")
-	favScopeStr := "All 370+ Scenes 🎨"
+	favScopeStr := fmt.Sprintf("All %d Scenes 🎨", len(art.SceneOrder))
 	if m.Scene.AutoCycleFavsOnly {
 		favScopeStr = "Favorites Only ⭐"
 	}
@@ -619,7 +619,7 @@ func (m Model) renderSidebar() string {
 }
 
 func (m Model) renderHelpModal(bg string) string {
-	helpText := `
+	helpText := fmt.Sprintf(`
   🏡 GOTTAGE — KEYBOARD SHORTCUTS & HELP
   ---------------------------------------
   [1]      Switch to Cottage Art View
@@ -632,12 +632,12 @@ func (m Model) renderHelpModal(bg string) string {
   [Shift+S] Open Preset Studio & Custom Manager Modal
   [Shift+X] Open 5-Channel Soundscape Equalizer & Mixer Modal
   [H]      Cycle Canvas Animation Shader (Rain-on-Glass, Fireflies, Aurora, Waveform)
-  [V]      Open Categorized Scene Catalog Modal (370+ Scenes)
+  [V]      Open Categorized Scene Catalog Modal (%d Scenes)
   [/]      Search / Filter Scenes by Keyword (in Catalog)
   [*]      Bookmark / Toggle Favorite Scene Preset
   [R]      Jump to Random Scene Preset (Surprise Me)
   [Y]      Cycle Auto-Cycle Scene Rotation Mode (1m, 3m, 5m, 10m, Timer-Linked)
-  [U]      Toggle Auto-Cycle Scope (Favorites Only / All 370+ Scenes)
+  [U]      Toggle Auto-Cycle Scope (Favorites Only / All %d Scenes)
   [v/b]    Cycle Next / Previous Scene Preset
 
   COZY BEVERAGE & COMPANION:
@@ -682,7 +682,8 @@ func (m Model) renderHelpModal(bg string) string {
 
   [?]      Close Help Overlay
   [q]      Quit Gottage
-`
+`, len(art.SceneOrder), len(art.SceneOrder))
+
 	modal := m.Styles.Box.
 		BorderForeground(m.Styles.Theme.Accent).
 		Render(helpText)
