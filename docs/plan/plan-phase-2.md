@@ -4,6 +4,48 @@
 
 ---
 
+## Prerequisites — findings from Phase 1
+
+> Written at the end of Phase 1. Read before starting.
+
+1. **Asset footprint is 1.78MB across 10 GIFs** — well inside §2.4's comfortable
+   range, not the ~6MB the goal line predicts. Embed is unambiguously the right
+   call: measured, the binary is 7.5MB and lands at **~9MB embedded**. No Git LFS
+   was introduced; `.gitattributes` still marks binaries as binary.
+2. **Registration count is 46** — 36 handcrafted + **10** `AnimatedGifScene`. That
+   is the number `TestEveryRegisteredAssetResolves` should expect, and the type
+   switch to reach `gifPath` is `sc.(*AnimatedGifScene)` from inside `package art`.
+3. **`SceneType` was NOT pruned.** All 360 constants remain, no renumbering, so
+   Phase 3 migrates rather than repairs — no existing `user_presets.json` is
+   corrupt. The 314 cut ids are simply unregistered.
+4. **`GetScene` silently falls back to `SceneRainyCity`** for an unregistered type
+   (`scene_interface.go`). That masked two built-in presets pointing at cut scenes;
+   `TestBuiltinPresetScenesAreRegistered` (`pkg/features/presets_test.go`) now
+   guards it. Phase 2's §2.3 error-surfacing should treat this fallback as another
+   instance of the same silent-failure class.
+5. **Every asset path still resolves** and there are zero orphans, asserted both
+   directions by `TestEverySceneHasAsset` (`pkg/art/scene_test.go`). Paths are
+   still CWD-relative and the test joins `"..", ".."` — Phase 2 is what fixes that,
+   and should update the test to resolve through `assets.Open` instead.
+6. **Test runtime dropped from ~21s to ~2s.** `TestVerifyDownloadedGifs` was 15.75s
+   of it; it now decodes 10 GIFs rather than 363 and is `testing.Short()`-guarded.
+   There is headroom for Phase 2 to add tests.
+7. **Line anchors in `scenes_modular.go` are all wrong now.** The file went
+   7909 → 6035 lines via a repo-wide `gofmt` plus 334 deleted registration blocks.
+   Re-derive with `grep -n`.
+8. **History was purged** — `.git` 92MB → **2.2MB**, zero `gottage` blobs. Two
+   deviations from `plan-phase-1.md` §1.8 worth knowing:
+   - Its purge base (`phase-0-end~1..HEAD`) yields an **empty list** and would have
+     left the binary in history. The correct base was `65ba4e3`.
+   - Path-only purging leaves the 10 keepers' pre-re-encode blobs (8.40MB) alive,
+     since those paths still exist. They were removed with
+     `--strip-blobs-with-ids` after verifying none was reachable from HEAD.
+   All SHAs are rewritten. One assets-only commit was pruned as empty. Backups:
+   `gottage-backup.git` (95 pre-Phase-0 commits) and `gottage-prepurge.git`
+   (111 commits, immediately pre-purge).
+
+---
+
 ## Goal
 
 Make the binary run correctly from **any** working directory by embedding the curated assets, and route every asset read through one resolver.
