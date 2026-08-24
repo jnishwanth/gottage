@@ -2,7 +2,7 @@
 
 **Gottage** is a cozy Virtual Cottage focus app for your terminal built in Go using [Bubbletea](https://github.com/charmbracelet/bubbletea), [Lipgloss](https://github.com/charmbracelet/lipgloss), and [CLIAMP](https://github.com/cliamp).
 
-![Cozy Bit-Art](https://img.shields.golang.org/badge/Art-TrueColor%2024bit-orange)
+![Cozy Bit-Art](https://img.shields.io/badge/Art-TrueColor%2024bit-orange)
 ![Bubbletea](https://img.shields.io/badge/TUI-Bubbletea-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
