@@ -1998,6 +1998,11 @@ type AnimatedGifScene struct {
 	name      string
 	gifPath   string
 	winBounds Rect
+	// showBuddy/buddyX/buddyY are read in RenderForeground but set true by none of
+	// the GIF scene literals, so no GIF scene contains the companion character at
+	// all. That is a product gap, not dead code -- a cozy scene with nobody in it is
+	// a large part of "not quite what i want".
+	// TODO(phase-8): decide whether the companion belongs in GIF scenes, and where.
 	showBuddy bool
 	buddyX    int
 	buddyY    int
