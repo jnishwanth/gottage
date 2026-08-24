@@ -19,13 +19,17 @@
 > - **§0.5's hook was changed to gate staged files only.** A hook running
 >   repo-wide `make check` would have blocked every Phase 0 and Phase 1 commit
 >   until §1.7, training the `--no-verify` habit. `make check` stays repo-wide.
+> - **The Goal's `.git` shrink claim was wrong for *this* phase.** Phase 0 does
+>   not shrink `.git`; it stays at 88MB, deliberately (§0.1). The purge belongs to
+>   Phase 1 §1.8, which rewrites binary *and* dropped-asset blobs in one
+>   `git-filter-repo` pass. The Goal below is scoped accordingly.
 > - Phase-1 handoff notes were written into `plan-phase-1.md`.
 
 ---
 
 ## Goal
 
-Make the repository a place where mistakes fail loudly, before changing a single line of app logic. Establish the conventions file, the license, the local build/lint/test gate, and shrink `.git` from 88MB to ~35MB.
+Make the repository a place where mistakes fail loudly, before changing a single line of app logic. Establish the conventions file, the license, and the local build/lint/test gate, and untrack the committed binary so that **Phase 1 §1.8** can shrink `.git` from 88MB to ~35MB in a single history rewrite. This phase leaves `.git` at 88MB — see §0.1.
 
 ## Why this phase is first
 
@@ -195,13 +199,18 @@ make check                                      # fails ONLY on gofmt (expected;
 
 ## Exit criteria
 
-- [ ] Backup mirror exists outside the repo, and its `git log --oneline | wc -l` is 95
-- [ ] `gottage` untracked and gitignored (history purge is Phase 1 §1.8)
-- [ ] `.gitignore`, `.gitattributes`, `LICENSE`, `AGENTS.md`, `Makefile`, `.golangci.yml`, `hooks/pre-commit` all committed
-- [ ] LFS decision recorded in `AGENTS.md` with its revisit conditions
-- [ ] `go mod tidy -diff` exits 0
-- [ ] `main` fast-forwarded to HEAD; stale branch deleted
-- [ ] Test suite still green and unchanged in count (22 test functions)
+Ticked only where the outcome was machine-checked, per §2 of `AGENTS.md`.
+
+- [x] `gottage` untracked and gitignored (history purge is Phase 1 §1.8) — `git ls-files | grep -x gottage` is empty; `/gottage` is in `.gitignore`
+- [x] `.gitignore`, `.gitattributes`, `LICENSE`, `AGENTS.md`, `Makefile`, `.golangci.yml`, `hooks/pre-commit` all committed — all seven resolve under `git ls-files`
+- [x] LFS decision recorded in `AGENTS.md` with its revisit conditions
+- [x] `go mod tidy -diff` exits 0
+- [x] Test suite unchanged in count — 22 test functions, counted
+- [ ] Backup mirror exists outside the repo, and its `git log --oneline | wc -l` is 95 — **unverified here**: the mirror is outside the repo, so it cannot be checked from a clone. Confirm on the machine that took it.
+- [ ] `main` fast-forwarded to HEAD; stale branch deleted — carried out and recorded in the correction block at the top of this file, but **not re-verifiable** from an arbitrary checkout.
+- [ ] Test suite still green — **not true on this tree.** Phase 1 §1.8's history rewrite retroactively removed the GIFs that `pkg/art` loads, so this commit's tree has no `assets/`. The suite is exercised against a tree that has them in Phase 1.
+
+`make check` is likewise expected to fail here, on `fmt-check` only — see the note just above **Exit criteria**.
 
 ## Re-validation checklist for Phase 1
 

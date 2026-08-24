@@ -19,7 +19,7 @@
 
 set -eu
 
-staged=$(git diff --cached --name-only --diff-filter=ACM | grep '\.go$' || true)
+staged=$(git diff --cached --name-only --diff-filter=ACMR | grep '\.go$' || true)
 
 if [ -n "$staged" ]; then
 	# shellcheck disable=SC2086  # word splitting is intended: $staged is a list

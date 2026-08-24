@@ -7,13 +7,16 @@ BIN := gottage
 ## check      full local gate; run before every commit
 check: fmt-check vet tidy-check test
 
-## fmt        rewrite Go files with gofmt
+## fmt        rewrite Go files with gofmt (exact inverse of fmt-check)
 fmt:
-	$(GO) fmt ./...
+	gofmt -w .
 
 ## fmt-check  fail if any Go file is unformatted
 fmt-check:
-	@out="$$(gofmt -l .)"; \
+	@if ! out="$$(gofmt -l .)"; then \
+	  echo "gofmt: could not parse a Go file (errors above)"; \
+	  exit 1; \
+	fi; \
 	if [ -n "$$out" ]; then \
 	  echo "gofmt: unformatted file(s):"; \
 	  printf '%s\n' "$$out" | sed 's/^/  /'; \

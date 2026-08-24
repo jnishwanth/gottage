@@ -138,22 +138,32 @@ every existing `user_presets.json`. Add at the end; delete only from the end.
 
 The instinct is reasonable and the answer is still no, on four counts:
 
-1. **There is no remote.** `git remote -v` is empty. LFS exists to keep large
-   objects on a separate server; with no remote it stores the same bytes on the
-   same disk behind an extra layer of indirection.
+1. **The remote does not create a need for it.** A private `origin`
+   (`git@github.com:jnishwanth/gottage.git`) now exists, so the earlier form of
+   this point — "`git remote -v` is empty" — is spent. It was never the
+   load-bearing one: LFS pays off when large objects would otherwise bloat every
+   clone and every fetch, and at the size in (2) they do not.
 2. **The scale does not justify it.** Post-curation the asset set is 1-3MB. LFS
    starts earning its keep in the hundreds of megabytes.
-3. **It would silently break `//go:embed`.** This is the decisive one. An LFS
-   pointer file is ~130 bytes of text. If the smudge filter has not run — a clone
-   without `git lfs pull`, LFS not installed, `GIT_LFS_SKIP_SMUDGE` set — then
-   `go:embed` embeds *that text* instead of the GIF. The build succeeds,
+3. **It would silently break Phase 2's `//go:embed`.** This is the decisive one.
+   An LFS pointer file is ~130 bytes of text. If the smudge filter has not run — a
+   clone without `git lfs pull`, LFS not installed, `GIT_LFS_SKIP_SMUDGE` set —
+   then `go:embed` embeds *that text* instead of the GIF. The build succeeds,
    `assets.Open` succeeds, and every scene renders flat navy. That is exactly the
-   silent-failure class this codebase already shipped once.
+   silent-failure class this codebase already shipped once. Phase 2 has not landed
+   yet — there is no `//go:embed` in the tree today — so this is a forward-looking
+   constraint, not a description of the current build.
 4. **It adds a required tool dependency** to every clone and every agent session,
    in exchange for nothing above.
 
-**Revisit only if all three become true:** a remote exists, assets exceed ~50MB,
-*and* the `//go:embed` strategy has been replaced by runtime asset loading.
+**Revisit only if all three become true:**
+
+1. a remote exists — **already true**, see (1) above;
+2. assets exceed ~50MB — **not** true, 1-3MB post-curation;
+3. *and* Phase 2's embed strategy has been replaced by runtime asset loading —
+   **not** true. Today's CWD-relative `os.Open` loader is the *pre*-Phase-2 state
+   that embedding is scheduled to replace, not a replacement for it. Do not read
+   this condition as satisfied merely because no `//go:embed` exists yet.
 
 What actually controls asset bloat here is the size cap and the churn discipline
 above, not LFS.

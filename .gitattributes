@@ -16,4 +16,5 @@ Makefile   text eol=lf
 
 # NOTE: these are deliberately NOT Git LFS objects. See AGENTS.md
 # ("Do not introduce Git LFS") — an LFS pointer would be silently embedded by
-# //go:embed in place of the GIF, and every scene would render flat navy.
+# Phase 2's //go:embed in place of the GIF, and every scene would render flat
+# navy. Phase 2 has not landed; there is no //go:embed in the tree yet.

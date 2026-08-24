@@ -24,8 +24,14 @@ user_presets.json
 test_presets.json
 
 # pkg/audio/ambient.go:55 discards the os.MkdirTemp error; on failure am.tempDir
-# is "" and all five ambient WAVs are written relative to CWD.
-*.wav
+# is "" and all five ambient WAVs are written relative to CWD. Anchored to the
+# only two directories that can be that CWD - the repo root (`make run`) and the
+# package dir (`go test ./pkg/audio`) - so a tracked assets/**/*.wav is never
+# silently skipped by `git add`; .gitattributes marks *.wav as a binary asset.
+# Expires with Phase 11 (plan-phase-11.md:67), which retargets createProceduralWAV
+# to in-memory PCM and removes the temp files entirely.
+/*.wav
+pkg/audio/*.wav
 
 # ---- Editor / OS ----
 .vscode/
