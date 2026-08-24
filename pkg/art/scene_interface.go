@@ -1,5 +1,7 @@
 package art
 
+import "fmt"
+
 // SceneInterface defines the modular contract for any Gottage visual scene.
 // Implementing this interface allows adding new scenes seamlessly to Gottage!
 type SceneInterface interface {
@@ -30,10 +32,18 @@ var SceneRegistry = make(map[SceneType]SceneInterface)
 var SceneOrder = []SceneType{}
 
 // RegisterScene adds a modular scene implementation to the registry.
+//
+// A duplicate ID is a panic, not a warning. Registration happens in init(), so
+// this fails the process and every test binary immediately and unmissably. The
+// previous version assigned unconditionally, which let 20 AnimatedGifScene
+// literals silently shadow 20 handcrafted scenes across 8 commits; log-and-skip
+// would only have converted that silent-overwrite bug into a silent-skip bug.
 func RegisterScene(s SceneInterface) {
-	if _, ok := SceneRegistry[s.ID()]; !ok {
-		SceneOrder = append(SceneOrder, s.ID())
+	if existing, ok := SceneRegistry[s.ID()]; ok {
+		panic(fmt.Sprintf("duplicate scene ID %d (%q): %T would shadow %T",
+			s.ID(), s.Name(), s, existing))
 	}
+	SceneOrder = append(SceneOrder, s.ID())
 	SceneRegistry[s.ID()] = s
 }
 
