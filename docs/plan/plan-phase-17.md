@@ -20,7 +20,7 @@ Nearly every specific claim in it is false:
 
 | README claims | Reality |
 |---|---|
-| **"4 Science-Backed Research Scenes"** cycled with `v` | **360 `SceneType` constants, 380 registrations.** The app's own placeholder says `"Type keyword to filter 370+ scenes..."`. Understated by ~90× |
+| **"4 Science-Backed Research Scenes"** cycled with `v` | **46 registered scenes** since Phase 1's curation — 36 handcrafted + 10 GIFs. (All 360 `SceneType` constants remain, deliberately unpruned; 314 are simply unregistered.) The README *understates* by ~11×, while the app's own strings *overstate* by ~8×: eight surviving `370+` literals across `model.go`, `command_palette.go` and `view.go` (`"Type keyword to filter 370+ scenes..."`, `"All 370+ Scenes 🎨"`, …). Fix both against `len(art.SceneOrder)`, not against each other |
 | Architecture diagram lists 10 files | 34 Go files. **Omits `scenes_modular.go` — 45% of all code** — plus `scenes.go`, `palette.go`, `gif_loader.go`, `command_palette.go`, `presets.go`, and more |
 | Ambient sounds: "Rain, Fireplace Crackle, Wind" | Five channels — and **none of them made sound** (Phase 11) |
 | Keybinding table | Missing ~25 bindings that exist |

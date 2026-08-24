@@ -328,3 +328,57 @@ func TestCanvasGeometryPrimitives(t *testing.T) {
 		t.Errorf("Expected non-empty rendered canvas for geometry primitives")
 	}
 }
+
+// TestRegisterSceneRejectsDuplicateID exercises the mechanism Phase 1 turns on.
+//
+// TestNoDuplicateSceneRegistrations only inspects the resulting state, so it stays
+// green under a log-and-skip RegisterScene -- the identical silent failure mode,
+// just in the other direction. This calls RegisterScene with an ID that is already
+// taken and asserts the process-killing panic, naming both the incumbent and the
+// shadower. Under the previous unconditional `SceneRegistry[s.ID()] = s` there is
+// no panic to recover and this fails.
+//
+// The duplicate check runs before any mutation, so the recovered call leaves
+// SceneRegistry and SceneOrder untouched; the test asserts that too, since a
+// registry corrupted here would poison every other test in the package.
+func TestRegisterSceneRejectsDuplicateID(t *testing.T) {
+	const victim = SceneZenTeahouse
+	incumbent, ok := SceneRegistry[victim]
+	if !ok {
+		t.Fatalf("SceneType %d is not registered; pick an ID that is", victim)
+	}
+	sizeBefore, orderBefore := len(SceneRegistry), len(SceneOrder)
+
+	shadower := &AnimatedGifScene{
+		id:        victim,
+		name:      "Zen Bamboo Water Teahouse 🍵",
+		gifPath:   "assets/animations/zen_teahouse.gif",
+		winBounds: Rect{X: 10, Y: 10, W: 140, H: 60},
+	}
+
+	var recovered any
+	func() {
+		defer func() { recovered = recover() }()
+		RegisterScene(shadower)
+	}()
+
+	if recovered == nil {
+		t.Fatalf("RegisterScene accepted a duplicate ID %d: %T now shadows %T with no signal",
+			victim, shadower, incumbent)
+	}
+	msg, _ := recovered.(string)
+	for _, want := range []string{"duplicate scene ID", "AnimatedGifScene", "ZenTeahouseScene"} {
+		if !strings.Contains(msg, want) {
+			t.Errorf("panic message %q does not name %q; it must identify the collision to be actionable", msg, want)
+		}
+	}
+
+	if got := SceneRegistry[victim]; got != incumbent {
+		t.Errorf("SceneType %d now resolves to %T, want the incumbent %T: the rejected registration mutated the registry",
+			victim, got, incumbent)
+	}
+	if len(SceneRegistry) != sizeBefore || len(SceneOrder) != orderBefore {
+		t.Errorf("registry sizes changed after a rejected registration: map %d->%d, order %d->%d",
+			sizeBefore, len(SceneRegistry), orderBefore, len(SceneOrder))
+	}
+}

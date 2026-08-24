@@ -30,9 +30,10 @@ make hooks     # sets core.hooksPath=hooks
 
 The hook is the fast subset (~0.2s): `gofmt` on **staged** `.go` files, plus
 `go vet` and `go mod tidy -diff`. It deliberately does not run the test suite —
-`pkg/art` alone takes 17s, and a gate slow enough to be annoying is a gate that
-gets bypassed. `make check` is the complete gate, over every tracked `.go`
-file; run it yourself.
+a gate slow enough to be annoying is a gate that gets bypassed. (`pkg/art` used
+to be 17s of a 21s suite; Phase 1's curation brought the whole suite to ~2s, but
+the rule holds as the suite grows back.) `make check` is the complete gate, over
+every tracked `.go` file; run it yourself.
 
 One caveat worth knowing:
 
@@ -77,14 +78,17 @@ belong in a test, not a commit message.
 
 This is the single most expensive mistake in this repo's history.
 
-`TestHandcraftedProceduralScenes` renders all 36 scenes across 4 times of day —
-144 frames — and asserts only that the output string is non-empty. When a scene
+`TestHandcraftedProceduralScenes` rendered all 36 scenes across 4 times of day —
+144 frames — and asserted only that the output string was non-empty. When a scene
 fails to load its asset it falls back to `c.Clear(PicoNavy)`, so **the test was
 asserting that a solid navy rectangle is not zero-length.** It passed through 8
 consecutive commits while 20 scenes were silently broken.
 
 Assert something a broken render cannot satisfy: a distinct-RGB count, an exact
-golden, a specific pixel. "It produced bytes" is not a test.
+golden, a specific pixel. "It produced bytes" is not a test. Phase 1 replaced it
+with a distinct-color floor over each scene's *own* layers — `renderSceneLayers`
+in `pkg/art/scene_test.go` records why the composited frame cannot be measured
+instead, and that reasoning is the transferable part.
 
 The same applies to any `len(x) == 0` guard standing in for a correctness check.
 
@@ -100,9 +104,9 @@ The same applies to any `len(x) == 0` guard standing in for a correctness check.
   (`pkg/ui/view_test.go:37-321`) is 285 lines with ~40 unrelated assertions
   against shared mutating state — a failure in the middle hides everything after.
 - **Guard slow tests** with `testing.Short()`. `TestVerifyDownloadedGifs`
-  (`pkg/art/gif_loader_test.go:41`) decoded every GIF in `assets/` on each run.
-  Since the §1.8 purge its `../../assets/animations` path no longer resolves, so
-  it now fails outright — the known cause of the red suite at this commit.
+  (`pkg/art/gif_loader_test.go`) decoded every GIF in `assets/` into the unbounded
+  loader cache on each run — 15.75s of a 21s suite. Phase 1 guarded it and cut what
+  it decodes from 363 files to 10.
 
 ---
 
@@ -111,12 +115,14 @@ The same applies to any `len(x) == 0` guard standing in for a correctness check.
 **Anything that registers by key needs a uniqueness test.** Two live bugs, one
 root cause — nothing in this repo ever checks for a duplicate key:
 
-- `RegisterScene` (`pkg/art/scene_interface.go:30`) ends in an unconditional
-  `SceneRegistry[s.ID()] = s`. Of 380 registrations, **20 IDs are claimed twice**;
-  the second silently wins. That is the 20 dead scenes. Phase 1 makes it panic.
+- `RegisterScene` (`pkg/art/scene_interface.go`) ended in an unconditional
+  `SceneRegistry[s.ID()] = s`. Of 380 registrations, **20 IDs were claimed twice**
+  and the second silently won. That is the 20 dead scenes. Phase 1 made it panic;
+  `TestRegisterSceneRejectsDuplicateID` and `TestNoDuplicateSceneRegistrations`
+  (`pkg/art/scene_test.go`) hold the line.
 - `GetCommandList` (`pkg/ui/command_palette.go`) is an append-only slice with no
-  key at all. `Shortcut: "[ K ]"` appears at both `:78` and `:510`, while
-  `pkg/ui/model.go:966` binds `K` to only the first — so the palette advertises a
+  key at all. `Shortcut: "[ K ]"` appears on two different entries, while the `"K"`
+  case in `pkg/ui/model.go` binds only the first — so the palette advertises a
   shortcut that does something else. Phase 13 owns the fix.
 
 Prefer **panic in `init()`** over log-and-skip. Log-and-skip converts a
@@ -201,8 +207,9 @@ divergence inexpressible. "This is obviously broken, let me just fix it" is how
 work gets done twice.
 
 **Line anchors drift.** Re-derive them with `grep -n` rather than trusting numbers
-cited in a doc, especially in `pkg/art/scenes_modular.go` (Phase 1 halves it) and
-`pkg/ui/view.go` (Phases 12-14 move it repeatedly).
+cited in a doc, especially in `pkg/art/scenes_modular.go` (Phase 1 took it 7,909 →
+6,035 lines, so every anchor into it in a Phase 4+ doc is wrong) and `pkg/ui/view.go`
+(Phases 12-14 move it repeatedly).
 
 ---
 
@@ -235,6 +242,10 @@ Mechanically checkable, all three required:
 | On-disk size | **≤ 300 KB** | Phase 2 embeds every asset into the binary. |
 | Frame count | **≤ 64** | Decoded cost is `frames × W × H × 24` bytes (`colorful.Color` is 3×float64) and the loader cache is unbounded until Phase 6. |
 | Source dimensions | **≤ 640×360** | The renderer downsamples to canvas size. Anything larger is wasted bytes and a slower decode. |
+
+`TestAssetsRespectHardCaps` (`pkg/art/asset_caps_test.go`) enforces all three
+against every file in `assets/animations`, so an offending asset fails `make check`
+rather than shipping.
 
 **The frame cap is not redundant with the size cap.** Measured on the pre-curation set,
 `waneella_street.gif` was 515 KB on disk — comfortably under 300 KB after a downscale —

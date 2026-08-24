@@ -10,9 +10,9 @@ Finish migrating the remaining handcrafted scenes, then break up the file that h
 
 ## Why the split comes last
 
-`scenes_modular.go` was **7,909 lines** — 45% of all Go in the repo, with a **2,117-line `init()`**. Splitting it earlier would have meant splitting it twice: Phase 1 deleted ~half, and Phases 9/10 rewrite the rest. Splitting a file you are about to rewrite is wasted work and a guaranteed merge headache.
+`scenes_modular.go` was **7,909 lines** — 45% of all Go in the repo, with a **2,117-line `init()`**. Splitting it earlier would have meant splitting it twice: Phase 1 took ~1,900 lines out of it, and Phases 9/10 rewrite the rest. Splitting a file you are about to rewrite is wasted work and a guaranteed merge headache.
 
-By now the file is roughly 3,000 lines and the registration table has fallen from 2,064 lines to ~250. The split is now small and obvious.
+After Phase 1 the file is 6,035 lines but `init()` is only 99 — curation collapsed the registration table from 2,064 lines to 46 registrations. So what remains is almost entirely scene *implementations*, which is what Phases 9/10 migrate. Re-derive both numbers before splitting.
 
 ---
 
@@ -46,7 +46,7 @@ Grouping by **archetype** (matching Phase 8's reference frames) beats grouping a
 
 ## Workstream 10.3 — Registration table → manifest
 
-The remaining ~40 GIF registrations are still structurally identical literals. Move to a data file (JSON/TOML next to the assets) walked at init, or `embed.FS` + a small manifest. Registration becomes a loop.
+The remaining **10** GIF registrations are still structurally identical literals. Move to a data file (JSON/TOML next to the assets) walked at init, or `embed.FS` + a small manifest. Registration becomes a loop. At 10 literals the payoff is much smaller than the ~40 this workstream was sized against — confirm it still earns its indirection before doing it.
 
 Keep `RegisterScene`'s **panic on duplicate** (Phase 1) — it now guards the manifest too, which is exactly where a copy-paste ID mistake would otherwise reappear.
 

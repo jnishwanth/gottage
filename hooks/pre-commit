@@ -3,17 +3,15 @@
 # gottage pre-commit gate. Activate with `make hooks` (sets core.hooksPath=hooks).
 #
 # This is the FAST subset (~0.2s), not the full gate. It deliberately does not
-# run the test suite: pkg/art alone takes ~17s, and a hook slow enough to be
-# annoying is a hook that gets bypassed with --no-verify.
+# run the test suite: a hook slow enough to be annoying is a hook that gets
+# bypassed with --no-verify. See AGENTS.md §1 for the rationale.
 #
 # The full gate is `make check` (adds gofmt over all tracked .go files, plus
 # go test).
 #
-# gofmt is checked against STAGED .go files only, for two reasons:
-#   1. It is what this commit is responsible for.
-#   2. `make check`'s all-tracked-files gofmt is expected to fail until Phase 1
-#      §1.7 runs `gofmt -w`. A hook with that same scope would block every
-#      Phase 0 and Phase 1 commit, which just trains the --no-verify habit.
+# gofmt is checked against STAGED .go files only: that is what this commit is
+# responsible for. The repo has been gofmt-clean since Phase 1's first commit,
+# so `make check`'s wider all-tracked-files scope passes too.
 #
 # Caveat: gofmt reads the working tree, not the index, so a partially-staged
 # file is judged by its on-disk contents.
