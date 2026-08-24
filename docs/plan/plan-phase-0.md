@@ -2,6 +2,25 @@
 
 > **Session size:** Small · **Depends on:** nothing · **Touches:** no application code
 
+> **Status: completed.** Corrections found while executing this phase, recorded
+> so §0.8 below is not read as current:
+>
+> - **§0.8's branch table was stale.** `just-making-the-repo-better-and-less-of-a-mess`
+>   did not exist and there was no second worktree. The actual third branch was
+>   `gnhf/plan-research-and-fi-75ef78` at `08be2ed`, 10 commits *behind* HEAD and
+>   0 ahead. It was deleted with `git branch -d`, which machine-confirmed it held
+>   no unique commits. `main` was fast-forwarded to HEAD.
+> - **§0.6's errcheck estimate was low.** 47 actionable, not 42 (19 in
+>   `ambient.go` as stated). More importantly, `errcheck` at defaults reports
+>   **122**, because 111 are `strings.Builder`/`bytes.Buffer` writes whose error
+>   is always nil — `.golangci.yml` excludes those by function.
+> - **§0.7:** `golang.org/x/image` is imported by *two* files —
+>   `gif_loader.go:11` and `image_loader.go:13`, the latter deleted by Phase 1.
+> - **§0.5's hook was changed to gate staged files only.** A hook running
+>   repo-wide `make check` would have blocked every Phase 0 and Phase 1 commit
+>   until §1.7, training the `--no-verify` habit. `make check` stays repo-wide.
+> - Phase-1 handoff notes were written into `plan-phase-1.md`.
+
 ---
 
 ## Goal

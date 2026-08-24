@@ -4,6 +4,58 @@
 
 ---
 
+## Prerequisites — findings from Phase 0
+
+> Written at the end of Phase 0. Read before starting; items 1 and 2 are blockers.
+
+1. **`git-filter-repo` is NOT installed.** `brew install git-filter-repo` is a hard
+   prerequisite for §1.8. Install and confirm it runs *before* the first deletion
+   commit, not when you reach the purge — the whole phase's deletions are the
+   purge list, and discovering the tool is missing at the end is a bad time.
+2. **Tag before deleting anything:** `git tag phase-0-end` (§1.8 step 0). The purge
+   list is derived from `phase-0-end~1..HEAD`, so the tag must predate every
+   deletion commit in this phase.
+3. **Backup verified.** `/Users/nish/proj/gottage-backup.git` is a mirror clone
+   holding all 95 pre-Phase-0 commits and all three original refs. After §1.8 it
+   is the only copy of the old history; Phase 17 §17.5 decides its fate.
+4. **Collision count re-derived: exactly 20.** §1.1's extraction was run verbatim
+   and gives 344 GIF ids, 36 handcrafted ids, 20 in the intersection — matching
+   the table in §1.2 entry-for-entry. `grep -c 'RegisterScene('
+   pkg/art/scenes_modular.go` = **380**. Re-run if scenes were hand-edited since.
+   Note the check must be **cross-group** (handcrafted `ID()` returns vs. GIF
+   `id:` literals); a within-group uniqueness check finds nothing and is
+   misleading.
+5. **Anchors held — Phase 0 shifted no `.go` line numbers.** `RegisterScene` is at
+   `pkg/art/scene_interface.go:30` (doc cites 29-34, correct). One correction:
+   `SceneOrder` is declared at `scene_interface.go:27`, **not** in
+   `categories.go`.
+6. **`gofmt` is untouched, by design.** Still 16 of 34 files, 1,745 diff lines.
+   `make check` fails on `fmt-check` and passes `vet`, `tidy-check` and `test`
+   individually. §1.7 (`gofmt -w`, last commit of the phase) is what turns it
+   green. The pre-commit hook gates **staged** files only, so it will not block
+   your deletion commits.
+7. **Lint is not blocking.** `golangci-lint` is not installed and `make lint`
+   degrades gracefully; `check` does not depend on it. `.golangci.yml` excludes
+   `errcheck` on `pkg/audio/`, `pkg/features/presets.go` and `pkg/(ui|art)/` with
+   `TODO(phase-N)` markers, so Phase 1 inherits zero lint noise. The config is
+   v2-schema and **unvalidated against the real binary** — whoever installs it
+   first should confirm it parses.
+8. **`.gitignore` now covers `/gottage`.** §1.8's safety gate (`comm -12` against
+   `git ls-files`) is unaffected since the binary is no longer tracked, but the
+   binary must still appear in the purge list — keep §1.8 step 1's
+   `grep -x gottage /tmp/purge-paths.txt` check. Note `git rm --cached` in Phase 0
+   registers as a deletion in `git diff --diff-filter=D`, so it should appear
+   automatically given the tag is placed per item 2.
+9. **Write the curation aesthetic bar first.** `AGENTS.md` §7 has a placeholder
+   for it. §1.3 says it must exist before cutting starts, since it is the
+   criterion Phase 8's reference frames get judged against. Fill it in as the
+   first act of §1.3, not retroactively.
+10. **Asset inventory as of Phase 0 end:** 363 GIFs + 4 JPGs = 367 tracked files,
+    31MB. `.git` is 89MB. 430 tracked files total.
+
+---
+
+
 ## Goal
 
 Delete everything that is dead, curate what stays, and make the registry **panic** on the class of mistake that hid 3,177 lines of art. Net effect: ~7,900-line `scenes_modular.go` down to roughly 3,500; assets 31MB → ~6MB; `.git` 88MB → ~8MB; 20 handcrafted scenes that never rendered start rendering.
