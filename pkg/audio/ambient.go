@@ -364,33 +364,3 @@ func (am *AmbientManager) Cleanup() {
 		_ = os.RemoveAll(am.tempDir)
 	}
 }
-
-// StatusSummary returns ambient sound toggles status string.
-func (am *AmbientManager) StatusSummary() string {
-	rainStr := "Rain: OFF"
-	if am.RainActive {
-		rainStr = "Rain: ON 🌧️"
-	}
-	fireStr := "Fire: OFF"
-	if am.FireActive {
-		fireStr = "Fire: ON 🔥"
-	}
-	windStr := "Wind: OFF"
-	if am.WindActive {
-		windStr = "Wind: ON 🍃"
-	}
-	cafeStr := "Cafe: OFF"
-	if am.CafeActive {
-		cafeStr = "Cafe: ON ☕"
-	}
-	cricketStr := "Crickets: OFF"
-	if am.CricketsActive {
-		cricketStr = "Crickets: ON 🦗"
-	}
-
-	playerStr := "Procedural Synth"
-	if am.playerBinary != "" {
-		playerStr = filepath.Base(am.playerBinary)
-	}
-	return fmt.Sprintf("%s | %s | %s | %s | %s [%s]", rainStr, fireStr, windStr, cafeStr, cricketStr, playerStr)
-}

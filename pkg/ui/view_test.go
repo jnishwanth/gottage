@@ -231,7 +231,7 @@ func TestModelViewModals(t *testing.T) {
 
 	// Test Canvas Clone & BlendCanvas
 	c1 := art.NewCanvas(20, 20)
-	c1.SetPixelHex(5, 5, "#FF0000")
+	c1.SetPixel(5, 5, art.PicoRed)
 	c2 := c1.Clone()
 	if c2 == nil || c2.Pixels[5][5].R < 0.9 {
 		t.Error("Expected Canvas.Clone to duplicate pixel matrix")

@@ -34,8 +34,6 @@ func TestAnimatedGifLoader(t *testing.T) {
 	// Draw second frame at tick 1
 	anim.DrawFrame(canvas, 1)
 
-	// Test DrawFrameAt
-	anim.DrawFrameAt(canvas, 10, 10, 80, 45, 2)
 }
 
 // TestVerifyDownloadedGifs decodes every GIF on disk and checks it is a real,

@@ -152,35 +152,6 @@ func (anim *AnimatedGif) DrawFrame(canvas *Canvas, tick uint64) {
 	}
 }
 
-// DrawFrameAt renders the GIF frame corresponding to tick into destination rectangle (dstX, dstY, dstW, dstH).
-func (anim *AnimatedGif) DrawFrameAt(canvas *Canvas, dstX, dstY, dstW, dstH int, tick uint64) {
-	matrix := anim.GetFrame(tick)
-	if matrix == nil {
-		return
-	}
-	srcH := len(matrix)
-	if srcH == 0 {
-		return
-	}
-	srcW := len(matrix[0])
-
-	for y := 0; y < dstH; y++ {
-		py := dstY + y
-		if py < 0 || py >= canvas.Height {
-			continue
-		}
-		srcY := (y * srcH) / dstH
-		for x := 0; x < dstW; x++ {
-			px := dstX + x
-			if px < 0 || px >= canvas.Width {
-				continue
-			}
-			srcX := (x * srcW) / dstW
-			canvas.Pixels[py][px] = matrix[srcY][srcX]
-		}
-	}
-}
-
 func minInt(a, b int) int {
 	if a < b {
 		return a
