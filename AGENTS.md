@@ -131,15 +131,16 @@ every existing `user_presets.json`. Add at the end; delete only from the end.
 
 ## 5. Assets
 
-Before Phase 1's curation, `assets/` held 367 files totalling 31MB; Phase 1
-curates that set to ~40 GIFs (`plan-phase-1.md` §1.3). §1.8's `git filter-repo`
-purge stripped the pre-curation asset blobs from every commit in this range, so
-no commit here contains any file under `assets/`.
+Before Phase 1's curation, `assets/` held 367 files totalling 31MB. §1.8's
+`git filter-repo` purge stripped the pre-curation asset blobs from every commit
+in this range, so no commit before Phase 1's re-encode contains any file under
+`assets/`. **§7 is the bar every asset must clear** — read it before adding or
+cutting one.
 
-- **No asset over ~300KB** without discussion. That distribution was heavily
-  skewed — mean 76KB, but the top 5 files alone were 9MB. A large GIF is
-  usually large because of frame count or palette width, neither of which
-  survives downsampling to 74×52 half-blocks. Re-encode rather than ship it.
+- **No asset over ~300KB, over 64 frames, or above 640×360** — see §7 for why all
+  three caps are needed and why on-disk size alone is not enough. On-disk size does
+  not predict decoded cost: a 515KB/431-frame GIF is 142MB resident. Re-encode
+  rather than ship an offender; drop it only if it fails the aesthetic bar too.
 - **Never commit build artifacts.** `make build` writes `./gottage`, which is
   gitignored.
 - **Batch asset churn.** Replacing an asset adds a permanent blob to history —
@@ -177,7 +178,7 @@ The instinct is reasonable and the answer is still no, on four counts:
    that embedding is scheduled to replace, not a replacement for it. Do not read
    this condition as satisfied merely because no `//go:embed` exists yet.
 
-What actually controls asset bloat here is the size cap and the churn discipline
+What actually controls asset bloat here is the §7 caps and the churn discipline
 above, not LFS.
 
 ---
@@ -207,13 +208,45 @@ cited in a doc, especially in `pkg/art/scenes_modular.go` (Phase 1 halves it) an
 
 ## 7. Asset curation bar
 
-<!-- PLACEHOLDER — Phase 1 §1.3 fills this in as its first act, before cutting
-     any asset. It is the criterion Phase 8's reference frames get judged
-     against, so it has to be written down before curation starts, not after.
+An asset earns its place in `assets/animations/` only if it clears **both** bars
+below. This is also the criterion Phase 8's reference frames get judged against, so
+it is written down before any curation happens rather than reverse-engineered after.
 
-     Suggested starting point from plan-phase-1.md §1.3: reads clearly at 74×52
-     half-blocks; a coherent cozy interior or view rather than an abstract loop;
-     visible micro-animation; a palette compatible with the app's warm tokens;
-     under ~300KB. -->
+### Aesthetic
 
-_Not yet written — see Phase 1 §1.3._
+- **Reads at 74×52 half-blocks.** Silhouette and value structure survive the
+  downsample; fine line-art and small text do not. Check the actual rendered frame,
+  not the source GIF in an image viewer.
+- **A coherent cozy interior or view** — a room, a window, a street at night. Not an
+  abstract loop, a logo, a character sheet, or a demo reel.
+- **Visible micro-animation.** Rain, steam, flicker, drift, a passing train. A frame
+  that only cross-fades is a still image with extra bytes.
+- **A palette compatible with the app's warm tokens.** Phase 7 defines them; until
+  then, judge against the existing handcrafted scenes.
+- **Somewhere a person would want to sit.** This is the whole product thesis and it
+  is the criterion that actually does the cutting.
+
+### Hard caps
+
+Mechanically checkable, all three required:
+
+| Cap | Value | Why |
+|---|---|---|
+| On-disk size | **≤ 300 KB** | Phase 2 embeds every asset into the binary. |
+| Frame count | **≤ 64** | Decoded cost is `frames × W × H × 24` bytes (`colorful.Color` is 3×float64) and the loader cache is unbounded until Phase 6. |
+| Source dimensions | **≤ 640×360** | The renderer downsamples to canvas size. Anything larger is wasted bytes and a slower decode. |
+
+**The frame cap is not redundant with the size cap.** Measured on the pre-curation set,
+`waneella_street.gif` was 515 KB on disk — comfortably under 300 KB after a downscale —
+but 431 frames, which is **142 MB resident** once decoded at 160×90. `cyber_bot.gif` was
+152 KB and 221 frames (73 MB). On-disk size does not predict memory cost; only frame
+count does.
+
+**An oversized asset that clears the aesthetic bar gets re-encoded, not dropped.** A
+large GIF is large because of source resolution or frame count, and neither survives the
+downsample to 74×52. `ffmpeg` with `fps=…,scale=…,palettegen/paletteuse` handles both.
+Prefer the `fps` filter over frame-dropping: it re-times the result, so the animation
+still plays at its authored wall-clock speed once Phase 15 starts honoring `Delays`.
+
+Re-encode **outside the repo and commit once** — see §5. Every intermediate version you
+commit is a permanent blob.
