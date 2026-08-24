@@ -55,6 +55,7 @@ func (am *AmbientManager) runLoop(filename string, activeFlag *bool, volVal *flo
 - **Volume by process-kill.** `AdjustChannelVolume` (`:263-265`) kills and respawns, so every `+`/`-` restarts the 4-second clip from zero.
 - **afplay churn.** afplay exits after 4s and the loop respawns immediately — ~15 process spawns/minute/channel with an audible gap each cycle.
 - **19 ignored errors in this one file**, including 10 unchecked `binary.Write` calls in the WAV header writer (`:158-181`).
+- **Silent no-audio if `MkdirTemp` fails.** `NewAmbientManager` drops that error at `:55`, leaving `am.tempDir` empty. `generateAmbientFiles` then returns at its `if am.tempDir == ""` guard (`:89-92`), so no WAV is written anywhere — **not** to CWD — and `runLoop` computes `filepath.Join("", "rain.wav")` = `"rain.wav"` at `:201`, handing the player a bare relative filename that resolves against whatever CWD the process happens to have. Nothing logs and nothing errors: the sidebar shows the channel active and no sound plays. §11.1's move to in-memory PCM removes the temp dir and this failure mode together.
 
 ---
 

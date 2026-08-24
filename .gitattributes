@@ -1,5 +1,7 @@
 # Mark binary assets so git never attempts diffs, merges, or CRLF translation
-# on them. 367 asset files are tracked today.
+# on them. 367 asset files were tracked when this rule was written; Phase 1
+# §1.8's history purge has since removed them, so none are tracked at this
+# commit. These rules stand for the curated set Phase 1 restores.
 *.gif  binary
 *.jpg  binary
 *.jpeg binary

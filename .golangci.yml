@@ -45,10 +45,13 @@ linters:
       - std-error-handling
 
     rules:
-      # TODO(phase-11): 34 ignored errors, 19 in ambient.go alone. Includes the
-      # load-bearing `tmpDir, _ := os.MkdirTemp(...)` at ambient.go:55 — on
-      # failure am.tempDir is "" and all five WAVs are written to CWD. Phase 11
-      # rewrites this package onto a real Go audio library; fix them there.
+      # TODO(phase-11): 34 ignored errors, 19 in ambient.go alone. The
+      # load-bearing one is `tmpDir, _ := os.MkdirTemp(...)` at ambient.go:55.
+      # On failure am.tempDir is "", generateAmbientFiles returns at its guard
+      # (:89-92) so no WAV is written at all, and runLoop hands the player a
+      # bare "rain.wav" (:201) — silent no-audio, no error anywhere. See
+      # plan-phase-11.md. Phase 11 rewrites this package onto a real Go audio
+      # library; fix them there.
       - path: 'pkg/audio/'
         linters: [errcheck]
 

@@ -92,8 +92,11 @@ The same applies to any `len(x) == 0` guard standing in for a correctness check.
 - **`t.Run` subtests** over monoliths. `TestModelViewModals`
   (`pkg/ui/view_test.go:37-321`) is 285 lines with ~40 unrelated assertions
   against shared mutating state — a failure in the middle hides everything after.
-- **Guard slow tests** with `testing.Short()`. `TestVerifyDownloadedGifs` decodes
-  every GIF in `assets/` on each run.
+- **Guard slow tests** with `testing.Short()`. `TestVerifyDownloadedGifs`
+  (`pkg/art/gif_loader_test.go:41`) decoded every GIF in `assets/` on each run.
+  Since the §1.8 purge its `../../assets/animations` path no longer resolves, so
+  it now fails outright — the known cause of the red suite at this commit. The
+  rule applies again once Phase 1 restores the curated set.
 
 ---
 
@@ -122,10 +125,13 @@ every existing `user_presets.json`. Add at the end; delete only from the end.
 
 ## 5. Assets
 
-`assets/` is 31MB across 367 files today. Phase 1 curates it to ~40 GIFs.
+Before Phase 1's curation, `assets/` held 367 files totalling 31MB; Phase 1
+curates that set to ~40 GIFs. Phase 1 §1.8's history purge has since removed the
+originals, so no `assets/` exists at this commit — the rules below govern the
+curated set Phase 1 restores.
 
-- **No asset over ~300KB** without discussion. The current distribution is
-  heavily skewed — mean 76KB, but the top 5 files alone are 9MB. A large GIF is
+- **No asset over ~300KB** without discussion. That distribution was heavily
+  skewed — mean 76KB, but the top 5 files alone were 9MB. A large GIF is
   usually large because of frame count or palette width, neither of which
   survives downsampling to 74×52 half-blocks. Re-encode rather than ship it.
 - **Never commit build artifacts.** `make build` writes `./gottage`, which is

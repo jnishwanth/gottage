@@ -1,20 +1,27 @@
 GO  ?= go
 BIN := gottage
 
+# tracked .go files that still exist in the working tree
+GOFILES_CMD = git ls-files '*.go' | while IFS= read -r f; do if [ -f "$$f" ]; then printf '%s\n' "$$f"; fi; done
+
 .DEFAULT_GOAL := help
 .PHONY: check fmt fmt-check vet tidy-check test test-race lint build run hooks clean help
 
 ## check      full local gate; run before every commit
 check: fmt-check vet tidy-check test
 
-## fmt        rewrite Go files with gofmt (exact inverse of fmt-check)
+## fmt        rewrite tracked Go files with gofmt (exact inverse of fmt-check)
 fmt:
-	gofmt -w .
+	@files="$$($(GOFILES_CMD))"; \
+	if [ -z "$$files" ]; then echo "no tracked Go files"; exit 0; fi; \
+	gofmt -w $$files
 
-## fmt-check  fail if any Go file is unformatted
+## fmt-check  fail if any tracked Go file is unformatted
 fmt-check:
-	@if ! out="$$(gofmt -l .)"; then \
-	  echo "gofmt: could not parse a Go file (errors above)"; \
+	@files="$$($(GOFILES_CMD))"; \
+	if [ -z "$$files" ]; then exit 0; fi; \
+	if ! out="$$(gofmt -l $$files)"; then \
+	  echo "gofmt failed on a tracked file (errors above)"; \
 	  exit 1; \
 	fi; \
 	if [ -n "$$out" ]; then \
