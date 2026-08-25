@@ -1,6 +1,6 @@
 # Phase 2b — Simplify: Remove the Scene-Category System
 
-> **Session size:** Small · **Depends on:** Phase 2 · **Touches:** `pkg/art/categories.go`, `pkg/ui/model.go`, `pkg/ui/view.go`, `pkg/ui/command_palette.go`
+> **Session size:** Small · **Depends on:** Phase 2 · **Touches:** `pkg/art/categories.go`, `pkg/art/categories_test.go`, `pkg/ui/model.go`, `pkg/ui/view.go`, `pkg/ui/command_palette.go`, `pkg/ui/view_test.go`, `pkg/ui/scene_count_test.go`
 
 > **Numbered 2b, not 3.** Inserting a real Phase 3 would renumber ten downstream
 > docs and every cross-reference in them, for no benefit. It runs after Phase 2
@@ -10,10 +10,14 @@
 
 ## Goal
 
-Delete the scene-category system outright: the seven-entry `SceneCategories`
-picker taxonomy, the substring matcher that populates it, and the per-category
-`SceneMeta` blurbs. One fewer concept, roughly 90 lines gone, and a picker that
-lists scenes instead of sorting them into buckets that no longer divide anything.
+Delete the scene-category system outright: the six-entry `SceneCategories`
+picker taxonomy (`pkg/art/categories.go:8-15`), the substring matcher that
+populates it, and the per-category `SceneMeta` blurbs. One fewer concept, roughly
+90 lines gone, and a picker that lists scenes instead of sorting them into
+buckets that no longer divide anything.
+
+Because entry 0 of that taxonomy is the app's only route to favorites, the phase
+also **adds a picker-level favorites filter**. That is not scope creep; see 2b.1.
 
 ## Why this phase exists, and why here
 
@@ -28,10 +32,18 @@ the reference frames force an explicit statement of what the app is for.
 
 **Mechanical.** Phase 1 emptied a category and exposed that the taxonomy fails
 silently when it stops dividing the set. `CategorizeScene` sorted 0 of 46 scenes
-into "⚙️ Steampunk & Fantasy" — all 57 members were among the 314 GIFs cut — and
-`GetScenesByCategoryAndFavorites` answers an empty category by returning
-`SceneOrder`, so the picker rendered *"Category: ⚙️ Steampunk & Fantasy
-(46 scenes)"* over every scene in the app. No error, no log.
+into "⚙️ Steampunk & Fantasy" — all **48** of its members were among the 314 GIFs
+cut, and not one was handcrafted — and `GetScenesByCategoryAndFavorites` answers
+an empty category by returning `SceneOrder`, so the picker rendered *"Category:
+⚙️ Steampunk & Fantasy (46 scenes)"* over every scene in the app. No error, no log.
+
+**48, not 57.** 57 is the raw count of pre-curation display names containing a
+steampunk-case keyword; nine of them never reached that case, because the cosmic
+case sits above it and claimed them on `observatory`, `astral` or `abyssal` —
+"Steampunk Sky Port Citadel Observatory ⚙️" and "Astral Clockwork Universe 🌌"
+among them. Keep the two numbers distinct: the 9-name gap between them is the
+order-decides-membership failure of the section below, measured rather than
+asserted.
 
 Phase 1 dropped that one category and added
 `TestEveryCategoryMatchesARegisteredScene` so the next prune fails loudly. Both
@@ -71,31 +83,101 @@ Any keyword fix is a fix to (2) that leaves (1) and (3) standing.
 `SceneCategories`, `CategorizeScene`, `GetScenesByCategory`,
 `GetScenesByCategoryAndFavorites`, `SceneMeta`, `GetSceneMeta`. The whole file.
 
-**Favorites must survive.** They are a real feature and are entangled with
-categories only by accident: category 0 is "⭐ Favorites" and
-`GetScenesByCategoryAndFavorites` special-cases `catIdx == 0` to filter
-`SceneOrder` by the favorites map. Lift that filter into a standalone
-`FavoriteScenes(favorites map[SceneType]bool) []SceneType`, and keep its
-fall-back-to-all-scenes-when-empty behaviour, which is honest for favorites in a
-way it was not for categories: an empty favorites list has no other sensible
-answer, whereas an empty category does.
+**Favorites must survive, and today the category system is their only route.**
+Category index 0 is "⭐ Favorites", and `GetScenesByCategoryAndFavorites`
+special-cases `catIdx == 0` to filter `SceneOrder` by the favorites map
+(`pkg/art/categories.go:42-52`). Exactly one caller passes the favorites map into
+it — `getFilteredScenes` (`pkg/ui/model.go:1035`), keyed on `m.PickerCategoryIdx`
+— so deleting `PickerCategoryIdx` deletes browsing by favorite outright unless
+this phase replaces it. `m.Scene.AutoCycleFavsOnly` is **not** a replacement: it
+is read only by the auto-cycle tick (`pkg/ui/model.go:256`) and the ambiance
+view's scope label (`pkg/ui/view.go:442`), never by the picker.
+
+**A second reason to delete rather than repair.** The picker's *render* path does
+not pass the map at all: `renderScenePickerModal` calls
+`GetScenesByCategory(m.PickerCategoryIdx)` (`pkg/ui/view.go:853`), which forwards
+`nil` favorites, so on the "⭐ Favorites" tab it renders the Cozy fallback while
+the key handler (`model.go:599`) selects out of `getFilteredScenes`, the real
+favorites list. Measured on a model with 2 favorites marked: 35 scenes rendered,
+2 scenes selectable — `enter` applies a scene the user is not looking at. Two
+call sites, two different answers to the same question. The replacement must
+read its list once and render and select from that same slice.
+
+So the phase must, in the same change:
+
+- Lift the filter into a standalone
+  `FavoriteScenes(favorites map[SceneType]bool) []SceneType`.
+- Add a **dedicated picker-level favorites toggle** (2b.2), separate from
+  `AutoCycleFavsOnly`. Do not couple them — one scopes what the picker lists, the
+  other scopes what auto-cycling rotates through, and they are independently
+  useful.
+
+Shipping the deletion without the toggle removes a working feature silently,
+which is the failure this phase exists to stop repeating.
+
+**An empty favorites filter renders an explicit empty state.** Something like
+*"No favorites yet — press `f` to add one"*, rendered where the picker already
+handles an empty list (`pkg/ui/view.go:883-884`).
+
+Do **not** carry the current behaviour forward, and do not replace it with
+fall-back-to-all-scenes. What the code does today is fall back to the **Cozy
+bucket**: `if len(list) == 0 { return GetScenesByCategoryAndFavorites(1, nil) }`
+(`pkg/art/categories.go:48-50`), so a user with no favorites sees the header
+*"⭐ Favorites (35 scenes)"* over 35 cozy scenes. That is the same silent
+substitution that put 46 scenes under a Steampunk header — one instance of it is
+being deleted here, and the phase must not introduce another in its place.
+An empty result is information; answering it with a different list destroys that
+information.
 
 ### 2b.2 — Collapse the picker to a flat list
 
-`pkg/ui/model.go`: remove `PickerCategoryIdx` and the `[` / `]` category-tab
-handling. `pkg/ui/view.go`: the picker renders `SceneOrder` (or the favorites
-subset when that toggle is on), and the header loses the category name and tab
-strip. Keep the `/` search filter — with 46 scenes it is now the primary way to
-find one, and it does the job categories were nominally for.
+**`pkg/ui/model.go`** — remove the `PickerCategoryIdx` field (`model.go:54`) and
+the category-tab handling. The tabs are bound to **`h`/`left` and `l`/`right`**
+(`model.go:617-622`), *not* to `[` and `]`; `[`/`]` have no key case anywhere in
+the repo, so "unbind `[`/`]`" would be vacuously true and is not the work. Those
+four bindings are the ones that must go, along with the `len(art.SceneCategories)`
+modular arithmetic behind them. `getFilteredScenes` (`model.go:1032-1045`) drops
+its `GetScenesByCategoryAndFavorites` call and returns `SceneOrder`, the search
+matches, or `FavoriteScenes(m.FavoriteScenes)` depending on picker state.
 
-`pkg/ui/command_palette.go`: the catalog command's description still says
-*"categorized scene catalog"*.
+**The favorites toggle.** Bind it inside the picker's non-search key switch
+(`model.go:600-637`). Recommended: **`F`** — `f` marks the highlighted scene a
+favorite (`model.go:607`), `F` filters the list to them. Record the one caveat:
+`F` is globally Zen Focus Mode (`model.go:709`). It is not a functional conflict,
+because the picker branch returns at `model.go:638` before the global switch is
+reached, and Phase 13's command table is what reconciles per-modal bindings into
+one source. If the phase would rather take zero collision, `o`, `y`, `N`, `L` and
+`Z` are unbound everywhere in `model.go`; `s` and `t` are **not** available —
+they are advertised-but-unbound and reserved for Phase 13's fix.
+
+**`pkg/ui/view.go`** — four sites:
+
+- `renderScenePickerModal` (`view.go:848-855`) drops the
+  `GetScenesByCategory(m.PickerCategoryIdx)` branch and the tab strip
+  (`view.go:856-864`); the header at `view.go:870` loses `"Category: %s"` and
+  states the active scope instead (all scenes, or favorites).
+- The footer at `view.go:945` renders
+  `"Nav: [h/l] Category • [/] Search • [f/*] Favorite • …"`. The brackets there
+  are notation *around* the key, not the key — that string must lose its
+  `[h/l] Category` segment and gain the new favorites-filter key.
+- The help modal at `view.go:635` reads
+  `"[V] Open Categorized Scene Catalog Modal (%d Scenes)"`. It is the most
+  prominent "Categorized" in the app and must change.
+- `view.go:1001` builds `catName := art.SceneCategories[art.CategorizeScene(st)]`
+  for the scene-overview `"Category:"` row. That row goes with the taxonomy.
+
+Keep the `/` search filter — with 46 scenes it is now the primary way to find
+one, and it does the job categories were nominally for.
+
+**`pkg/ui/command_palette.go`** — the catalog command's description at
+`command_palette.go:292` still says *"Open categorized scene catalog with %d
+pixel-art presets"*.
 
 ### 2b.3 — Re-home the `SceneMeta` blurbs, or drop them
 
 `GetSceneMeta` returns a `MoodTag` / `RecommendedWeather` / `Atmosphere` triple
-keyed on category index, rendered at `view.go` in the picker detail pane and the
-scene header. With categories gone there is no key.
+keyed on category index, rendered in the picker preview card (`view.go:916`) and
+the scene-overview pane (`view.go:979`). With categories gone there is no key.
 
 Two options, and this is a **product call for whoever runs the phase**:
 
@@ -114,33 +196,52 @@ writing 138 strings against an interface about to change is not free.
 - Delete `pkg/art/categories_test.go`, including
   `TestEveryCategoryMatchesARegisteredScene` — it guards a structure that no
   longer exists.
-- Keep `pkg/ui/scene_count_test.go`. It asserts rendered output carries
+- `pkg/ui/view_test.go:111` sets `m.PickerCategoryIdx = 0` to reach the favorites
+  list. It **will not compile** once the field is removed; repoint it at the new
+  favorites toggle, which keeps the assertion below it meaningful.
+- Keep `pkg/ui/scene_count_test.go` — it asserts rendered output carries
   `len(art.SceneOrder)` rather than a hardcoded number, which is orthogonal to
-  categories and stays valuable.
+  categories and stays valuable — but **one assertion in it must change**:
+  `scene_count_test.go:43` pins the exact help-modal string
+  `"Open Categorized Scene Catalog Modal (" + count + " Scenes)"`, which
+  `view.go:635` is being reworded. Update the expectation, do not delete the case.
 - Add a picker test asserting the flat list renders every registered scene, so
   a future filter bug cannot silently hide scenes the way the category fallback
   silently showed all of them.
+- Add a picker test for the empty favorites case: with no favorites marked, the
+  filter renders the empty-state message and **not** a substituted list. Assert
+  on rendered output through `Model.View()` — that is the surface the user reads,
+  and it is what the category bug got wrong.
 
 ---
 
 ## Known live issue this phase removes
 
-`GetScenesByCategoryAndFavorites` still contains the fallback that caused the
-original failure:
+`GetScenesByCategoryAndFavorites` still contains **two** empty-result fallbacks,
+one of which caused the original failure:
 
 ```go
-if len(list) == 0 {
-    return SceneOrder      // an empty category answers with every scene
+if len(list) == 0 {                                  // categories.go:48-50
+    return GetScenesByCategoryAndFavorites(1, nil)   // no favorites → the Cozy bucket
+}
+...
+if len(list) == 0 {                                  // categories.go:58-60
+    return SceneOrder                                // an empty category → every scene
 }
 ```
 
-Phase 1 deliberately left it. Dropping the empty category removed the *instance*;
+The second is the one that shipped the Steampunk header over 46 scenes. The first
+is the same bug with a smaller blast radius, live right now: with no favorites
+marked the picker reads *"⭐ Favorites (35 scenes)"* over the Cozy bucket.
+2b.1's explicit empty state is what replaces it — both go, neither is re-created.
+
+Phase 1 deliberately left them. Dropping the empty category removed the *instance*;
 the *mechanism* is still there, and after Phase 1 two categories hold exactly one
 scene each ("🌌 Sci-Fi & Cosmic" and "🌅 Synthwave & Retro"), so either could
 re-trigger it. Until this phase runs,
 `TestEveryCategoryMatchesARegisteredScene` is what stands between a curation pass
 and a silently mislabelled picker. Deleting the function deletes the mechanism —
-do not "fix" the fallback first and call the phase done.
+do not "fix" the fallbacks first and call the phase done.
 
 ## Do NOT touch in this phase
 
@@ -159,20 +260,47 @@ do not "fix" the fallback first and call the phase done.
 make check
 test ! -f pkg/art/categories.go
 grep -rn 'CategorizeScene\|SceneCategories\|GetSceneMeta\|PickerCategoryIdx' --include='*.go' .   # 0 hits
-grep -rn 'categoriz' --include='*.go' .                                                           # 0 hits
-go run .    # picker lists all 46 scenes; [ and ] no longer switch tabs; / still filters
+grep -rni 'categoriz' --include='*.go' .                                                          # 0 hits
+go run .    # picker lists all 46 scenes; h/l and left/right no longer switch tabs; / still filters
 ```
 
-- Favorites still work: mark one, toggle the favorites scope, confirm the picker
-  narrows to it and that an empty favorites list still shows every scene.
-- `pkg/ui/scene_count_test.go` still passes — the rendered count tracks the
-  registry.
+The `categoriz` grep is **case-insensitive on purpose**. Case-sensitive it finds
+`command_palette.go:292` but misses `view.go:635`
+(`"Open Categorized Scene Catalog Modal"`) and the assertion pinning that string
+at `scene_count_test.go:43` — it would report 0 hits while the help modal still
+called a flat list "Categorized". A check that passes with the most visible
+wrong string still on screen is worse than no check.
+
+Manual, in `go run .`:
+
+- Press `V`, then `h`, `l`, `left`, `right`: none of them change the list. This
+  is the real tab check — `[` and `]` were never bound, so testing those proves
+  nothing.
+- Mark a scene with `f`, toggle the favorites filter, confirm the picker narrows
+  to exactly the marked scenes and the header says so.
+- With the filter on, press `enter` on the highlighted row and confirm the scene
+  that activates is the one on screen. This is the render/select divergence from
+  2b.1; it must be gone, not merely relocated.
+- Unmark everything, toggle the filter again: the empty state renders, and **no**
+  substituted list appears. Cross-check the count against the header.
+- `U` still toggles auto-cycle scope independently of the picker filter — the two
+  are deliberately not wired together.
+
+`pkg/ui/scene_count_test.go` still passes, with its `view.go:635` expectation
+updated — the rendered count tracks the registry.
 
 ## Exit criteria
 
 - [ ] `pkg/art/categories.go` deleted; zero references remain repo-wide
-- [ ] Picker renders a flat scene list; `/` search intact; `[`/`]` unbound
-- [ ] Favorites preserved as a standalone filter
+- [ ] `grep -rni 'categoriz' --include='*.go' .` returns 0 hits — including
+      `view.go:635` and its assertion at `scene_count_test.go:43`
+- [ ] Picker renders a flat scene list; `/` search intact; the category tabs'
+      `h`/`left` and `l`/`right` bindings removed, and `Nav: [h/l] Category`
+      gone from the footer at `view.go:945`
+- [ ] Favorites reachable from the picker via a dedicated filter key, decoupled
+      from `AutoCycleFavsOnly`
+- [ ] Empty favorites renders an explicit empty state, not a substituted list,
+      and a test asserts it
 - [ ] `SceneMeta` dropped (or explicitly re-homed with a recorded decision)
 - [ ] `make check` green
 
@@ -181,7 +309,9 @@ go run .    # picker lists all 46 scenes; [ and ] no longer switch tabs; / still
 1. **Did `PickerCategoryIdx` reach the persistence schema?** Phase 3 §3.2 lists
    UI state to persist. If categories are gone before Phase 3 runs, that field
    must not appear in the config schema — persisting a field for a deleted
-   feature is the format break paying for nothing.
+   feature is the format break paying for nothing. The favorites filter that
+   replaces it is transient picker state and should not be persisted either; the
+   favorites *map* already is.
 2. **`SceneMeta` decision?** If it moved onto `SceneInterface`, Phase 6's v2
    interface has three more methods to carry.
 3. Confirm the scene count Phase 3's tests should expect: **46** at the end of

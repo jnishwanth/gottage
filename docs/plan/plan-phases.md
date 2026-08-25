@@ -1,6 +1,8 @@
 # Gottage Improvement Plan — Phase Index
 
-18 phases, each sized for **one fresh session**. Read this file first, then `plan-phase-N.md`.
+19 phases, each sized for **one fresh session**. Read this file first, then `plan-phase-N.md`.
+
+Numbering runs 0-17, plus **2b** — inserted between Phases 2 and 3 rather than renumbered, because a real Phase 3 would touch ten downstream docs and every cross-reference in them for no benefit. `plan-phase-2b.md` is the one filename that does not match the `plan-phase-N.md` pattern; that is deliberate, not an error.
 
 ## The ordering rule
 
