@@ -61,7 +61,7 @@ A conventions file plus a gate is what stops commit #96 from repeating this.
 **The history rewrite itself moved to Phase 1** — see the note below. This phase takes the backup and untracks the binary so it stops accumulating.
 
 ```bash
-# 1. Backup mirror, kept outside the repo. Do this before ANY of the 18 phases.
+# 1. Backup mirror, kept outside the repo. Do this before ANY of the phases.
 git clone --mirror /Users/nish/proj/gottage /Users/nish/proj/gottage-backup.git
 git -C /Users/nish/proj/gottage-backup.git log --oneline | wc -l    # -> 95
 
@@ -172,7 +172,7 @@ gnhf/make-the-tui-design-d3afb2             65ba4e3   (HEAD, +88)
 just-making-the-repo-better-and-less-of-a-mess  2a747b9   (stale, in a worktree)
 ```
 
-`git rev-list --left-right --count main...HEAD` → `0  88`. Clean fast-forward, no divergence. Fast-forward `main` to HEAD and delete the stale third branch, or the next 17 phases stack on a tree whose default branch is 88 commits stale. There was no remote at the time, so this was purely local bookkeeping. *(A private `origin` was added after Phase 1.)*
+`git rev-list --left-right --count main...HEAD` → `0  88`. Clean fast-forward, no divergence. Fast-forward `main` to HEAD and delete the stale third branch, or the remaining phases stack on a tree whose default branch is 88 commits stale. There was no remote at the time, so this was purely local bookkeeping. *(A private `origin` was added after Phase 1.)*
 
 ---
 
