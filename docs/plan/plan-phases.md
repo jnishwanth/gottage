@@ -30,7 +30,7 @@ Everything is ordered most-fundamental-first, so no phase's work is made obsolet
 | 1 | Content Triage | L | 0 | **20 dead scenes start rendering**; assets 31MB → **1.78MB**; **`.git` 88MB → 2.2MB** |
 | 2 | Asset Pipeline & Embed | S | 1 | Runs from any directory |
 | 2b | Simplify: drop scene categories | S | 2 | One fewer concept; picker is a flat list |
-| 3 | Config & Persistence | M | 2 | The one on-disk format break; state survives restart |
+| 3 | Config & Persistence | M | 2b | The one on-disk format break; state survives restart |
 | 4 | Canvas Core | L | 0 | ~3,800 → <10 allocs/frame; `RenderTo` |
 | 5 | Determinism & Goldens | M | 4 | Rendering becomes testable at all |
 | 6 | `SceneInterface` v2 | L | 5 | Lifecycle hook; **~1GB cache bounded** |

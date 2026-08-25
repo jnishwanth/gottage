@@ -16,21 +16,51 @@ entry point.
 *Virtual Cottage* simplification (`plan-phases.md`, Confirmed decisions) defers
 **how far to cut** to Phase 8, which is gated on signed-off reference frames.
 Phase 8 runs after this phase and cannot be waited for, so this phase does not
-guess. Persist only state whose survival is not in question:
+guess. **These two lists are exhaustive over §3.2's schema — every one of its 17
+entries appears in exactly one of them.** Anything added to that schema later
+must be classified into one of them at the time it is added; an unlisted entry is
+an unanswered question, not a default.
+
+**Persist** — state whose survival is not in question:
 
 > active scene, theme, favorites, weather / time-of-day and lamp/fire toggles,
-> per-channel audio volumes and active flags, timer session state.
+> **anim speed**, per-channel audio volumes and active flags, **CLIAMP preset
+> index**, timer session count and phase, **zen mode**.
 
-Leave out state whose survival Phase 8 decides: **tasks, beverage state,
-inspiration, the 34 atmosphere presets, colour filters, particle overlays,
-shader effects, vignette/CRT, render mode, GPU flag.** §3.2's schema list below
-predates this constraint and names several of them; the constraint wins.
+The three in bold are the ones the first draft of this list left unstated:
+
+- **anim speed** — a property of how the scene animates. Scenes survive any
+  Phase 8 outcome, and §3.1 already gives `AnimSpeed` a stable string identity.
+- **CLIAMP preset index** — which curated lofi track is selected
+  (`pkg/audio/cliamp.go:49`, indexing `CuratedLofiPresets`). Music is half the
+  stated direction, and Phase 11 rewrites the audio engine without removing the
+  feature.
+- **zen mode** — a view-level toggle over the scene, not a separate feature
+  whose survival is in question.
+
+**Defer** — state whose survival Phase 8 decides:
+
+> tasks, beverage state, color filter, particle overlay, shader effect,
+> vignette/CRT, render mode, GPU render flag.
+
+Also deferred, though §3.2 does not list them: **inspiration quotes** and the
+**34 built-in atmosphere presets** (`loadBuiltinPresets`, `pkg/features/presets.go`).
+
+**Built-in presets are not user-saved presets.** The 34 built-ins are a shipped
+library, deferred with the rest of the feature catalogue. `user_presets.json`
+(`pkg/ui/model.go:147`) is user data, is what §3.0's unguarded-load-path note is
+about, and **is in scope** — §3.2's "keep user presets here or in a sibling
+`presets.json`" decision still stands, and the int→string migration still applies
+to it.
 
 Deferring them costs nothing, and the asymmetry is the whole reason: *adding* a
 field to a versioned config later is backward-compatible and **is not a format
 break**, whereas *removing* one is. Persisting an undecided feature now is the
 only option that buys a second break. This does not weaken "one on-disk format
 break" — the break is §3.1's enum→string identity change, not the field list.
+
+§3.2's schema list below predates this constraint and names several deferred
+entries; the constraint wins.
 
 **While in `pkg/features/presets.go`:** the comment at `presets_test.go:52` says
 Phase 1 pruned the GIF set "from 344 to 10". The real pre-curation count was
@@ -130,7 +160,7 @@ One file, e.g. `~/.config/gottage/config.json`, with a `"version"` field from da
 
 Schema covers: active scene, theme, favorites, weather/ToD/lamp/fire toggles, anim speed, render mode, color filter, overlay, shader, vignette/CRT, per-channel audio volumes and active flags, CLIAMP preset index, tasks, timer session count and phase, beverage state, zen mode, GPU render flag.
 
-> **Narrow this list against the Prerequisites section above.** It was written before the *Virtual Cottage* simplification was recorded, and several entries here — tasks, beverage state, colour filter, overlay, shader, vignette/CRT, render mode, GPU render flag — are state whose survival Phase 8 decides. Adding them in a later phase is backward-compatible; removing them is not. Persist only what is settled.
+> **Narrow this list against the Prerequisites section above.** It was written before the *Virtual Cottage* simplification was recorded. The Prerequisites persist/defer lists are exhaustive over these 17 entries and are authoritative where the two disagree: eight of them — tasks, beverage state, color filter, overlay, shader, vignette/CRT, render mode, GPU render flag — are state whose survival Phase 8 decides and are deferred; the other nine persist. Adding a deferred field in a later phase is backward-compatible; removing one is not. Persist only what is settled.
 
 Keep user presets either in the same file or a sibling `presets.json` — one decision, made here.
 
