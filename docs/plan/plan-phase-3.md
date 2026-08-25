@@ -25,9 +25,12 @@ an unanswered question, not a default.
 
 > active scene, theme, favorites, weather / time-of-day and lamp/fire toggles,
 > **anim speed**, per-channel audio volumes and active flags, **CLIAMP preset
-> index**, timer session count and phase, **zen mode**.
+> index**, timer session count and phase, **zen mode**, *color filter*,
+> *particle overlay*, *shader effect*.
 
-The three in bold are the ones the first draft of this list left unstated:
+The three in italics sat on the Defer list until it was checked against what the
+app already writes to disk; the rule that moved them is stated below. The three
+in bold are the ones the first draft of this list left unstated:
 
 - **anim speed** — a property of how the scene animates. Scenes survive any
   Phase 8 outcome, and §3.1 already gives `AnimSpeed` a stable string identity.
@@ -40,8 +43,25 @@ The three in bold are the ones the first draft of this list left unstated:
 
 **Defer** — state whose survival Phase 8 decides:
 
-> tasks, beverage state, color filter, particle overlay, shader effect,
-> vignette/CRT, render mode, GPU render flag.
+> tasks, beverage state, vignette/CRT, render mode, GPU render flag.
+
+**A field already persisted through an in-scope file cannot be deferred out of
+the schema.** Deferring it does not stop it being written — it only removes the
+schema's account of it. `AtmospherePreset` (`pkg/features/presets.go:10-23`)
+already persists `ColorFilter`, `ParticleOverlay` and `ShaderEffect` as
+`color_filter` / `particle_overlay` / `shader_effect`; `user_presets.json` is
+declared in scope below and the int→string migration applies to it; and §3.1
+gives all three stable string identities. So a Phase 8 that deletes colour
+filters has to remove the field from an in-scope persisted file whether or not
+this schema mentions it — which is exactly the second break the deferral was
+supposed to buy off. The deferral bought nothing, so they persist.
+
+Applying that rule to the rest of the Defer list moves nothing else.
+`AtmospherePreset`'s remaining fields — `Name`, `Description`, `Scene`, `Theme`,
+`RainAudio`, `FireAudio`, `WindAudio`, `AnimSpeed` — are all on the Persist list
+already, and tasks, beverage state, vignette/CRT, render mode and the GPU flag
+are persisted nowhere today: `SaveToFile` (`presets.go:459`) writes the only
+user-state file the app has, and `AtmospherePreset` is its entire payload.
 
 Also deferred, though §3.2 does not list them: **inspiration quotes** and the
 **34 built-in atmosphere presets** (`loadBuiltinPresets`, `pkg/features/presets.go`).
@@ -73,11 +93,14 @@ library remain Phase 8's call. `user_presets.json` (`pkg/ui/model.go:147`) is
 user data and **is in scope**: §3.2's "keep user presets here or in a sibling
 `presets.json`" decision still stands, and the int→string migration applies to it.
 
-Deferring them costs nothing, and the asymmetry is the whole reason: *adding* a
-field to a versioned config later is backward-compatible and **is not a format
-break**, whereas *removing* one is. Persisting an undecided feature now is the
-only option that buys a second break. This does not weaken "one on-disk format
-break" — the break is §3.1's enum→string identity change, not the field list.
+For everything still on the Defer list — that is, everything not already written
+to disk — deferring costs nothing, and the asymmetry is the whole reason:
+*adding* a field to a versioned config later is backward-compatible and **is not
+a format break**, whereas *removing* one is. Persisting an undecided feature that
+is not already persisted is the only option that buys a second break; where it is
+already persisted, the rule above applies instead and deferral buys nothing. This
+does not weaken "one on-disk format break" — the break is §3.1's enum→string
+identity change, not the field list.
 
 §3.2's schema list below predates this constraint and names several deferred
 entries; the constraint wins.
@@ -194,7 +217,7 @@ One file, e.g. `~/.config/gottage/config.json`, with a `"version"` field from da
 
 Schema covers: active scene, theme, favorites, weather/ToD/lamp/fire toggles, anim speed, render mode, color filter, overlay, shader, vignette/CRT, per-channel audio volumes and active flags, CLIAMP preset index, tasks, timer session count and phase, beverage state, zen mode, GPU render flag.
 
-> **Narrow this list against the Prerequisites section above.** It was written before the *Virtual Cottage* simplification was recorded. The Prerequisites persist/defer lists are exhaustive over these 17 entries and are authoritative where the two disagree: eight of them — tasks, beverage state, color filter, overlay, shader, vignette/CRT, render mode, GPU render flag — are state whose survival Phase 8 decides and are deferred; the other nine persist. Adding a deferred field in a later phase is backward-compatible; removing one is not. Persist only what is settled.
+> **Narrow this list against the Prerequisites section above.** It was written before the *Virtual Cottage* simplification was recorded. The Prerequisites persist/defer lists are exhaustive over these 17 entries and are authoritative where the two disagree: five of them — tasks, beverage state, vignette/CRT, render mode, GPU render flag — are state whose survival Phase 8 decides and are deferred; the other twelve persist. Colour filter, overlay and shader are among those twelve despite Phase 8 owning their fate, because `AtmospherePreset` already persists them and this file is in scope — see the Prerequisites rule. Adding a deferred field in a later phase is backward-compatible; removing one is not. Persist only what is settled.
 
 Keep user presets either in the same file or a sibling `presets.json` — one decision, made here.
 

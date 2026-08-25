@@ -116,9 +116,19 @@ So the phase must, in the same change:
 Shipping the deletion without the toggle removes a working feature silently,
 which is the failure this phase exists to stop repeating.
 
-**An empty favorites filter renders an explicit empty state.** Something like
-*"No favorites yet — press `f` to add one"*, rendered where the picker already
-handles an empty list (`pkg/ui/view.go:883-884`).
+**An empty favorites filter renders an explicit empty state**, rendered where the
+picker already handles an empty list (`pkg/ui/view.go:883-884`).
+
+**The copy must name an action that works from that state.** *"No favorites yet —
+press `f` to add one"* does not. `f` marks the *highlighted* scene
+(`model.go:607`) and its body is guarded by
+`len(catScenes) > 0 && m.PickerSceneIdx < len(catScenes)`, so with the filter on
+and no favorites there is nothing highlighted, and the key does nothing at all —
+not even a status message. The only route out is to turn the filter off, then
+mark a scene. So the copy has to point at the filter key first: *"No favorites
+yet — press `F` to show all scenes, then `f` to add one"*, substituting whichever
+key 2b.2 binds the filter to. An empty state that tells the user to press an
+inert key is the same defect as a header that names the wrong list.
 
 Do **not** carry the current behaviour forward, and do not replace it with
 fall-back-to-all-scenes. What the code does today is fall back to the **Cozy
@@ -150,6 +160,15 @@ reached, and Phase 13's command table is what reconciles per-modal bindings into
 one source. If the phase would rather take zero collision, `o`, `y`, `N`, `L` and
 `Z` are unbound everywhere in `model.go`; `s` and `t` are **not** available —
 they are advertised-but-unbound and reserved for Phase 13's fix.
+
+**Leave `f`'s empty-list guard in place.** `f`'s body is guarded by
+`len(catScenes) > 0 && m.PickerSceneIdx < len(catScenes)` (`model.go:607-616`),
+which stays correct once the filter exists: with the filter on and no favorites
+there is genuinely nothing highlighted to toggle. That guard is what makes `f`
+inert in the empty state, and it is why 2b.1's empty-state copy sends the user to
+the filter key rather than to `f`. The two are one decision — if this phase
+relaxes the guard so `f` does something from an empty list, the empty-state copy
+has to change with it.
 
 **`pkg/ui/view.go`** — four sites:
 
