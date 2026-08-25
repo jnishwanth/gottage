@@ -46,12 +46,32 @@ The three in bold are the ones the first draft of this list left unstated:
 Also deferred, though §3.2 does not list them: **inspiration quotes** and the
 **34 built-in atmosphere presets** (`loadBuiltinPresets`, `pkg/features/presets.go`).
 
-**Built-in presets are not user-saved presets.** The 34 built-ins are a shipped
-library, deferred with the rest of the feature catalogue. `user_presets.json`
-(`pkg/ui/model.go:147`) is user data, is what §3.0's unguarded-load-path note is
-about, and **is in scope** — §3.2's "keep user presets here or in a sibling
-`presets.json`" decision still stands, and the int→string migration still applies
-to it.
+**Presets are deferred, but not because built-ins and user data are separable
+today — they are not.** `loadBuiltinPresets` (`presets.go:41`) fills `pm.Presets`
+with the 34 built-ins; `SaveToFile` (`presets.go:451`) marshals **all** of
+`pm.Presets`; and both `SavePreset` (`presets.go:438`) and `DeletePreset`
+(`presets.go:447`) call it, reachable from the UI at `model.go:513` and
+`model.go:551`. So saving a single custom preset writes all 34 built-ins into
+`user_presets.json`, and `LoadFromFile` (`presets.go:475`) then does
+`pm.Presets = loaded` wholesale, discarding the in-code copies.
+
+That is the same defect as **bug 4 below** ("Load clobbers built-ins",
+`presets.go:474-476`) seen from the other side, and Phase 3 owns both. It also
+means §3.0's framing understates the exposure: a `user_presets.json` written
+before Phase 1 pins the *old* built-ins too, so "⚡ Cyberpunk Hackathon Deck" and
+"🌌 Stargazing Observatory" come back at their pre-curation `SceneType`s and hit
+the same silent fallback — and `TestBuiltinPresetScenesAreRegistered` cannot
+catch it, because it builds `NewPresetManager("")` and `LoadFromFile` returns
+early on an empty path, so the test only ever sees the in-code copies.
+
+**Consequence for this phase:** presets cannot be deferred by simply leaving them
+out of the schema, because the file already contains state on both sides of the
+line. Phase 3 has to decide how built-in and user presets are separated — on
+migration, are persisted built-ins re-seeded from code by name, or carried
+forward as opaque user data? Answer that here; the *contents* of the built-in
+library remain Phase 8's call. `user_presets.json` (`pkg/ui/model.go:147`) is
+user data and **is in scope**: §3.2's "keep user presets here or in a sibling
+`presets.json`" decision still stands, and the int→string migration applies to it.
 
 Deferring them costs nothing, and the asymmetry is the whole reason: *adding* a
 field to a versioned config later is backward-compatible and **is not a format
@@ -61,11 +81,6 @@ break" — the break is §3.1's enum→string identity change, not the field lis
 
 §3.2's schema list below predates this constraint and names several deferred
 entries; the constraint wins.
-
-**While in `pkg/features/presets.go`:** the comment at `presets_test.go:52` says
-Phase 1 pruned the GIF set "from 344 to 10". The real pre-curation count was
-**324** — 36 handcrafted + 324 GIF registrations = the 360 `SceneType`
-constants. Correct it while you are in that file.
 
 ---
 
@@ -123,7 +138,19 @@ Theme names carry emoji (`pkg/ui/styles.go:20` → `"Cozy Autumn 🍁"`); built-
 > Recorded at the end of Phase 1 so it is not rediscovered as a bug report.
 
 Phase 1 cut 314 GIF registrations without pruning the `SceneType` enum, so **314
-constants are now valid enum values that nothing registers.** A saved
+constants are now valid enum values that nothing registers.**
+
+> **Three GIF counts circulate; they measure different moments and all three are
+> right.** **344** GIF registration calls existed when Phase 1 began
+> (`plan-phase-1.md:22,84`) — with the 36 handcrafted calls that is the **380
+> registrations** of `AGENTS.md` §4, of which 20 IDs were claimed twice, so 360
+> distinct entries reached the registry. **324** is the GIF count once those 20
+> shadowing registrations were deleted (360 total). **314** is what the curation
+> pass then cut, leaving 10. So `presets_test.go:52`'s "from 344 to 10" is
+> correct as written — Phase 1 removed both the 20 and the 314. Check which
+> moment a count refers to before treating it as a discrepancy.
+
+A saved
 `user_presets.json` written before that curation can name one, and nothing on the
 load path notices:
 
@@ -139,6 +166,13 @@ neither that scene nor the one the preset asked for. Phase 1 added
 `TestBuiltinPresetScenesAreRegistered` covering the **built-in** presets, which is
 what caught two of them at the time; **user-saved presets have no equivalent
 guard**, and a test cannot supply one because the input is a user's file.
+
+That guard is also narrower than it looks. It builds `NewPresetManager("")`, and
+`LoadFromFile` returns early on an empty path, so it only ever checks the in-code
+built-ins. Once a user has saved any preset, `user_presets.json` holds a *copy* of
+all 34 (see the Prerequisites section), and `LoadFromFile` prefers that copy — so
+built-ins pinned at pre-curation `SceneType`s reach the same fallback while the
+test stays green.
 
 This is not a bug to patch here — §3.1's `UnmarshalJSON` over stable string keys
 is the fix, provided it treats an unknown key as the documented "fall back to a
