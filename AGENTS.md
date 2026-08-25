@@ -191,10 +191,14 @@ above, not LFS.
 
 ## 6. The phase plan
 
-`docs/plan/` holds an 18-phase improvement plan. **`docs/plan/plan-phases.md` is
-the index — read it first.** `docs/plan/plan-phase-N.md` is the source of truth
-for what phase N does, and every phase doc has a **"Do NOT touch"** section that
-exists to keep phases from colliding. Respect it.
+`docs/plan/` holds a 19-phase improvement plan, numbered 0-17 plus **2b**.
+**`docs/plan/plan-phases.md` is the index — read it first.**
+`docs/plan/plan-phase-N.md` is the source of truth for what phase N does, and
+every phase doc has a **"Do NOT touch"** section that exists to keep phases from
+colliding. Respect it. `plan-phase-2b.md` is a deliberate exception to that
+filename pattern — 2b was inserted between Phases 2 and 3 rather than renaming
+`plan-phase-3.md` through `plan-phase-17.md`, fifteen files — so treat it as a
+phase doc like any other.
 
 The ordering rule the plan follows:
 

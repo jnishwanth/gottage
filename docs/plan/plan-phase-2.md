@@ -174,6 +174,10 @@ New tests:
 
 ## Re-validation checklist for Phase 3
 
+> **Phase 2b now runs between this phase and Phase 3.** These three items are
+> carried forward into `plan-phase-2b.md`'s checklist, which is the one Phase 3
+> runs; record findings there.
+
 1. **Did embed change test runtime?** `pkg/art` was 17s (222s under `-race`). If embedding pushed it materially higher, Phase 3 should add the `testing.Short()` guards before adding more tests.
 2. **Binary size acceptable?** If not, revisit before Phase 9/10 add more assets.
 3. Phase 3 is independent of this phase's code — it only needs Phase 1's enum decision. Confirm whether Phase 1 renumbered any `SceneType`.

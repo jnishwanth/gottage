@@ -274,8 +274,24 @@ go build ./... && go test ./... -count=1           # working tree intact
 - **Do not build the list from `git rev-list --objects --all`.** That prints *tree* objects as well as blobs, so bare directory paths (`assets`, `assets/animations`, `assets/scenes`) land in the list — and since `git ls-files` never lists directories, a naive `comm` diff will not filter them out. Purging `assets/animations` deletes **every** GIF including the curated keepers. (Verified against this repo: those three tree paths do appear.) `git rev-list` also dedups by blob SHA, so byte-identical files report only one of their paths — 367 tracked assets currently resolve to just 349 reported paths. The `git diff --diff-filter=D --name-only` form has neither problem.
 - `git-filter-repo` refuses to run with uncommitted changes, and needs `--force` because this is not a fresh clone.
 - It rewrites **every** SHA, including Phase 0's. Harmless — no phase doc cites a commit SHA, only `file:line` anchors, which are untouched. The `phase-0-end` tag is consumed by the rewrite; delete it afterwards.
-- It drops configured remotes and runs its own `reflog expire` + `gc --prune=now`. No remote here, so nothing to restore.
-- **Afterwards the backup mirror is the only copy of the old history.** Keep it until confident; Phase 17 §17.5 decides its fate.
+- **It drops configured remotes** and runs its own `reflog expire` + `gc --prune=now`. It announces this (`NOTICE: Removing 'origin' remote; see 'Why is my origin removed?'`) rather than doing it quietly, but it does not put the remote back. This repo now has a private `origin`, added after Phase 1, so it **must be re-added afterwards**. And because the bullet above means the rewrite shares **no commits** with what `origin` holds, a plain `git push` is rejected as non-fast-forward; the branches have to be forced:
+  ```bash
+  git remote add origin git@github.com:jnishwanth/gottage.git
+  git ls-remote origin refs/heads/<branch>       # read the remote SHA; transfers no objects
+  git push --force-with-lease=refs/heads/<branch>:<that-sha> origin <branch>
+  ```
+  **Do not reach for `git fetch origin` here, even though the lease looks like it needs one.** The problem the fetch appears to solve is real: filter-repo removes the remote with `git remote rm origin`, which deletes `refs/remotes/origin/*` along with the config, and `git remote add` restores only the config. A bare `--force-with-lease` with no explicit `=<expect>` derives its lease from that missing tracking ref, so it expects the ref to be absent, finds it present on the remote, and rejects the push with `! [rejected] <branch> -> <branch> (stale info)`.
+
+  **But fetching to repopulate the tracking ref undoes the purge you just ran.** The rewrite shares no commits with `origin`, so fetch negotiation finds no common ancestor and the server sends the remote's *entire pre-rewrite history* — every blob the purge deleted — into `.git/objects`. filter-repo's `reflog expire` + `gc --prune=now` has already run by then, and this recipe has no second prune, so after the force-push those objects are merely unreachable, not gone. The damage is silent: nothing errors, `.git` just grows back. Measured in a scratch repo reproducing this exact sequence (3MB blob, rewrite, `gc --prune=now`, re-add remote): `.git` was 116K after the purge, **3.2M after `git fetch origin`, and still 3.2M after the force-push**.
+
+  `git ls-remote` avoids this because it lists refs over the wire and transfers no objects at all — `.git` stayed at 116K across it — and passing that SHA as an explicit `=<expect>` gives the lease a value without a tracking ref. Verified in the same harness: bare `--force-with-lease` → `(stale info)`, exit 1; `--force-with-lease=refs/heads/main:<ls-remote-sha>` → `+ cc4505f...742c6a3 main -> main (forced update)`, exit 0, `.git` 124K. Plain `git push --force origin <branch>` also works and stays small; it gives up the lease's protection against overwriting someone else's push, which is tolerable on a solo repo but is a real trade, not a shortcut. Use `--all` in place of `<branch>` if every branch was rewritten.
+
+  Two consequences worth knowing before you start:
+  - **Until the force-push lands, the remote still holds every blob the purge deleted** — the 88MB→8MB win is local-only until then, and GitHub keeps the unreachable objects until it garbage-collects.
+  - **Open pull requests referencing pre-rewrite SHAs are left pointing at commits that exist on no branch.** They do not rebase themselves; expect to reopen or re-target them.
+
+  *(Corrected in place: this line previously read "No remote here, so nothing to restore." That was true when written and is not a historical note but a live instruction, so it is fixed rather than annotated. `plan-phase-0.md` §0.2b and §0.8 carry the same falsified premise and are marked superseded there instead, being completed records.)*
+- **Afterwards the backup mirror is the only *local* copy of the old history.** Keep it until confident; Phase 17 §17.5 decides its fate. (On a re-run, `origin` also holds the old history until the force-push above and the forge's GC have both happened.)
 
 Expected result: `.git` from **88MB to roughly 8MB** — the in-pack total was 83.4 MiB, dominated by 39 copies of a 7MB binary plus ~25MB of GIFs that do not deltify.
 

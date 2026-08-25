@@ -61,7 +61,7 @@ A conventions file plus a gate is what stops commit #96 from repeating this.
 **The history rewrite itself moved to Phase 1** — see the note below. This phase takes the backup and untracks the binary so it stops accumulating.
 
 ```bash
-# 1. Backup mirror, kept outside the repo. Do this before ANY of the 18 phases.
+# 1. Backup mirror, kept outside the repo. Do this before ANY of the phases.
 git clone --mirror /Users/nish/proj/gottage /Users/nish/proj/gottage-backup.git
 git -C /Users/nish/proj/gottage-backup.git log --oneline | wc -l    # -> 95
 
@@ -107,7 +107,7 @@ Marking the binaries stops git attempting diffs/merges on them and prevents any 
 
 The instinct is right (27MB of binary GIFs in a 17k-line repo), but LFS is the wrong tool *here*, on four counts:
 
-1. **There is no remote.** `git remote -v` is empty; the repo has never been pushed. LFS's entire value is that large objects live on a separate server and are fetched on demand. With no remote, LFS objects sit in `.git/lfs/objects/` — **the same bytes on the same disk, plus a layer of indirection.** It buys literally nothing today.
+1. **There was no remote when this was decided.** *(Superseded: a private `origin` at `git@github.com:jnishwanth/gottage.git` was added after Phase 1. `AGENTS.md` §5 carries the current form of this argument and marks this condition already true.)* LFS's entire value is that large objects live on a separate server and are fetched on demand; with no remote, LFS objects sat in `.git/lfs/objects/` — **the same bytes on the same disk, plus a layer of indirection.** The decision still holds on the remaining grounds: the curated set is 1.78MB, and an LFS pointer would be silently embedded by Phase 2's `//go:embed`.
 2. **The scale does not justify it.** Assets are 27MB now, but Phase 1 curates to ~40 GIFs under a size cap. The distribution is heavily skewed — mean 76KB, but 12 files over 500KB and the top 5 alone accounting for 9MB — so a size-aware curation lands the whole set at **1-3MB**. LFS starts earning its keep in the hundreds of MB.
 3. **It would silently break Phase 2's `//go:embed`.** This is the decisive one — see `plan-phase-2.md`, which documents it in full. Short version: an LFS pointer file is ~130 bytes of text, and `go:embed` would embed *that* rather than the GIF. The build succeeds and every scene renders garbage.
 4. **It adds a required tool dependency** for every clone and every future agent session, in exchange for nothing.
@@ -172,7 +172,7 @@ gnhf/make-the-tui-design-d3afb2             65ba4e3   (HEAD, +88)
 just-making-the-repo-better-and-less-of-a-mess  2a747b9   (stale, in a worktree)
 ```
 
-`git rev-list --left-right --count main...HEAD` → `0  88`. Clean fast-forward, no divergence. Fast-forward `main` to HEAD and delete the stale third branch, or the next 17 phases stack on a tree whose default branch is 88 commits stale. There is no remote, so this is purely local bookkeeping.
+`git rev-list --left-right --count main...HEAD` → `0  88`. Clean fast-forward, no divergence. Fast-forward `main` to HEAD and delete the stale third branch, or the remaining phases stack on a tree whose default branch is 88 commits stale. There was no remote at the time, so this was purely local bookkeeping. *(A private `origin` was added after Phase 1.)*
 
 ---
 
