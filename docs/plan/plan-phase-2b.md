@@ -2,9 +2,10 @@
 
 > **Session size:** Small · **Depends on:** Phase 2 · **Touches:** `pkg/art/categories.go`, `pkg/art/categories_test.go`, `pkg/ui/model.go`, `pkg/ui/view.go`, `pkg/ui/command_palette.go`, `pkg/ui/view_test.go`, `pkg/ui/scene_count_test.go`
 
-> **Numbered 2b, not 3.** Inserting a real Phase 3 would renumber ten downstream
-> docs and every cross-reference in them, for no benefit. It runs after Phase 2
-> and before Phase 3.
+> **Numbered 2b, not 3.** Inserting a real Phase 3 would rename
+> `plan-phase-3.md` through `plan-phase-17.md` — fifteen files — and every
+> cross-reference in them, for no benefit. It runs after Phase 2 and before
+> Phase 3.
 
 ---
 
@@ -205,13 +206,20 @@ writing 138 strings against an interface about to change is not free.
   `scene_count_test.go:43` pins the exact help-modal string
   `"Open Categorized Scene Catalog Modal (" + count + " Scenes)"`, which
   `view.go:635` is being reworded. Update the expectation, do not delete the case.
-- Add a picker test asserting the flat list renders every registered scene, so
-  a future filter bug cannot silently hide scenes the way the category fallback
-  silently showed all of them.
+- Add a picker test asserting the unfiltered list **is** every registered scene —
+  `getFilteredScenes()` returning `len(art.SceneOrder)` entries, the list the
+  picker reads. Do **not** assert this against `Model.View()`: the picker windows
+  its output to at most 11 rows (`endIdx := startIdx + 11`, `view.go:874-881`),
+  so no rendered surface ever carries all 46 and such a test cannot pass. The
+  goal is unchanged — a future filter bug must not silently hide scenes — but the
+  list is where that is observable. The `SCENE CATALOG BROWSER (%d Total Scenes)`
+  count (`view.go:942-943`) is the rendered half, and `scene_count_test.go`
+  already pins it.
 - Add a picker test for the empty favorites case: with no favorites marked, the
   filter renders the empty-state message and **not** a substituted list. Assert
-  on rendered output through `Model.View()` — that is the surface the user reads,
-  and it is what the category bug got wrong.
+  on rendered output through `Model.View()` here — an empty state *is* a
+  rendering concern, the 11-row window does not affect a zero-row list, and the
+  rendered surface is what the category bug got wrong.
 
 ---
 
@@ -306,13 +314,33 @@ updated — the rendered count tracks the registry.
 
 ## Re-validation checklist for Phase 3
 
-1. **Did `PickerCategoryIdx` reach the persistence schema?** Phase 3 §3.2 lists
+2b sits between Phase 2 and Phase 3, so **this is the checklist Phase 3 runs** —
+`plan-phase-3.md`'s Prerequisites section points here. Phase 2's own checklist
+(`plan-phase-2.md`, "Re-validation checklist for Phase 3") is not skipped: its
+three items are carried forward as 1-3 below, because 2b does not touch the
+embed, the binary, or the enum and cannot answer them itself.
+
+**Carried forward from Phase 2:**
+
+1. **Did embed change test runtime?** `pkg/art` was 17s (222s under `-race`). If
+   embedding pushed it materially higher, Phase 3 should add the
+   `testing.Short()` guards before adding more tests.
+2. **Binary size acceptable?** If not, revisit before Phase 9/10 add more assets.
+3. **Did Phase 1 renumber any `SceneType`?** Phase 3 needs Phase 1's enum
+   decision, not Phase 2's or 2b's code.
+
+**From 2b:**
+
+4. **Did `PickerCategoryIdx` reach the persistence schema?** Phase 3 §3.2 lists
    UI state to persist. If categories are gone before Phase 3 runs, that field
    must not appear in the config schema — persisting a field for a deleted
    feature is the format break paying for nothing. The favorites filter that
    replaces it is transient picker state and should not be persisted either; the
    favorites *map* already is.
-2. **`SceneMeta` decision?** If it moved onto `SceneInterface`, Phase 6's v2
+5. **`SceneMeta` decision?** If it moved onto `SceneInterface`, Phase 6's v2
    interface has three more methods to carry.
-3. Confirm the scene count Phase 3's tests should expect: **46** at the end of
+6. Confirm the scene count Phase 3's tests should expect: **46** at the end of
    Phase 1, unchanged by this phase.
+7. **Schema scope.** Phase 3 persists conservatively — see its Prerequisites
+   section. The *Virtual Cottage* cut is deferred to Phase 8, which runs later,
+   so §3.2 must not persist state whose survival Phase 8 decides.

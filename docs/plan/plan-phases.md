@@ -2,7 +2,7 @@
 
 19 phases, each sized for **one fresh session**. Read this file first, then `plan-phase-N.md`.
 
-Numbering runs 0-17, plus **2b** — inserted between Phases 2 and 3 rather than renumbered, because a real Phase 3 would touch ten downstream docs and every cross-reference in them for no benefit. `plan-phase-2b.md` is the one filename that does not match the `plan-phase-N.md` pattern; that is deliberate, not an error.
+Numbering runs 0-17, plus **2b** — inserted between Phases 2 and 3 rather than renumbered, because a real Phase 3 would rename `plan-phase-3.md` through `plan-phase-17.md` — **fifteen files** — and every cross-reference in them, for no benefit. `plan-phase-2b.md` is the one filename that does not match the `plan-phase-N.md` pattern; that is deliberate, not an error.
 
 ## The ordering rule
 
@@ -58,8 +58,16 @@ Phases 9 and 10 split further if a session runs long — per-scene work cuts cle
   categories, already provably broken after Phase 1's curation). **How much
   further to cut is deferred to Phase 8**, which is already gated on reference
   frames and is where an explicit statement of what the app is for belongs.
-  Deciding before Phase 3 matters: Phase 3 is the one on-disk format break, and
-  it should not persist state for features that are about to be deleted.
+
+  Phase 3 runs first and cannot wait for that answer, so **Phase 3 persists
+  conservatively** instead: only state whose survival is not in question. The
+  asymmetry is what makes deferring free — *adding* a field to a versioned
+  config later is backward-compatible and is not a format break, while
+  *removing* one is. Persisting an undecided feature early is the only choice
+  here that buys a second break. Phase 3 is still "the one on-disk format
+  break": the break is the enum→string identity change in `plan-phase-3.md`
+  §3.1, not the field list. The constraint is recorded in that doc's
+  prerequisites.
 - **Personal tool, done well** — module path stays `gottage`; no CI/goreleaser; local `Makefile`; assets embedded.
 - **No Git LFS.** The curated set is only 1-3MB, and an LFS pointer file would be silently embedded by `//go:embed` in place of the GIF — build green, every scene garbage. `.gitattributes` marks binaries instead. Full reasoning and revisit conditions in `AGENTS.md` §5.
 

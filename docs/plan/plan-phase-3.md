@@ -1,6 +1,41 @@
 # Phase 3 — Config & Persistence Format
 
-> **Session size:** Medium · **Depends on:** Phase 2 · **Touches:** `pkg/features/presets.go`, a new `pkg/config/`, `pkg/ui/model.go` (call sites only)
+> **Session size:** Medium · **Depends on:** Phase 2b · **Touches:** `pkg/features/presets.go`, a new `pkg/config/`, `pkg/ui/model.go` (call sites only)
+
+---
+
+## Prerequisites
+
+Phase 2b sits between Phase 2 and this phase, so **`plan-phase-2b.md`'s
+"Re-validation checklist for Phase 3" is the one to run** — it carries Phase 2's
+three items forward alongside its own. `plan-phase-2.md`'s checklist is the
+earlier link in that chain and is preserved there; 2b's supersedes it as the
+entry point.
+
+**Persist conservatively — this is a constraint on §3.2's schema.** The
+*Virtual Cottage* simplification (`plan-phases.md`, Confirmed decisions) defers
+**how far to cut** to Phase 8, which is gated on signed-off reference frames.
+Phase 8 runs after this phase and cannot be waited for, so this phase does not
+guess. Persist only state whose survival is not in question:
+
+> active scene, theme, favorites, weather / time-of-day and lamp/fire toggles,
+> per-channel audio volumes and active flags, timer session state.
+
+Leave out state whose survival Phase 8 decides: **tasks, beverage state,
+inspiration, the 34 atmosphere presets, colour filters, particle overlays,
+shader effects, vignette/CRT, render mode, GPU flag.** §3.2's schema list below
+predates this constraint and names several of them; the constraint wins.
+
+Deferring them costs nothing, and the asymmetry is the whole reason: *adding* a
+field to a versioned config later is backward-compatible and **is not a format
+break**, whereas *removing* one is. Persisting an undecided feature now is the
+only option that buys a second break. This does not weaken "one on-disk format
+break" — the break is §3.1's enum→string identity change, not the field list.
+
+**While in `pkg/features/presets.go`:** the comment at `presets_test.go:52` says
+Phase 1 pruned the GIF set "from 344 to 10". The real pre-curation count was
+**324** — 36 handcrafted + 324 GIF registrations = the 360 `SceneType`
+constants. Correct it while you are in that file.
 
 ---
 
@@ -94,6 +129,8 @@ Add `TestEnumStringIdentitiesAreStable` with a golden fixture. This is the test 
 One file, e.g. `~/.config/gottage/config.json`, with a `"version"` field from day one. Atomic write (temp + rename). Errors returned, never `_ =`.
 
 Schema covers: active scene, theme, favorites, weather/ToD/lamp/fire toggles, anim speed, render mode, color filter, overlay, shader, vignette/CRT, per-channel audio volumes and active flags, CLIAMP preset index, tasks, timer session count and phase, beverage state, zen mode, GPU render flag.
+
+> **Narrow this list against the Prerequisites section above.** It was written before the *Virtual Cottage* simplification was recorded, and several entries here — tasks, beverage state, colour filter, overlay, shader, vignette/CRT, render mode, GPU render flag — are state whose survival Phase 8 decides. Adding them in a later phase is backward-compatible; removing them is not. Persist only what is settled.
 
 Keep user presets either in the same file or a sibling `presets.json` — one decision, made here.
 

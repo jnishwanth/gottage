@@ -274,7 +274,11 @@ go build ./... && go test ./... -count=1           # working tree intact
 - **Do not build the list from `git rev-list --objects --all`.** That prints *tree* objects as well as blobs, so bare directory paths (`assets`, `assets/animations`, `assets/scenes`) land in the list — and since `git ls-files` never lists directories, a naive `comm` diff will not filter them out. Purging `assets/animations` deletes **every** GIF including the curated keepers. (Verified against this repo: those three tree paths do appear.) `git rev-list` also dedups by blob SHA, so byte-identical files report only one of their paths — 367 tracked assets currently resolve to just 349 reported paths. The `git diff --diff-filter=D --name-only` form has neither problem.
 - `git-filter-repo` refuses to run with uncommitted changes, and needs `--force` because this is not a fresh clone.
 - It rewrites **every** SHA, including Phase 0's. Harmless — no phase doc cites a commit SHA, only `file:line` anchors, which are untouched. The `phase-0-end` tag is consumed by the rewrite; delete it afterwards.
-- It drops configured remotes and runs its own `reflog expire` + `gc --prune=now`. No remote here, so nothing to restore.
+- **It drops configured remotes** and runs its own `reflog expire` + `gc --prune=now`. This repo now has a private `origin`, added after Phase 1, so it **must be re-added afterwards** — the pass will silently leave you with no remote:
+  ```bash
+  git remote add origin git@github.com:jnishwanth/gottage.git
+  ```
+  *(Corrected in place: this line previously read "No remote here, so nothing to restore." That was true when written and is not a historical note but a live instruction, so it is fixed rather than annotated. `plan-phase-0.md` §0.2b and §0.8 carry the same falsified premise and are marked superseded there instead, being completed records.)*
 - **Afterwards the backup mirror is the only copy of the old history.** Keep it until confident; Phase 17 §17.5 decides its fate.
 
 Expected result: `.git` from **88MB to roughly 8MB** — the in-pack total was 83.4 MiB, dominated by 39 copies of a 7MB binary plus ~25MB of GIFs that do not deltify.

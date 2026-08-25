@@ -196,8 +196,9 @@ above, not LFS.
 `docs/plan/plan-phase-N.md` is the source of truth for what phase N does, and
 every phase doc has a **"Do NOT touch"** section that exists to keep phases from
 colliding. Respect it. `plan-phase-2b.md` is a deliberate exception to that
-filename pattern — 2b was inserted between Phases 2 and 3 rather than renumbering
-ten downstream docs — so treat it as a phase doc like any other.
+filename pattern — 2b was inserted between Phases 2 and 3 rather than renaming
+`plan-phase-3.md` through `plan-phase-17.md`, fifteen files — so treat it as a
+phase doc like any other.
 
 The ordering rule the plan follows:
 
