@@ -1,10 +1,12 @@
 package art
 
 import (
+	"bytes"
 	"image/gif"
-	"os"
-	"path/filepath"
+	"path"
 	"testing"
+
+	"gottage/assets"
 )
 
 // Hard caps from AGENTS.md §7. All three are required of every asset.
@@ -27,38 +29,37 @@ const (
 // Source dimensions are read from the GIF's own logical screen descriptor rather
 // than from LoadAnimatedGif, which rescales to whatever target size it is handed
 // and therefore can never observe a source-dimension violation.
+//
+// It measures the embedded copies rather than the source tree, because those are
+// the bytes that ship in the binary -- and reading them through package assets is
+// what lets this test run from any directory. assets.ReadEmbedded, not
+// assets.ReadFile: a GOTTAGE_ASSETS directory resolves ahead of the embedded FS,
+// and an oversized asset in the binary must not be excused by a compliant file
+// sitting in someone's override.
 func TestAssetsRespectHardCaps(t *testing.T) {
-	animDir := filepath.Join("..", "..", "assets", "animations")
-	entries, err := os.ReadDir(animDir)
+	names, err := assets.List()
 	if err != nil {
-		t.Fatalf("read %s: %v", animDir, err)
+		t.Fatalf("assets.List: %v", err)
 	}
 
 	checked := 0
-	for _, e := range entries {
-		if e.IsDir() || filepath.Ext(e.Name()) != ".gif" {
+	for _, full := range names {
+		if path.Ext(full) != ".gif" {
 			continue
 		}
-		name := e.Name()
-		path := filepath.Join(animDir, name)
+		name := path.Base(full)
 		checked++
 
-		info, err := os.Stat(path)
+		b, err := assets.ReadEmbedded(full)
 		if err != nil {
-			t.Errorf("%s: stat: %v", name, err)
+			t.Errorf("%s: read: %v", name, err)
 			continue
 		}
-		if info.Size() > maxAssetBytes {
-			t.Errorf("%s: %d bytes on disk, cap is %d", name, info.Size(), maxAssetBytes)
+		if int64(len(b)) > maxAssetBytes {
+			t.Errorf("%s: %d bytes embedded, cap is %d", name, len(b), maxAssetBytes)
 		}
 
-		f, err := os.Open(path)
-		if err != nil {
-			t.Errorf("%s: open: %v", name, err)
-			continue
-		}
-		g, err := gif.DecodeAll(f)
-		f.Close()
+		g, err := gif.DecodeAll(bytes.NewReader(b))
 		if err != nil {
 			t.Errorf("%s: decode: %v", name, err)
 			continue
@@ -79,6 +80,6 @@ func TestAssetsRespectHardCaps(t *testing.T) {
 	}
 
 	if checked == 0 {
-		t.Fatalf("no .gif files in %s: the caps would pass vacuously", animDir)
+		t.Fatal("no embedded .gif files: the caps would pass vacuously")
 	}
 }

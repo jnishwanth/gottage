@@ -1,6 +1,10 @@
 package art
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 // SceneInterface defines the modular contract for any Gottage visual scene.
 // Implementing this interface allows adding new scenes seamlessly to Gottage!
@@ -53,4 +57,55 @@ func GetScene(st SceneType) SceneInterface {
 		return s
 	}
 	return SceneRegistry[SceneRainyCity]
+}
+
+// SceneNames returns every registered scene's display name, in SceneOrder.
+func SceneNames() []string {
+	names := make([]string, 0, len(SceneOrder))
+	for _, id := range SceneOrder {
+		names = append(names, SceneRegistry[id].Name())
+	}
+	return names
+}
+
+// SceneByName resolves a display name to a registered SceneType.
+//
+// Deliberately not built on GetScene, which answers an unregistered type with
+// SceneRainyCity. A caller that asks for one scene and quietly receives another
+// is the same silent failure Phase 1 spent itself removing -- and it masked two
+// built-in presets pointing at scenes curation had cut.
+//
+// An exact case-insensitive match wins. Failing that, a unique case-insensitive
+// substring match wins, so a name carrying an emoji ("Kirokaze Cozy Room \U0001F3A8")
+// stays reachable from a shell. Ambiguity is an error naming the candidates,
+// never a pick.
+func SceneByName(name string) (SceneType, error) {
+	want := strings.ToLower(strings.TrimSpace(name))
+	if want == "" {
+		return 0, fmt.Errorf("no scene name given")
+	}
+
+	var partial []SceneType
+	for _, id := range SceneOrder {
+		have := strings.ToLower(SceneRegistry[id].Name())
+		if have == want {
+			return id, nil
+		}
+		if strings.Contains(have, want) {
+			partial = append(partial, id)
+		}
+	}
+
+	switch len(partial) {
+	case 0:
+		return 0, fmt.Errorf("no scene matches %q", name)
+	case 1:
+		return partial[0], nil
+	default:
+		matched := make([]string, 0, len(partial))
+		for _, id := range partial {
+			matched = append(matched, strconv.Quote(SceneRegistry[id].Name()))
+		}
+		return 0, fmt.Errorf("%q matches %d scenes: %s", name, len(partial), strings.Join(matched, ", "))
+	}
 }

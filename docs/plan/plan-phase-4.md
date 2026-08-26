@@ -80,7 +80,7 @@ Phases 8-10 make migrated scenes resolution-independent as a *by-product* of the
 
 Also fix two bugs here while the file is open:
 - `EncodeKittyGPU(cs.Canvas, 74, 34)` (`pkg/art/scene.go:1158`) hardcodes `rows=34` while the canvas has 26 char rows, and `terminal_adapter.go:110-114` emits 33 newlines to match the wrong count.
-- `TestEncodeKittyGPU` (`terminal_adapter_test.go:40`) asserts `s=320,v=180,c=74,r=34` — a header shape the app **never emits** (it passes a 74×52 canvas, producing `s=148,v=104,...`), which is why it never caught the row mismatch.
+- `TestEncodeKittyGPU` (`terminal_adapter_test.go:70`) asserts `s=320,v=180,c=74,r=34` — a header shape the app **never emits** (it passes a 74×52 canvas, producing `s=148,v=104,...`), which is why it never caught the row mismatch.
 - The GPU path allocates ~250KB/frame (~4MB/s): an RGBA buffer, a base64 string, then a re-chunked builder with a `Sprintf` per 4KB chunk (`:104,106`).
 
 ---

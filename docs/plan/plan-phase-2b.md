@@ -9,6 +9,80 @@
 
 ---
 
+## Prerequisites — findings from Phase 2
+
+> Written at the end of Phase 2. Read before starting.
+>
+> `plan-phase-2.md`'s re-validation checklist forwards its three questions here,
+> because 2b now runs between Phase 2 and Phase 3. They are answered in items
+> 6-8 below.
+
+1. **`assets/` is a Go package now.** Phase 2 added `assets/assets.go`
+   (`package assets`, import `gottage/assets`) with `//go:embed animations/*.gif`,
+   exposing `Open`, `ReadFile`, `ReadEmbedded` and `List` — `plan-phase-2.md`
+   §2.1 records why a shipped-bytes contract must read through `ReadEmbedded`
+   rather than `ReadFile`. **This deviates from
+   `plan-phase-2.md`'s "a new `pkg/assets/`"**: `//go:embed` cannot traverse
+   `../`, so the package has to be an ancestor of the GIFs, and siting it at
+   `assets/` needed no `git mv` and kept every existing reference to
+   `assets/animations/` true.
+2. **There is no CWD fallback, by design.** Resolution is `$GOTTAGE_ASSETS` then
+   the embedded FS. A file absent from the override falls through to the embedded
+   copy; an override directory that does not exist errors on every `Open`.
+3. **`pkg/art` is CWD-independent** — `grep -rn '"\.\."' pkg/` is 0, and
+   `TestScenesRenderFromArbitraryCWD` (`pkg/art/asset_resolution_test.go`) holds
+   the line. Any test 2b adds must resolve through `assets.Open`, never by
+   climbing to the source tree.
+4. **The registry counts are asserted**: `wantRegistrations = 46` and
+   `wantGifScenes = 10` in `pkg/art/asset_resolution_test.go`. 2b deletes the
+   category taxonomy, not scenes, so both must still hold when it lands.
+5. **`art.SceneByName` and `art.SceneNames` are new** (`scene_interface.go`),
+   added for `--demo --scene`. `SceneByName` resolves against `SceneRegistry`
+   directly and errors rather than guessing — 2b's flat picker may want either.
+   **`GetScene`'s silent fallback to `SceneRainyCity` is still there**; Phase 2
+   routed around it rather than removing it, so it remains a live silent-failure
+   vector for any id→scene path.
+6. **Test runtime: `pkg/art` went 0.55s → 0.85s**, four runs each side. The cost
+   is the CWD test decoding all ten GIFs at 73×51; `-short` brings it to 0.57s.
+   Whole suite is ~2.3s. There is headroom for Phase 3 to add tests without
+   reaching for `testing.Short()` guards.
+7. **Binary size: 7.46 MB → 9.30 MB.** The 1.78 MB of assets, near enough
+   exactly. Comfortably inside §2.4's "acceptable for a personal tool", and
+   nowhere near the ~10 MB-of-assets line at which that section says to
+   reconsider embedding.
+8. **Phase 1 renumbered no `SceneType`.** The block in `pkg/art/scenes.go` still
+   holds **360** constants, `SceneRainyCity` first through
+   `SceneAstralZodiacChronosAetherPortalStellar` last. Phase 3 migrates rather
+   than repairs; no existing `user_presets.json` is corrupt.
+9. **`art.AssetErrors()` records failed loads** (`pkg/art/asset_errors.go`),
+   captured in a wrapper around `AnimatedGifLoader.load` so open and decode
+   failures are both caught. **`pkg/art` writes nothing to stderr** — the rule is
+   scoped to the TUI, where bubbletea owns the terminal in alt-screen mode and a
+   log line at frame rate would corrupt the render it reports on. That path is
+   still stderr-free. The one-shot `--demo` path is not the TUI and never enters
+   alt-screen, so `main.go` reads `art.AssetErrors()` after rendering and, if it
+   is non-empty, prints `gottage: N asset(s) failed to load…` plus one line per
+   asset to stderr, suppresses the success trailer, and **exits 1**. Phase 16
+   still owns surfacing inside the running app, and the `c.Clear(PicoNavy)`
+   fallback is unchanged and still deliberate.
+10. **`main.go` gained `--scene`**, which `plan-phase-2.md`'s Touches line does
+    not list. It exists because exit criterion 1 was otherwise unverifiable:
+    `--demo` renders `SceneRainyCity`, a handcrafted scene that reads no asset.
+11. **Unparseable flag values now exit 2 on both paths.** `--scene`, `--weather`
+    and `--time` reject an unrecognised *or empty* value with a diagnostic
+    instead of falling back to a default — `--weather hail` and `--weather ""`
+    exit 2 rather than launching the TUI with the default weather, where before
+    they fell off the end of a `switch` with no default arm. `--time` also
+    reaches the `--demo` frame now; it used to be read only after the demo block
+    had already exited. **This was reviewed and accepted deliberately, not
+    inherited** — a typo'd flag value silently doing the wrong thing is the
+    failure class this whole rehabilitation removes, and it matches the `--scene`
+    decision. Do not re-litigate it or restore a silent fallback. Detecting
+    "flag passed empty" rather than "flag absent" needs `flag.FlagSet.Visit`;
+    `main.go`'s `flagPassed` is the helper.
+
+---
+
 ## Goal
 
 Delete the scene-category system outright: the six-entry `SceneCategories`
@@ -336,17 +410,16 @@ updated — the rendered count tracks the registry.
 2b sits between Phase 2 and Phase 3, so **this is the checklist Phase 3 runs** —
 `plan-phase-3.md`'s Prerequisites section points here. Phase 2's own checklist
 (`plan-phase-2.md`, "Re-validation checklist for Phase 3") is not skipped: its
-three items are carried forward as 1-3 below, because 2b does not touch the
-embed, the binary, or the enum and cannot answer them itself.
+three items are carried forward as 1-3 below.
 
-**Carried forward from Phase 2:**
+**Carried forward from Phase 2 — all three are already answered.** Phase 2
+measured them at the end of its own run, and 2b touches neither the embed, the
+binary nor the enum, so it cannot change the answers. Read the Prerequisites item
+each one points at rather than re-deriving it here.
 
-1. **Did embed change test runtime?** `pkg/art` was 17s (222s under `-race`). If
-   embedding pushed it materially higher, Phase 3 should add the
-   `testing.Short()` guards before adding more tests.
-2. **Binary size acceptable?** If not, revisit before Phase 9/10 add more assets.
-3. **Did Phase 1 renumber any `SceneType`?** Phase 3 needs Phase 1's enum
-   decision, not Phase 2's or 2b's code.
+1. **Did embed change test runtime?** — answered, Prerequisites item 6.
+2. **Binary size acceptable?** — answered, Prerequisites item 7.
+3. **Did Phase 1 renumber any `SceneType`?** — answered, Prerequisites item 8.
 
 **From 2b:**
 

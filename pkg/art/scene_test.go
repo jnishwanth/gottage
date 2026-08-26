@@ -2,10 +2,10 @@ package art
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
+
+	"gottage/assets"
 )
 
 func TestSceneRegistryAndCycling(t *testing.T) {
@@ -258,36 +258,42 @@ func TestNoDuplicateSceneRegistrations(t *testing.T) {
 	}
 }
 
-// TestEverySceneHasAsset checks the registry and assets/ agree in both directions:
-// no registration points at a missing GIF, and no GIF on disk is unregistered.
+// TestEverySceneHasAsset checks the registry and the embedded asset set agree in
+// both directions: no registration points at an asset that is not there, and no
+// embedded asset goes unregistered.
 //
 // A missing asset is invisible at runtime -- LoadAnimatedGif fails and the scene
 // falls back to a flat navy fill -- so this has to be caught in a test.
+//
+// It resolves through assets.Open rather than climbing to the source tree: the
+// embedded set is what actually ships, and a test that reads the checkout can
+// only ever pass from inside the checkout.
 func TestEverySceneHasAsset(t *testing.T) {
-	const animDir = "assets/animations"
 	registered := make(map[string]SceneType)
 	for id, sc := range SceneRegistry {
 		gs, ok := sc.(*AnimatedGifScene)
 		if !ok {
 			continue
 		}
-		if _, err := os.Stat(filepath.Join("..", "..", gs.gifPath)); err != nil {
-			t.Errorf("SceneType %d (%q) registers %s, which does not exist", id, gs.name, gs.gifPath)
+		f, err := assets.Open(gs.gifPath)
+		if err != nil {
+			t.Errorf("SceneType %d (%q) registers %s, which does not resolve: %v", id, gs.name, gs.gifPath, err)
 			continue
 		}
-		registered[filepath.Base(gs.gifPath)] = id
+		f.Close()
+		registered[gs.gifPath] = id
 	}
 
-	entries, err := os.ReadDir(filepath.Join("..", "..", animDir))
+	embedded, err := assets.List()
 	if err != nil {
-		t.Fatalf("read %s: %v", animDir, err)
+		t.Fatalf("assets.List: %v", err)
 	}
-	for _, e := range entries {
-		if filepath.Ext(e.Name()) != ".gif" {
-			continue
-		}
-		if _, ok := registered[e.Name()]; !ok {
-			t.Errorf("%s/%s is on disk but no scene registers it", animDir, e.Name())
+	if len(embedded) == 0 {
+		t.Fatal("no embedded assets: the orphan check below would pass vacuously")
+	}
+	for _, name := range embedded {
+		if _, ok := registered[name]; !ok {
+			t.Errorf("%s is embedded but no scene registers it", name)
 		}
 	}
 }

@@ -50,7 +50,7 @@ The remaining **10** GIF registrations are still structurally identical literals
 
 Keep `RegisterScene`'s **panic on duplicate** (Phase 1) — it now guards the manifest too, which is exactly where a copy-paste ID mistake would otherwise reappear.
 
-Add `TestManifestMatchesAssets` — every manifest entry resolves through `pkg/assets`, and every embedded GIF appears in the manifest. Closes the orphan-asset loop permanently (19 GIFs were orphaned before Phase 1).
+Add `TestManifestMatchesAssets` — every manifest entry resolves through `gottage/assets`, and every embedded GIF appears in the manifest. Closes the orphan-asset loop permanently (19 GIFs were orphaned before Phase 1).
 
 ## Workstream 10.4 — Retire the dead flags
 

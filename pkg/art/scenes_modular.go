@@ -136,6 +136,12 @@ func (s *AnimatedGifScene) RenderSky(c *Canvas, tod TimeOfDay, lightning bool, f
 	if err == nil && anim != nil {
 		anim.DrawFrame(c, frameCount)
 	} else {
+		// The navy fill stays as the visual fallback, but it is no longer the
+		// whole story: LoadAnimatedGif has recorded the failure, readable via
+		// AssetErrors(). A flat rectangle with nothing behind it is how 20
+		// broken scenes shipped.
+		// TODO(phase-16): surface the recorded error on the status line instead
+		// of rendering a fill that looks like art.
 		c.Clear(PicoNavy)
 	}
 }

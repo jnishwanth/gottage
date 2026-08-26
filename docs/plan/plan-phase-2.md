@@ -1,6 +1,6 @@
 # Phase 2 — Asset Pipeline & Embed
 
-> **Session size:** Small · **Depends on:** Phase 1 · **Touches:** `pkg/art/gif_loader.go`, a new `pkg/assets/`, `assets/`
+> **Session size:** Small · **Depends on:** Phase 1 · **Touches:** `pkg/art/gif_loader.go`, `pkg/art/scenes_modular.go`, `pkg/art/scene_interface.go`, `assets/`, `main.go`
 
 ---
 
@@ -56,6 +56,10 @@ It depends on Phase 1 (embed only survivors — 6MB, not 31MB) and blocks nothin
 
 ## The bug
 
+> **Fixed by this phase.** The section below describes the tree as it stood
+> *before* Phase 2, including a `grep` that now returns hits. Kept in that voice
+> because it is the argument for why the phase exists.
+
 There is **no `//go:embed` anywhere** in the repo (verified: `grep -rn 'embed' --include='*.go' .` → zero hits). All GIF paths are relative string literals like `"assets/animations/kirokaze_room.gif"`, opened with plain `os.Open` at `pkg/art/gif_loader.go:50`.
 
 So **every GIF scene silently renders as flat navy unless the process CWD is the repo root**:
@@ -82,16 +86,25 @@ This is also why `TestHandcraftedProceduralScenes` was able to assert that a nav
 
 ## Workstreams
 
-### 2.1 — `pkg/assets` with an embedded FS
+### 2.1 — `assets` with an embedded FS
+
+**Landed at `assets/assets.go`, not `pkg/assets/`.** `//go:embed` cannot traverse
+`../`, so the package has to be an ancestor of the files it embeds. Making the
+existing `assets/` directory a Go package needed no `git mv` and kept every
+existing reference to `assets/animations/` true — `AGENTS.md` §5 and §7, five
+test path joins, `README.md`, and the `assets/` naming in the Phase 8-10 docs.
 
 ```go
-package assets
+package assets   // import "gottage/assets"
 
 //go:embed animations/*.gif
 var embedded embed.FS
 
 // Open resolves an asset by its registration path, e.g. "assets/animations/x.gif".
 func Open(name string) (fs.File, error)
+func ReadFile(name string) ([]byte, error)     // resolved exactly as Open resolves it
+func ReadEmbedded(name string) ([]byte, error) // embedded bytes only, override ignored
+func List() ([]string, error)                  // the embedded set
 ```
 
 Resolution order:
@@ -100,6 +113,17 @@ Resolution order:
 2. The embedded FS.
 
 Do **not** fall back to CWD. Silent CWD resolution is the bug being fixed; an explicit env override replaces it.
+
+A file *absent* from the override falls through to the embedded copy, so
+overriding one asset does not mean copying all ten. The silent-failure risk that
+opens — a typo'd directory quietly reading the embedded set — is closed by making
+a `$GOTTAGE_ASSETS` that is not an existing directory an error on every `Open`.
+The env var is read per call rather than cached, so `t.Setenv` can reach it.
+
+`ReadEmbedded` speaks for the bytes that **ship**, `ReadFile` for the resolved
+ones. §2.3b's LFS tripwire and `AGENTS.md` §7's caps must use the former, because
+an override directory can satisfy `ReadFile` with files that are not in the build.
+Full reasoning is on `ReadEmbedded` itself in `assets/assets.go`.
 
 ### 2.2 — Route `gif_loader.go` through the resolver
 
@@ -135,7 +159,32 @@ If LFS is ever adopted, embedding must be abandoned first, not simultaneously. S
 
 If Phase 1's size cap held, assets should be **1-3MB**, putting the binary at ~8-10MB. Acceptable for a personal tool.
 
+**Measured: 7.46 MB → 9.30 MB**, the 1.78 MB of assets near enough exactly.
+
 If it landed materially above ~10MB of assets, stop and reconsider a runtime data directory before committing to embed — but note that going the other way (runtime dir) reopens the CWD-dependency bug this phase exists to close, so prefer tightening curation over abandoning embed.
+
+### 2.5 — `--scene`, because exit criterion 1 was unverifiable
+
+`--demo` renders `SceneRainyCity`, which is the handcrafted `CityCafeScene` and
+reads no asset at all, so `cd /tmp && ./gottage --demo` could never observe this
+phase's bug. `main.go` gains `--scene <name>`, resolved by a new
+`art.SceneByName`.
+
+That lookup goes to `SceneRegistry` directly and **not** through `GetScene`,
+which answers an unregistered type with `SceneRainyCity` — the fallback that let
+two built-in presets point at cut scenes. An unknown name exits 2 and lists what
+is available; an ambiguous substring names its candidates rather than picking
+one. A unique substring is accepted because every display name carries an emoji.
+
+**Exit codes.** An unrecognised *or empty* `--scene`, `--weather` or `--time`
+value exits **2** with a diagnostic, on the interactive path as well as under
+`--demo`; the two `switch` statements that used to drop such a value silently are
+gone. `--scene` without `--demo` is also a 2. Separately, `--demo` exits **1**
+and reports to stderr when `art.AssetErrors()` is non-empty after the frame is
+drawn, because a frame made of the navy fallback is not evidence that the binary
+resolved its assets — see the Verification block below.
+
+**This is a scope deviation**: `main.go` was not in the Touches line above.
 
 ---
 
@@ -150,11 +199,32 @@ If it landed materially above ~10MB of assets, stop and reconsider a runtime dat
 ## Verification
 
 ```bash
-go build -o /tmp/gottage . && cd /tmp && ./gottage --demo | head -5   # real art, not solid navy
-ls -lh /tmp/gottage                                                   # ~13MB
+go build -o /tmp/gottage . && cd /tmp
+env -u TERM_PROGRAM -u TERM -u KITTY_WINDOW_ID ./gottage --demo --scene "Kirokaze Cozy Room" | head -4
+env -u TERM_PROGRAM -u TERM -u KITTY_WINDOW_ID ./gottage --demo --scene "Kirokaze Cozy Room" \
+  | grep -o '38;2;[0-9]*;[0-9]*;[0-9]*' | sort -u | wc -l   # 1367; the fallback scores 1
+./gottage --demo --scene "Kirokaze Cozy Room"; echo $?      # 0 - a non-zero exit means an asset failed
+GOTTAGE_ASSETS=/tmp/nope ./gottage --demo --scene "Kirokaze Cozy Room"; echo $?   # 1, and it names the asset
+./gottage --demo --scene nonsense; echo $?                  # 2, and it lists valid names
+./gottage --weather hail; echo $?                           # 2 - no silent fallback to the default
+ls -lh /tmp/gottage                                         # 9.3MB
 go test ./... -count=1
-grep -rn 'os.Open' pkg/art/ | grep -v _test    # 0 direct asset opens
+grep -rn 'os.Open' pkg/art/ | grep -v _test                 # 0 direct asset opens
+grep -rn '"\.\."' pkg/                                      # 0 - pkg/art is CWD-independent
 ```
+
+**The `env -u` on the colour count is load-bearing, not tidiness.**
+`CottageScene.Render` consults `art.DetectTerminalProtocol`, and from Ghostty,
+Kitty or WezTerm it answers with `EncodeKittyGPU`'s base64 payload, which carries
+no `38;2;R;G;B` sequences at all. Run the pipeline from one of those terminals
+without clearing the variables and it prints **0**, on a binary that is working
+perfectly. `art.TerminalProtocolEnv()` is the list to clear;
+`main_test.go`'s `runGottageWithAssets` takes it from there rather than restating
+it, so the same trap cannot reappear in the suite.
+
+The `--demo` line without `--scene` is deliberately gone: it renders
+`SceneRainyCity`, a handcrafted scene that reads no asset, and proves nothing
+about asset resolution. See §2.5.
 
 New tests:
 
@@ -165,19 +235,24 @@ New tests:
 
 ## Exit criteria
 
-- [ ] Binary renders GIF scenes correctly from `/tmp`
-- [ ] Zero direct `os.Open` of assets outside `pkg/assets`
-- [ ] `GOTTAGE_ASSETS` override works
-- [ ] Asset load failures recorded rather than silently swallowed
-- [ ] `TestEmbeddedAssetsAreRealGifs` green — no pointer files, no truncated assets
-- [ ] `make check` green
+- [x] Binary renders GIF scenes correctly from `/tmp` — 1367 distinct colors via `--demo --scene`, exit 0; a failed asset is exit 1 rather than a silent navy frame
+- [x] Zero direct `os.Open` of assets outside `assets/`
+- [x] `GOTTAGE_ASSETS` override works, and a bad override directory errors loudly
+- [x] Asset load failures recorded rather than silently swallowed — `art.AssetErrors()`
+- [x] `TestEmbeddedAssetsAreRealGifs` green — no pointer files, no truncated assets
+- [x] `grep -rn '"\.\."' pkg/` → 0
+- [x] `make check` green
 
 ## Re-validation checklist for Phase 3
 
-> **Phase 2b now runs between this phase and Phase 3.** These three items are
-> carried forward into `plan-phase-2b.md`'s checklist, which is the one Phase 3
-> runs; record findings there.
+> **Phase 2b now runs between this phase and Phase 3.** All three are **answered**
+> below and carried into `plan-phase-2b.md`'s prerequisites (items 6-8), which is
+> the checklist Phase 3 runs.
 
-1. **Did embed change test runtime?** `pkg/art` was 17s (222s under `-race`). If embedding pushed it materially higher, Phase 3 should add the `testing.Short()` guards before adding more tests.
-2. **Binary size acceptable?** If not, revisit before Phase 9/10 add more assets.
-3. Phase 3 is independent of this phase's code — it only needs Phase 1's enum decision. Confirm whether Phase 1 renumbered any `SceneType`.
+1. **Did embed change test runtime?** `pkg/art` went **0.55s → 0.85s**, four runs
+   each side; `-short` is 0.57s and the whole suite ~2.3s. The cost is the CWD
+   test decoding all ten GIFs at 73×51. No `testing.Short()` guards needed yet.
+2. **Binary size acceptable?** **9.30 MB**, up from 7.46 MB. Yes.
+3. **Did Phase 1 renumber any `SceneType`?** **No** — 360 constants,
+   `SceneRainyCity` first through `SceneAstralZodiacChronosAetherPortalStellar`
+   last. Phase 3 migrates rather than repairs.

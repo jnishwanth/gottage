@@ -69,7 +69,7 @@ linters:
       - path: 'pkg/(ui|art)/'
         linters: [errcheck]
 
-      # Tests: 10 unchecked os.Setenv in terminal_adapter_test.go. Phase 16
+      # Tests: 11 unchecked os.Setenv in terminal_adapter_test.go. Phase 16
       # §16.5 converts them to t.Setenv.
       - path: '_test\.go'
         linters: [errcheck]

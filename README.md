@@ -57,12 +57,21 @@ go build -o gottage main.go
 # Render a single frame preview to stdout
 ./gottage --demo
 
+# Render one named scene (accepts a unique substring, so the emoji is optional)
+./gottage --demo --scene "Kirokaze Cozy Room"
+
 # Launch with specific initial weather
 ./gottage --weather rain
 
 # Launch with specific time of day
 ./gottage --time night
 ```
+
+An unrecognised or empty `--scene`, `--weather` or `--time` value **exits 2 with
+a diagnostic** rather than falling back to a default, so a typo cannot quietly
+give you a different scene, sky or weather than the one you asked for. `--scene`
+requires `--demo`. Under `--demo`, an asset that fails to load exits 1 and names
+it on stderr instead of rendering a flat navy frame and reporting success.
 
 ---
 
@@ -101,6 +110,9 @@ go build -o gottage main.go
 ```
 gottage/
 ├── main.go               # Application entry point & CLI flags
+├── assets/               # Curated GIFs, compiled into the binary
+│   ├── animations/       # The 10 scene GIFs
+│   └── assets.go         # //go:embed resolver — every asset read goes through it
 ├── pkg/
 │   ├── art/              # Dynamic Bit-Art Canvas & Scene Engine
 │   │   ├── canvas.go     # 24-bit TrueColor ANSI half-block pixel canvas
