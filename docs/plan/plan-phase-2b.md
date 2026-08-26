@@ -9,6 +9,60 @@
 
 ---
 
+## Prerequisites — findings from Phase 2
+
+> Written at the end of Phase 2. Read before starting.
+>
+> `plan-phase-2.md`'s re-validation checklist forwards its three questions here,
+> because 2b now runs between Phase 2 and Phase 3. They are answered in items
+> 6-8 below.
+
+1. **`assets/` is a Go package now.** Phase 2 added `assets/assets.go`
+   (`package assets`, import `gottage/assets`) with `//go:embed animations/*.gif`,
+   exposing `Open`, `ReadFile` and `List`. **This deviates from
+   `plan-phase-2.md`'s "a new `pkg/assets/`"**: `//go:embed` cannot traverse
+   `../`, so the package has to be an ancestor of the GIFs, and siting it at
+   `assets/` needed no `git mv` and kept every existing reference to
+   `assets/animations/` true.
+2. **There is no CWD fallback, by design.** Resolution is `$GOTTAGE_ASSETS` then
+   the embedded FS. A file absent from the override falls through to the embedded
+   copy; an override directory that does not exist errors on every `Open`.
+3. **`pkg/art` is CWD-independent** — `grep -rn '"\.\."' pkg/` is 0, and
+   `TestScenesRenderFromArbitraryCWD` (`pkg/art/asset_resolution_test.go`) holds
+   the line. Any test 2b adds must resolve through `assets.Open`, never by
+   climbing to the source tree.
+4. **The registry counts are asserted**: `wantRegistrations = 46` and
+   `wantGifScenes = 10` in `pkg/art/asset_resolution_test.go`. 2b deletes the
+   category taxonomy, not scenes, so both must still hold when it lands.
+5. **`art.SceneByName` and `art.SceneNames` are new** (`scene_interface.go`),
+   added for `--demo --scene`. `SceneByName` resolves against `SceneRegistry`
+   directly and errors rather than guessing — 2b's flat picker may want either.
+   **`GetScene`'s silent fallback to `SceneRainyCity` is still there**; Phase 2
+   routed around it rather than removing it, so it remains a live silent-failure
+   vector for any id→scene path.
+6. **Test runtime: `pkg/art` went 0.55s → 0.85s**, four runs each side. The cost
+   is the CWD test decoding all ten GIFs at 73×51; `-short` brings it to 0.57s.
+   Whole suite is ~2.3s. There is headroom for Phase 3 to add tests without
+   reaching for `testing.Short()` guards.
+7. **Binary size: 7.46 MB → 9.30 MB.** The 1.78 MB of assets, near enough
+   exactly. Comfortably inside §2.4's "acceptable for a personal tool", and
+   nowhere near the ~10 MB-of-assets line at which that section says to
+   reconsider embedding.
+8. **Phase 1 renumbered no `SceneType`.** The block in `pkg/art/scenes.go` still
+   holds **360** constants, `SceneRainyCity` first through
+   `SceneAstralZodiacChronosAetherPortalStellar` last. Phase 3 migrates rather
+   than repairs; no existing `user_presets.json` is corrupt.
+9. **`art.AssetErrors()` records failed loads** (`pkg/art/asset_errors.go`),
+   captured in a wrapper around `AnimatedGifLoader.load` so open and decode
+   failures are both caught. Nothing is written to stderr — bubbletea owns the
+   terminal. Phase 16 reads this; the `c.Clear(PicoNavy)` fallback is unchanged
+   and still deliberate.
+10. **`main.go` gained `--scene`**, which `plan-phase-2.md`'s Touches line does
+    not list. It exists because exit criterion 1 was otherwise unverifiable:
+    `--demo` renders `SceneRainyCity`, a handcrafted scene that reads no asset.
+
+---
+
 ## Goal
 
 Delete the scene-category system outright: the six-entry `SceneCategories`

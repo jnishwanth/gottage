@@ -143,6 +143,20 @@ in this range, so no commit before Phase 1's re-encode contains any file under
 `assets/`. **§7 is the bar every asset must clear** — read it before adding or
 cutting one.
 
+**Every asset read goes through `gottage/assets`.** Phase 2 made `assets/` a Go
+package: the curated GIFs are compiled in with `//go:embed`, and `assets.Open`
+resolves a registration path (`"assets/animations/x.gif"`) against
+`$GOTTAGE_ASSETS` and then the embedded FS. There is no CWD fallback, because
+CWD-relative resolution *was* the bug — a bare `os.Open` meant every GIF scene
+rendered flat navy anywhere but the repo root, and `pkg/art`'s own tests, which
+run from `pkg/art/`, only ever exercised that failure path. Do not reintroduce
+`os.Open` on an asset, and do not write a test that reaches the source tree by
+joining `".."`; `assets.Open` and `assets.List` work from anywhere.
+
+A failed load is recorded by `art.AssetErrors()` rather than swallowed. The
+`c.Clear(PicoNavy)` fallback still paints the frame — Phase 16 owns replacing
+what the user sees — but it is no longer the only trace.
+
 - **No asset over ~300KB, over 64 frames, or above 640×360** — see §7 for why all
   three caps are needed and why on-disk size alone is not enough. On-disk size does
   not predict decoded cost: a 515KB/431-frame GIF is 142MB resident. Re-encode
@@ -164,14 +178,16 @@ The instinct is reasonable and the answer is still no, on four counts:
    clone and every fetch, and at the size in (2) they do not.
 2. **The scale does not justify it.** Post-curation the asset set is 1-3MB. LFS
    starts earning its keep in the hundreds of megabytes.
-3. **It would silently break Phase 2's `//go:embed`.** This is the decisive one.
+3. **It would silently break `//go:embed`.** This is the decisive one.
    An LFS pointer file is ~130 bytes of text. If the smudge filter has not run — a
    clone without `git lfs pull`, LFS not installed, `GIT_LFS_SKIP_SMUDGE` set —
    then `go:embed` embeds *that text* instead of the GIF. The build succeeds,
    `assets.Open` succeeds, and every scene renders flat navy. That is exactly the
-   silent-failure class this codebase already shipped once. Phase 2 has not landed
-   yet — there is no `//go:embed` in the tree today — so this is a forward-looking
-   constraint, not a description of the current build.
+   silent-failure class this codebase already shipped once. Phase 2 has landed, so
+   this now describes the current build rather than a future one:
+   `assets/assets.go` embeds `animations/*.gif`, and
+   `TestEmbeddedAssetsAreRealGifs` is the tripwire — GIF magic bytes and a 1KB
+   floor on every embedded file.
 4. **It adds a required tool dependency** to every clone and every agent session,
    in exchange for nothing above.
 
@@ -180,9 +196,10 @@ The instinct is reasonable and the answer is still no, on four counts:
 1. a remote exists — **already true**, see (1) above;
 2. assets exceed ~50MB — **not** true, 1-3MB post-curation;
 3. *and* Phase 2's embed strategy has been replaced by runtime asset loading —
-   **not** true. Today's CWD-relative `os.Open` loader is the *pre*-Phase-2 state
-   that embedding is scheduled to replace, not a replacement for it. Do not read
-   this condition as satisfied merely because no `//go:embed` exists yet.
+   **not** true. The assets are embedded as of Phase 2. `$GOTTAGE_ASSETS` is an
+   override for iterating on candidate frames without a rebuild, not a runtime
+   asset directory: with it unset — which is every real run — the binary reads
+   only what is compiled into it.
 
 What actually controls asset bloat here is the §7 caps and the churn discipline
 above, not LFS.
