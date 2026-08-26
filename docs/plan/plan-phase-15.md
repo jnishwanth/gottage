@@ -18,7 +18,7 @@ It needs the settled `Model` (12) and command table (13) — tick handling lives
 
 ### Three unsynchronized tickers, none gated
 
-`pkg/ui/model.go:200-227`:
+`pkg/ui/model.go:201-230`:
 
 ```go
 func (m Model) Init() tea.Cmd {
@@ -31,16 +31,16 @@ func (m Model) pollCLIAMP() tea.Cmd { return tea.Tick(1*time.Second, ...) }
 func (m Model) timerTick() tea.Cmd  { return tea.Tick(1*time.Second, ...) }
 ```
 
-- **~16.7 FPS fixed**, self-rescheduling at `:274`, `:277`, `:297`.
+- **~16.7 FPS fixed**, self-rescheduling at `:276`, `:279`, `:299`.
 - **Zero idle detection.** The tick fires unconditionally forever. Nothing checks whether particles exist, whether audio is playing, whether the active tab is even the art tab, or whether the terminal is focused. On the Timer/Tasks/Ambiance tabs the scene is **still simulated and fully re-rendered 16.7×/second.**
-- **Simulation and render are not decoupled.** `tickMsg` advances simulation (`m.Scene.Update()`, `:247`); Bubbletea then calls `View()`, which **rasterizes** (`m.Scene.RenderFrame()` at `view.go:250`, and again at `:695` for Zen view). One rate for both.
+- **Simulation and render are not decoupled.** `tickMsg` advances simulation (`m.Scene.Update()`, `:249`); Bubbletea then calls `View()`, which **rasterizes** (`m.Scene.RenderFrame()` at `view.go:250`, and again at `:695` for Zen view). One rate for both.
 - **`AnimSpeed` is ignored by the renderer.** `art/scene.go:615-621` returns early on `SpeedPaused` and halves on `SpeedSlow` — but `RenderFrame()` in `View()` ignores it entirely, so **the full raster cost is paid even when paused.**
 - **Rendering is also driven by mouse motion.** `tea.WithMouseCellMotion()` (`main.go:121`) emits a message per cell traversed, each triggering a full re-raster.
 - **`pollCLIAMP` forks a subprocess every second, forever** — `exec.Command(cliampPath, "status").Run()` (`audio/cliamp.go:116`) — regardless of whether CLIAMP is installed or playing.
 
 ### GIFs ignore their authored timing
 
-`AnimatedGif.Delays` (`pkg/art/gif_loader.go:20`) is populated at `:95` and **never read**. Playback uses `tick % FrameCount` at `:138`, so **every GIF plays at the 60ms UI tick.** A 10fps GIF renders at 16.7fps; a 4fps one runs 4× too fast.
+`AnimatedGif.Delays` (`pkg/art/gif_loader.go:26`) is populated at `:117` and **never read**. Playback uses `tick % FrameCount` at `:162`, so **every GIF plays at the 60ms UI tick.** A 10fps GIF renders at 16.7fps; a 4fps one runs 4× too fast. (Anchors re-derived at Phase 2; `grep -n 'TODO(phase-15)' pkg/art/gif_loader.go` reaches both sites without trusting these numbers.)
 
 Preserved deliberately in Phase 1 as an unimplemented feature. Given the user's complaint is about the art, this is plausibly the **highest art-quality-per-line change in the whole plan.**
 
