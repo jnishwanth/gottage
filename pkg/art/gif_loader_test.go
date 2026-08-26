@@ -1,17 +1,21 @@
 package art
 
 import (
-	"os"
-	"path/filepath"
+	"path"
 	"testing"
+
+	"gottage/assets"
 )
 
 func TestAnimatedGifLoader(t *testing.T) {
-	// Path to downloaded test gif
-	gifPath := filepath.Join("..", "..", "assets", "animations", "kirokaze_room.gif")
-	if _, err := os.Stat(gifPath); os.IsNotExist(err) {
-		t.Skip("Test GIF file not found, skipping test")
-	}
+	// The registration key, resolved through package assets -- not a path
+	// relative to this package directory.
+	//
+	// The previous version stat'd the source tree and called t.Skip when the file
+	// was absent. A vanished asset has to fail the suite: a test that skips itself
+	// out of existence is the same silent-failure class as the navy fallback it is
+	// here to catch.
+	gifPath := "assets/animations/kirokaze_room.gif"
 
 	canvas := NewCanvas(160, 90)
 	anim, err := LoadAnimatedGif(gifPath, canvas.Width, canvas.Height)
@@ -36,8 +40,8 @@ func TestAnimatedGifLoader(t *testing.T) {
 
 }
 
-// TestVerifyDownloadedGifs decodes every GIF in assets/animations and checks each
-// one is a real, non-empty animation.
+// TestVerifyDownloadedGifs decodes every embedded GIF and checks each one is a
+// real, non-empty animation.
 //
 // It deliberately asserts nothing about registry/asset agreement: TestEverySceneHasAsset
 // already asserts that in both directions at path granularity, which is strictly
@@ -47,27 +51,25 @@ func TestAnimatedGifLoader(t *testing.T) {
 // package-level loader cache and is the single slowest test in the repo.
 func TestVerifyDownloadedGifs(t *testing.T) {
 	if testing.Short() {
-		t.Skip("decodes every GIF in assets/; skipped under -short")
+		t.Skip("decodes every embedded GIF; skipped under -short")
 	}
 
-	animDir := filepath.Join("..", "..", "assets", "animations")
-	files, err := os.ReadDir(animDir)
+	names, err := assets.List()
 	if err != nil {
-		t.Fatalf("Failed to read animations directory: %v", err)
+		t.Fatalf("assets.List: %v", err)
+	}
+	if len(names) == 0 {
+		t.Fatal("no embedded assets: this test would pass vacuously")
 	}
 
-	for _, f := range files {
-		if filepath.Ext(f.Name()) != ".gif" {
-			continue
-		}
-		path := filepath.Join(animDir, f.Name())
-		anim, err := LoadAnimatedGif(path, 160, 90)
+	for _, name := range names {
+		anim, err := LoadAnimatedGif(name, 160, 90)
 		if err != nil {
-			t.Errorf("Failed to decode GIF %s: %v", f.Name(), err)
+			t.Errorf("Failed to decode GIF %s: %v", path.Base(name), err)
 			continue
 		}
 		if anim.FrameCount == 0 {
-			t.Errorf("GIF %s has 0 frames", f.Name())
+			t.Errorf("GIF %s has 0 frames", path.Base(name))
 		}
 	}
 }

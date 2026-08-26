@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"image"
 	"image/gif"
-	"os"
 	"sync"
+
+	"gottage/assets"
 
 	"github.com/lucasb-eyer/go-colorful"
 	"golang.org/x/image/draw"
@@ -52,7 +53,10 @@ func (loader *AnimatedGifLoader) Load(filePath string, targetWidth, targetHeight
 		return cached, nil
 	}
 
-	file, err := os.Open(filePath)
+	// Resolved through package assets rather than opened directly: filePath is a
+	// registration key ("assets/animations/x.gif"), not a path relative to
+	// whatever directory the process happens to be running in.
+	file, err := assets.Open(filePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open GIF file %s: %w", filePath, err)
 	}
