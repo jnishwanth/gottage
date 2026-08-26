@@ -58,9 +58,15 @@ Then hunt for what the audit never covered — `pkg/features` got the least atte
 
 ## Workstream 16.3 — `main.go`
 
-- `os.Exit(1)` at `main.go:90` **skips the deferred `model.Ambient.Cleanup()`** at `:82-86`, leaking the temp dir on every error exit. (Phase 11 removed temp WAVs, but the pattern is still wrong.)
-- `time.Sleep(100 * time.Millisecond)` at `:94`, commented *"Sleep briefly for cleanup"* — a race-y hack. Phase 11 gave `Cleanup()` real cancellation; wait on it properly.
-- The `--weather`/`--time` flag handling duplicates a nested string switch **twice** (`:24-35` and `:49-72`). With Phase 3's enum string parsing, both collapse to one call.
+- `os.Exit(1)` at `main.go:133` **skips the deferred `model.Ambient.Cleanup()`** at `:125-129`, leaking the temp dir on every error exit. (Phase 11 removed temp WAVs, but the pattern is still wrong.)
+- `time.Sleep(100 * time.Millisecond)` at `:137`, commented *"Sleep briefly for cleanup"* — a race-y hack. Phase 11 gave `Cleanup()` real cancellation; wait on it properly.
+- **Closed in Phase 2** — the `--weather`/`--time` handling no longer duplicates a
+  nested string switch. `parseWeather` and `parseTimeOfDay` resolve each flag once
+  for both the `--demo` and interactive paths, and an unrecognised *or empty* value
+  now exits 2 instead of falling off the end of a `switch` (see `plan-phase-2b.md`
+  item 11 — deliberate and reviewed; do not restore a silent fallback). Phase 3's
+  enum string parsing may absorb the two helpers, but there is no duplication left
+  to remove.
 
 ## Workstream 16.4 — Widen the lint gate
 

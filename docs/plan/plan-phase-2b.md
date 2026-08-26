@@ -19,7 +19,9 @@
 
 1. **`assets/` is a Go package now.** Phase 2 added `assets/assets.go`
    (`package assets`, import `gottage/assets`) with `//go:embed animations/*.gif`,
-   exposing `Open`, `ReadFile` and `List`. **This deviates from
+   exposing `Open`, `ReadFile`, `ReadEmbedded` and `List` — `plan-phase-2.md`
+   §2.1 records why a shipped-bytes contract must read through `ReadEmbedded`
+   rather than `ReadFile`. **This deviates from
    `plan-phase-2.md`'s "a new `pkg/assets/`"**: `//go:embed` cannot traverse
    `../`, so the package has to be an ancestor of the GIFs, and siting it at
    `assets/` needed no `git mv` and kept every existing reference to
@@ -408,17 +410,16 @@ updated — the rendered count tracks the registry.
 2b sits between Phase 2 and Phase 3, so **this is the checklist Phase 3 runs** —
 `plan-phase-3.md`'s Prerequisites section points here. Phase 2's own checklist
 (`plan-phase-2.md`, "Re-validation checklist for Phase 3") is not skipped: its
-three items are carried forward as 1-3 below, because 2b does not touch the
-embed, the binary, or the enum and cannot answer them itself.
+three items are carried forward as 1-3 below.
 
-**Carried forward from Phase 2:**
+**Carried forward from Phase 2 — all three are already answered.** Phase 2
+measured them at the end of its own run, and 2b touches neither the embed, the
+binary nor the enum, so it cannot change the answers. Read the Prerequisites item
+each one points at rather than re-deriving it here.
 
-1. **Did embed change test runtime?** `pkg/art` was 17s (222s under `-race`). If
-   embedding pushed it materially higher, Phase 3 should add the
-   `testing.Short()` guards before adding more tests.
-2. **Binary size acceptable?** If not, revisit before Phase 9/10 add more assets.
-3. **Did Phase 1 renumber any `SceneType`?** Phase 3 needs Phase 1's enum
-   decision, not Phase 2's or 2b's code.
+1. **Did embed change test runtime?** — answered, Prerequisites item 6.
+2. **Binary size acceptable?** — answered, Prerequisites item 7.
+3. **Did Phase 1 renumber any `SceneType`?** — answered, Prerequisites item 8.
 
 **From 2b:**
 

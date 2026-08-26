@@ -98,7 +98,7 @@ The same applies to any `len(x) == 0` guard standing in for a correctness check.
   writes `test_presets.json` into the package source directory and cleans up only
   on a non-panicking exit.
 - **`t.Setenv`**, never `os.Setenv` with a manual `defer` restore.
-  `pkg/art/terminal_adapter_test.go:9-38` does the latter; it is not
+  `pkg/art/terminal_adapter_test.go:9-42` does the latter; it is not
   parallel-safe and leaks on panic.
 - **`t.Run` subtests** over monoliths. `TestModelViewModals`
   (`pkg/ui/view_test.go:37-321`) is 285 lines with ~40 unrelated assertions
@@ -265,8 +265,9 @@ Mechanically checkable, all three required:
 | Source dimensions | **≤ 640×360** | The renderer downsamples to canvas size. Anything larger is wasted bytes and a slower decode. |
 
 `TestAssetsRespectHardCaps` (`pkg/art/asset_caps_test.go`) enforces all three
-against every file in `assets/animations`, so an offending asset fails `make check`
-rather than shipping.
+against every **embedded** GIF — the bytes that actually ship, read through
+`assets.ReadEmbedded` so a `$GOTTAGE_ASSETS` override cannot excuse an oversized
+asset in the binary — so an offender fails `make check` rather than shipping.
 
 **The frame cap is not redundant with the size cap.** Measured on the pre-curation set,
 `waneella_street.gif` was 515 KB on disk — comfortably under 300 KB after a downscale —

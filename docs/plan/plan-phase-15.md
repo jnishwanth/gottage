@@ -35,7 +35,7 @@ func (m Model) timerTick() tea.Cmd  { return tea.Tick(1*time.Second, ...) }
 - **Zero idle detection.** The tick fires unconditionally forever. Nothing checks whether particles exist, whether audio is playing, whether the active tab is even the art tab, or whether the terminal is focused. On the Timer/Tasks/Ambiance tabs the scene is **still simulated and fully re-rendered 16.7×/second.**
 - **Simulation and render are not decoupled.** `tickMsg` advances simulation (`m.Scene.Update()`, `:247`); Bubbletea then calls `View()`, which **rasterizes** (`m.Scene.RenderFrame()` at `view.go:250`, and again at `:695` for Zen view). One rate for both.
 - **`AnimSpeed` is ignored by the renderer.** `art/scene.go:615-621` returns early on `SpeedPaused` and halves on `SpeedSlow` — but `RenderFrame()` in `View()` ignores it entirely, so **the full raster cost is paid even when paused.**
-- **Rendering is also driven by mouse motion.** `tea.WithMouseCellMotion()` (`main.go:78`) emits a message per cell traversed, each triggering a full re-raster.
+- **Rendering is also driven by mouse motion.** `tea.WithMouseCellMotion()` (`main.go:121`) emits a message per cell traversed, each triggering a full re-raster.
 - **`pollCLIAMP` forks a subprocess every second, forever** — `exec.Command(cliampPath, "status").Run()` (`audio/cliamp.go:116`) — regardless of whether CLIAMP is installed or playing.
 
 ### GIFs ignore their authored timing

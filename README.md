@@ -110,6 +110,9 @@ it on stderr instead of rendering a flat navy frame and reporting success.
 ```
 gottage/
 ├── main.go               # Application entry point & CLI flags
+├── assets/               # Curated GIFs, compiled into the binary
+│   ├── animations/       # The 10 scene GIFs
+│   └── assets.go         # //go:embed resolver — every asset read goes through it
 ├── pkg/
 │   ├── art/              # Dynamic Bit-Art Canvas & Scene Engine
 │   │   ├── canvas.go     # 24-bit TrueColor ANSI half-block pixel canvas

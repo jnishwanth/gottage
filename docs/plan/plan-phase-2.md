@@ -102,8 +102,9 @@ var embedded embed.FS
 
 // Open resolves an asset by its registration path, e.g. "assets/animations/x.gif".
 func Open(name string) (fs.File, error)
-func ReadFile(name string) ([]byte, error)
-func List() ([]string, error)
+func ReadFile(name string) ([]byte, error)     // resolved exactly as Open resolves it
+func ReadEmbedded(name string) ([]byte, error) // embedded bytes only, override ignored
+func List() ([]string, error)                  // the embedded set
 ```
 
 Resolution order:
@@ -118,6 +119,11 @@ overriding one asset does not mean copying all ten. The silent-failure risk that
 opens — a typo'd directory quietly reading the embedded set — is closed by making
 a `$GOTTAGE_ASSETS` that is not an existing directory an error on every `Open`.
 The env var is read per call rather than cached, so `t.Setenv` can reach it.
+
+`ReadEmbedded` speaks for the bytes that **ship**, `ReadFile` for the resolved
+ones. §2.3b's LFS tripwire and `AGENTS.md` §7's caps must use the former, because
+an override directory can satisfy `ReadFile` with files that are not in the build.
+Full reasoning is on `ReadEmbedded` itself in `assets/assets.go`.
 
 ### 2.2 — Route `gif_loader.go` through the resolver
 
