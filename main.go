@@ -19,17 +19,24 @@ func main() {
 	timeFlag := flag.String("time", "", "Initial time of day (dawn, day, sunset, night, auto)")
 	flag.Parse()
 
+	// Whether --scene was passed, not whether its value is non-empty. `--scene
+	// "$SCENE"` with SCENE unset arrives here as the empty string, and reading
+	// that as "no --scene given" renders whatever the default happens to be --
+	// the silent-wrong-scene failure this flag exists to detect. An empty value
+	// is a request that cannot be satisfied; SceneByName says so.
+	sceneRequested := flagPassed(flag.CommandLine, "scene")
+
 	// --scene only means something in demo mode. Accepting it silently in the
 	// interactive path would leave the user staring at a scene they did not ask
 	// for, with nothing to explain why.
-	if *sceneFlag != "" && !*demoFlag {
+	if sceneRequested && !*demoFlag {
 		fmt.Fprintln(os.Stderr, "gottage: --scene requires --demo")
 		os.Exit(2)
 	}
 
 	if *demoFlag {
 		scene := art.NewCottageScene(74, 52)
-		if *sceneFlag != "" {
+		if sceneRequested {
 			// Resolved through the registry, never through art.GetScene, which
 			// answers an unregistered type with SceneRainyCity -- a demo that
 			// quietly renders the wrong scene would lie in exactly the way this
@@ -116,4 +123,17 @@ func main() {
 
 	// Sleep briefly for cleanup
 	time.Sleep(100 * time.Millisecond)
+}
+
+// flagPassed reports whether name appeared on the command line. FlagSet.Visit
+// walks only the flags actually set, which is the distinction a flag whose zero
+// value is also a legal-looking value cannot draw from its value alone.
+func flagPassed(fs *flag.FlagSet, name string) bool {
+	passed := false
+	fs.Visit(func(f *flag.Flag) {
+		if f.Name == name {
+			passed = true
+		}
+	})
+	return passed
 }

@@ -95,6 +95,26 @@ func ReadFile(name string) ([]byte, error) {
 	return io.ReadAll(f)
 }
 
+// ReadEmbedded returns an asset's contents from the embedded FS, ignoring
+// $GOTTAGE_ASSETS entirely. It accepts the same path forms Open accepts.
+//
+// It is the read path that matches List: both speak only for the bytes compiled
+// into the binary. Anything asserting on what actually ships -- the LFS tripwire
+// in this package, the AGENTS.md section 7 caps in pkg/art -- has to use it,
+// because an override directory can satisfy ReadFile with files that are not in
+// the binary and never will be.
+func ReadEmbedded(name string) ([]byte, error) {
+	rel, err := embedPath(name)
+	if err != nil {
+		return nil, err
+	}
+	b, err := embedded.ReadFile(rel)
+	if err != nil {
+		return nil, fmt.Errorf("embedded asset %s: %w", name, err)
+	}
+	return b, nil
+}
+
 // List returns every embedded asset's registration path, sorted.
 //
 // It reports the *embedded* set on purpose: that is what ships in the binary and

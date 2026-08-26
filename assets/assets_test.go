@@ -26,6 +26,10 @@ const wantAssetCount = 10
 // Open succeeds, and every scene renders flat navy. This is the tripwire.
 const minPlausibleAssetBytes = 1024
 
+// TestEmbeddedAssetsAreRealGifs is the LFS tripwire, so it reads through
+// ReadEmbedded rather than ReadFile: a GOTTAGE_ASSETS directory in the
+// developer's shell resolves ahead of the embedded FS, and reading through it
+// would let a real GIF on disk vouch for a pointer file in the binary.
 func TestEmbeddedAssetsAreRealGifs(t *testing.T) {
 	names, err := List()
 	if err != nil {
@@ -40,9 +44,9 @@ func TestEmbeddedAssetsAreRealGifs(t *testing.T) {
 
 	for _, name := range names {
 		t.Run(filepath.Base(name), func(t *testing.T) {
-			b, err := ReadFile(name)
+			b, err := ReadEmbedded(name)
 			if err != nil {
-				t.Fatalf("ReadFile: %v", err)
+				t.Fatalf("ReadEmbedded: %v", err)
 			}
 			if len(b) < minPlausibleAssetBytes {
 				t.Errorf("%d bytes, below the %d-byte floor -- an LFS pointer or a truncated file looks like this",
@@ -116,11 +120,11 @@ func TestAssetOverrideEnv(t *testing.T) {
 	const overridden = "assets/animations/kirokaze_room.gif"
 	const untouched = "assets/animations/snow_cabin.gif"
 
-	embeddedOverridden, err := ReadFile(overridden)
+	embeddedOverridden, err := ReadEmbedded(overridden)
 	if err != nil {
 		t.Fatalf("read embedded %s: %v", overridden, err)
 	}
-	embeddedUntouched, err := ReadFile(untouched)
+	embeddedUntouched, err := ReadEmbedded(untouched)
 	if err != nil {
 		t.Fatalf("read embedded %s: %v", untouched, err)
 	}
@@ -140,6 +144,27 @@ func TestAssetOverrideEnv(t *testing.T) {
 		}
 		if bytes.Equal(got, embeddedOverridden) {
 			t.Error("read the embedded copy while an override was present")
+		}
+	})
+
+	t.Run("ReadEmbedded ignores the override", func(t *testing.T) {
+		dir := t.TempDir()
+		replacement := tinyGIF(t)
+		writeAsset(t, dir, "animations/kirokaze_room.gif", replacement)
+		t.Setenv(OverrideEnv, dir)
+
+		if got, err := ReadFile(overridden); err != nil {
+			t.Fatalf("ReadFile: %v", err)
+		} else if !bytes.Equal(got, replacement) {
+			t.Fatal("the override is not actually in effect, so the assertion below proves nothing")
+		}
+
+		got, err := ReadEmbedded(overridden)
+		if err != nil {
+			t.Fatalf("ReadEmbedded: %v", err)
+		}
+		if !bytes.Equal(got, embeddedOverridden) {
+			t.Errorf("ReadEmbedded returned %d bytes, want the %d embedded ones", len(got), len(embeddedOverridden))
 		}
 	})
 

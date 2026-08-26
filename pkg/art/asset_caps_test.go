@@ -32,7 +32,10 @@ const (
 //
 // It measures the embedded copies rather than the source tree, because those are
 // the bytes that ship in the binary -- and reading them through package assets is
-// what lets this test run from any directory.
+// what lets this test run from any directory. assets.ReadEmbedded, not
+// assets.ReadFile: a GOTTAGE_ASSETS directory resolves ahead of the embedded FS,
+// and an oversized asset in the binary must not be excused by a compliant file
+// sitting in someone's override.
 func TestAssetsRespectHardCaps(t *testing.T) {
 	names, err := assets.List()
 	if err != nil {
@@ -47,7 +50,7 @@ func TestAssetsRespectHardCaps(t *testing.T) {
 		name := path.Base(full)
 		checked++
 
-		b, err := assets.ReadFile(full)
+		b, err := assets.ReadEmbedded(full)
 		if err != nil {
 			t.Errorf("%s: read: %v", name, err)
 			continue
