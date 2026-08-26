@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"gottage/assets"
+	"gottage/pkg/art"
 )
 
 // gottageBin is the real binary, built once. The --scene contract is about exit
@@ -52,14 +53,23 @@ func runGottage(t *testing.T, args ...string) (stdout, stderr string, code int) 
 // runGottageWithAssets sets GOTTAGE_ASSETS to exactly override, replacing any
 // value already in the environment rather than appending a second one: which of
 // two same-named entries getenv answers with is not something to rely on.
+//
+// It also drops every variable art.TerminalProtocolEnv names. CottageScene.Render
+// answers a Kitty-class terminal with a base64 graphics payload carrying no SGR
+// colour sequences at all, so inheriting the developer's TERM_PROGRAM would make
+// the colour counts below read 0 against a perfectly good binary. Taking the list
+// from the detector rather than restating it here is what stops a variable added
+// to that detector from silently reaching the child.
 func runGottageWithAssets(t *testing.T, override string, args ...string) (stdout, stderr string, code int) {
 	t.Helper()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
+	stripped := append(art.TerminalProtocolEnv(), assets.OverrideEnv)
 	env := slices.DeleteFunc(os.Environ(), func(kv string) bool {
-		return strings.HasPrefix(kv, assets.OverrideEnv+"=")
+		name, _, _ := strings.Cut(kv, "=")
+		return slices.Contains(stripped, name)
 	})
 
 	cmd := exec.CommandContext(ctx, gottageBin, args...)
@@ -191,6 +201,25 @@ func TestSceneFlagSelectsTheNamedScene(t *testing.T) {
 	if fallback >= minDemoGifColors {
 		t.Errorf("the default scene renders %d distinct colours, at or above the %d floor, so the floor above no longer distinguishes the two",
 			fallback, minDemoGifColors)
+	}
+}
+
+// TestDemoRendersAnsiWhateverTerminalRanTheSuite reproduces a false failure the
+// colour floors used to take from their surroundings: with TERM_PROGRAM=ghostty
+// in the environment, CottageScene.Render returns EncodeKittyGPU's base64 payload,
+// distinctForegroundColors reads 0, and every assertion above reports a GIF that
+// never reached the frame on a binary where it did.
+func TestDemoRendersAnsiWhateverTerminalRanTheSuite(t *testing.T) {
+	for _, name := range art.TerminalProtocolEnv() {
+		t.Setenv(name, "ghostty")
+	}
+
+	out, stderr, code := runGottage(t, "--demo", "--time", "night", "--weather", "rain", "--scene", "Kirokaze Cozy Room")
+	if code != 0 {
+		t.Fatalf("exit %d (stderr: %q)", code, stderr)
+	}
+	if got := distinctForegroundColors(out); got < minDemoGifColors {
+		t.Errorf("%d distinct colours: the host terminal's protocol reached the child and the frame is not ANSI", got)
 	}
 }
 

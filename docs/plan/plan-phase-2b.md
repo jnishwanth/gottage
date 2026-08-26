@@ -54,12 +54,30 @@
    than repairs; no existing `user_presets.json` is corrupt.
 9. **`art.AssetErrors()` records failed loads** (`pkg/art/asset_errors.go`),
    captured in a wrapper around `AnimatedGifLoader.load` so open and decode
-   failures are both caught. Nothing is written to stderr — bubbletea owns the
-   terminal. Phase 16 reads this; the `c.Clear(PicoNavy)` fallback is unchanged
-   and still deliberate.
+   failures are both caught. **`pkg/art` writes nothing to stderr** — the rule is
+   scoped to the TUI, where bubbletea owns the terminal in alt-screen mode and a
+   log line at frame rate would corrupt the render it reports on. That path is
+   still stderr-free. The one-shot `--demo` path is not the TUI and never enters
+   alt-screen, so `main.go` reads `art.AssetErrors()` after rendering and, if it
+   is non-empty, prints `gottage: N asset(s) failed to load…` plus one line per
+   asset to stderr, suppresses the success trailer, and **exits 1**. Phase 16
+   still owns surfacing inside the running app, and the `c.Clear(PicoNavy)`
+   fallback is unchanged and still deliberate.
 10. **`main.go` gained `--scene`**, which `plan-phase-2.md`'s Touches line does
     not list. It exists because exit criterion 1 was otherwise unverifiable:
     `--demo` renders `SceneRainyCity`, a handcrafted scene that reads no asset.
+11. **Unparseable flag values now exit 2 on both paths.** `--scene`, `--weather`
+    and `--time` reject an unrecognised *or empty* value with a diagnostic
+    instead of falling back to a default — `--weather hail` and `--weather ""`
+    exit 2 rather than launching the TUI with the default weather, where before
+    they fell off the end of a `switch` with no default arm. `--time` also
+    reaches the `--demo` frame now; it used to be read only after the demo block
+    had already exited. **This was reviewed and accepted deliberately, not
+    inherited** — a typo'd flag value silently doing the wrong thing is the
+    failure class this whole rehabilitation removes, and it matches the `--scene`
+    decision. Do not re-litigate it or restore a silent fallback. Detecting
+    "flag passed empty" rather than "flag absent" needs `flag.FlagSet.Visit`;
+    `main.go`'s `flagPassed` is the helper.
 
 ---
 

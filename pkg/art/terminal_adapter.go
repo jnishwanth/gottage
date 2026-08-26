@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -29,11 +30,44 @@ func (p TerminalProtocol) String() string {
 	}
 }
 
+const (
+	envTermProgram = "TERM_PROGRAM"
+	envTerm        = "TERM"
+	envKittyWindow = "KITTY_WINDOW_ID"
+)
+
+// terminalProtocolEnv is the only route detection has to the environment.
+//
+// Detection reads through this list, so a variable consulted by the matcher but
+// missing from it resolves to the empty string and cannot influence the answer.
+// That is what keeps TerminalProtocolEnv complete: a caller that neutralises
+// every name it returns gets ProtocolHalfBlock, and stays getting it when the
+// matcher grows a case.
+var terminalProtocolEnv = []string{envTermProgram, envTerm, envKittyWindow}
+
+// TerminalProtocolEnv returns every environment variable DetectTerminalProtocol
+// consults.
+//
+// CottageScene.Render answers ProtocolKitty with a base64 graphics payload rather
+// than ANSI, so anything asserting on rendered colour has to pin the protocol
+// instead of inheriting whichever terminal the process was launched from.
+func TerminalProtocolEnv() []string {
+	return slices.Clone(terminalProtocolEnv)
+}
+
 // DetectTerminalProtocol inspects environment variables to determine terminal graphics capabilities.
 func DetectTerminalProtocol() TerminalProtocol {
-	termProg := strings.ToLower(os.Getenv("TERM_PROGRAM"))
-	term := strings.ToLower(os.Getenv("TERM"))
-	kittyWindow := os.Getenv("KITTY_WINDOW_ID")
+	env := make(map[string]string, len(terminalProtocolEnv))
+	for _, name := range terminalProtocolEnv {
+		env[name] = os.Getenv(name)
+	}
+	return detectTerminalProtocol(env)
+}
+
+func detectTerminalProtocol(env map[string]string) TerminalProtocol {
+	termProg := strings.ToLower(env[envTermProgram])
+	term := strings.ToLower(env[envTerm])
+	kittyWindow := env[envKittyWindow]
 
 	if termProg == "ghostty" || term == "xterm-ghostty" || termProg == "kitty" || kittyWindow != "" || termProg == "wezterm" {
 		return ProtocolKitty

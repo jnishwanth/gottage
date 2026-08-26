@@ -67,6 +67,12 @@ go build -o gottage main.go
 ./gottage --time night
 ```
 
+An unrecognised or empty `--scene`, `--weather` or `--time` value **exits 2 with
+a diagnostic** rather than falling back to a default, so a typo cannot quietly
+give you a different scene, sky or weather than the one you asked for. `--scene`
+requires `--demo`. Under `--demo`, an asset that fails to load exits 1 and names
+it on stderr instead of rendering a flat navy frame and reporting success.
+
 ---
 
 ## ⌨️ Keybindings

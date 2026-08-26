@@ -170,6 +170,14 @@ two built-in presets point at cut scenes. An unknown name exits 2 and lists what
 is available; an ambiguous substring names its candidates rather than picking
 one. A unique substring is accepted because every display name carries an emoji.
 
+**Exit codes.** An unrecognised *or empty* `--scene`, `--weather` or `--time`
+value exits **2** with a diagnostic, on the interactive path as well as under
+`--demo`; the two `switch` statements that used to drop such a value silently are
+gone. `--scene` without `--demo` is also a 2. Separately, `--demo` exits **1**
+and reports to stderr when `art.AssetErrors()` is non-empty after the frame is
+drawn, because a frame made of the navy fallback is not evidence that the binary
+resolved its assets — see the Verification block below.
+
 **This is a scope deviation**: `main.go` was not in the Touches line above.
 
 ---
@@ -186,15 +194,27 @@ one. A unique substring is accepted because every display name carries an emoji.
 
 ```bash
 go build -o /tmp/gottage . && cd /tmp
-./gottage --demo --scene "Kirokaze Cozy Room" | head -4     # real art, not solid navy
-./gottage --demo --scene "Kirokaze Cozy Room" \
+env -u TERM_PROGRAM -u TERM -u KITTY_WINDOW_ID ./gottage --demo --scene "Kirokaze Cozy Room" | head -4
+env -u TERM_PROGRAM -u TERM -u KITTY_WINDOW_ID ./gottage --demo --scene "Kirokaze Cozy Room" \
   | grep -o '38;2;[0-9]*;[0-9]*;[0-9]*' | sort -u | wc -l   # 1367; the fallback scores 1
+./gottage --demo --scene "Kirokaze Cozy Room"; echo $?      # 0 - a non-zero exit means an asset failed
+GOTTAGE_ASSETS=/tmp/nope ./gottage --demo --scene "Kirokaze Cozy Room"; echo $?   # 1, and it names the asset
 ./gottage --demo --scene nonsense; echo $?                  # 2, and it lists valid names
+./gottage --weather hail; echo $?                           # 2 - no silent fallback to the default
 ls -lh /tmp/gottage                                         # 9.3MB
 go test ./... -count=1
 grep -rn 'os.Open' pkg/art/ | grep -v _test                 # 0 direct asset opens
 grep -rn '"\.\."' pkg/                                      # 0 - pkg/art is CWD-independent
 ```
+
+**The `env -u` on the colour count is load-bearing, not tidiness.**
+`CottageScene.Render` consults `art.DetectTerminalProtocol`, and from Ghostty,
+Kitty or WezTerm it answers with `EncodeKittyGPU`'s base64 payload, which carries
+no `38;2;R;G;B` sequences at all. Run the pipeline from one of those terminals
+without clearing the variables and it prints **0**, on a binary that is working
+perfectly. `art.TerminalProtocolEnv()` is the list to clear;
+`main_test.go`'s `runGottageWithAssets` takes it from there rather than restating
+it, so the same trap cannot reappear in the suite.
 
 The `--demo` line without `--scene` is deliberately gone: it renders
 `SceneRainyCity`, a handcrafted scene that reads no asset, and proves nothing
@@ -209,7 +229,7 @@ New tests:
 
 ## Exit criteria
 
-- [x] Binary renders GIF scenes correctly from `/tmp` — 1367 distinct colors via `--demo --scene`
+- [x] Binary renders GIF scenes correctly from `/tmp` — 1367 distinct colors via `--demo --scene`, exit 0; a failed asset is exit 1 rather than a silent navy frame
 - [x] Zero direct `os.Open` of assets outside `assets/`
 - [x] `GOTTAGE_ASSETS` override works, and a bad override directory errors loudly
 - [x] Asset load failures recorded rather than silently swallowed — `art.AssetErrors()`
