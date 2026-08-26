@@ -14,12 +14,36 @@ import (
 
 func main() {
 	demoFlag := flag.Bool("demo", false, "Render a single frame of cozy bit-art to terminal and exit")
+	sceneFlag := flag.String("scene", "", "Scene to render with --demo (display name, or a unique substring of one)")
 	weatherFlag := flag.String("weather", "", "Initial weather (clear, rain, snow, storm, fog)")
 	timeFlag := flag.String("time", "", "Initial time of day (dawn, day, sunset, night, auto)")
 	flag.Parse()
 
+	// --scene only means something in demo mode. Accepting it silently in the
+	// interactive path would leave the user staring at a scene they did not ask
+	// for, with nothing to explain why.
+	if *sceneFlag != "" && !*demoFlag {
+		fmt.Fprintln(os.Stderr, "gottage: --scene requires --demo")
+		os.Exit(2)
+	}
+
 	if *demoFlag {
 		scene := art.NewCottageScene(74, 52)
+		if *sceneFlag != "" {
+			// Resolved through the registry, never through art.GetScene, which
+			// answers an unregistered type with SceneRainyCity -- a demo that
+			// quietly renders the wrong scene would lie in exactly the way this
+			// flag exists to detect.
+			st, err := art.SceneByName(*sceneFlag)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "gottage: %v\n\nAvailable scenes:\n", err)
+				for _, name := range art.SceneNames() {
+					fmt.Fprintf(os.Stderr, "  %s\n", name)
+				}
+				os.Exit(2)
+			}
+			scene.CurrentScene = st
+		}
 		if *weatherFlag != "" {
 			switch *weatherFlag {
 			case "clear":

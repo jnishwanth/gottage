@@ -57,6 +57,9 @@ go build -o gottage main.go
 # Render a single frame preview to stdout
 ./gottage --demo
 
+# Render one named scene (accepts a unique substring, so the emoji is optional)
+./gottage --demo --scene "Kirokaze Cozy Room"
+
 # Launch with specific initial weather
 ./gottage --weather rain
 
