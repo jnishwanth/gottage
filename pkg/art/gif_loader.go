@@ -44,7 +44,20 @@ func LoadAnimatedGif(filePath string, targetWidth, targetHeight int) (*AnimatedG
 }
 
 // Load decodes an animated GIF file, scales all frames to (targetWidth, targetHeight), and caches the result.
+//
+// Every failure is recorded before it is returned. This wrapper is the single
+// choke point for that: callers reach assets through the loader, so recording
+// here catches open failures and decode failures alike, and a future error
+// return added to load cannot bypass it by forgetting to record.
 func (loader *AnimatedGifLoader) Load(filePath string, targetWidth, targetHeight int) (*AnimatedGif, error) {
+	anim, err := loader.load(filePath, targetWidth, targetHeight)
+	if err != nil {
+		recordAssetError(filePath, err)
+	}
+	return anim, err
+}
+
+func (loader *AnimatedGifLoader) load(filePath string, targetWidth, targetHeight int) (*AnimatedGif, error) {
 	loader.mu.Lock()
 	defer loader.mu.Unlock()
 
